@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from "framer-motion";
-import styles from './main.module.css';
+import styles from '../../stylesheets/main/main.module.scss';
 
 class MainPage extends React.Component {
     render() {

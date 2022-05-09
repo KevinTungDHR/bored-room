@@ -5,13 +5,13 @@
     background: $coral;
     margin-bottom: 16px;
     border: none;
-    width: 100%;
     border-radius: 8px;
-    height: 40px;
+    height: 80px;
+    width: 100px;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    color: $bronze;
+    color: $turq;
 }
 
 .container {
@@ -19,4 +19,5 @@
     justify-content: space-between;
     align-items: center;
     background-color: $tan;
+    width: 100%;
 }
