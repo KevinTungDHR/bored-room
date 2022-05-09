@@ -1,11 +1,18 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+@import '../reset.scss';
 
 .welcome {
-    background-color: red;
-    height: 500px;
-    width: 500px;
+    background-color: $turq;
+    opacity: 0.5;
+    border-radius: 20px;
+    height: 200px;
+    width: 200px;
 }
 
 .background {
+    display: block;
+    margin: auto;
     background-image: url('../../assets/images/game_table.jpg');
 }
 
