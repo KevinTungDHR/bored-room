@@ -5,7 +5,7 @@ import styles from '../../stylesheets/main/main.module.scss';
 class MainPage extends React.Component {
     render() {
         return (
-            <div>
+            <div className={styles.background}>
                 <h1>This is the Homepage</h1>
 
                 <motion.div 

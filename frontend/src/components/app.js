@@ -8,7 +8,7 @@ import MainPage from './main/main_page';
 import Footer from './footer/footer';
 
 const App = () => (
-    <div className='page-container'>
+    <div>
         <NavBarContainer />
         <Switch>
             <AuthRoute exact path="/" component={MainPage} />
