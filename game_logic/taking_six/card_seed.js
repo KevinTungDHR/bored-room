@@ -1,4 +1,14 @@
-cards = [{
+const mongoose = require("mongoose");
+const Card = require('./models/card');
+const db = require('../../config/keys').mongoURI;
+
+
+mongoose
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log("Connected to MongoDB successfully"))
+  .catch(err => console.log(err));
+
+seedCards = [{
   value: 1,
   bulls: 1,
 },{
@@ -310,4 +320,13 @@ cards = [{
 },{
   value: 104,
   bulls: 1,
-},]
+},];
+
+const seedDB = async () => {
+  await Card.deleteMany({});
+  await Card.insertMany(seedCards);
+};
+
+seedDB().then(() => {
+  mongoose.connection.close();
+});

@@ -22,9 +22,9 @@ state = {
     type: "playerAction",
     action: "takeRow",
     description: function(activePlayer) {
-      return (`${activePlayer} must take a row`)
+      return (`${activePlayer} must take a row`);
     }
   }
-}
+};
 
-console.log(state[3].description("Jon"))
+console.log(state[3].description("Jon"));
