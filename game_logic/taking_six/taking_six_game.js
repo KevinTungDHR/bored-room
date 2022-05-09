@@ -7,7 +7,7 @@ class TakingSixGame {
     this.currentPlayer = options.currentPlayer;
     this.players = options.players
     this.currentState = options.currentState;
-    
+      
   }
 
   setupNewGame(){
@@ -43,7 +43,9 @@ game = {
       activePlayer: false,
     }
   ],
-  hands: [],
+  hands: {
+    userId: [Card.ObjectId, card.ObjectId]
+  }
   deck: [],
-  
+
 }
