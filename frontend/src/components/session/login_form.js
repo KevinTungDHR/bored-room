@@ -40,7 +40,7 @@ class LoginForm extends React.Component {
             email: this.state.email,
             password: this.state.password
         };
-
+        debugger;
         this.props.login(user);
     }
 
