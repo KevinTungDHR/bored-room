@@ -12,7 +12,7 @@ class TakingSixGame {
 
   setupNewGame(players, options){
     this.name = "Taking Six"
-    this.deck = await Deck.find()
+    this.deck = await Card.find()
     this.shuffleCards()
 
     players.forEach((player) => {
@@ -54,17 +54,3 @@ class TakingSixGame {
 }
 
 module.exports = TakingSixGame
-
-// sampleState
-game = {
-  players: [
-    {
-      userId: Object.Id, // for user
-      activePlayer: false,
-    }
-  ],
-  hands: {
-    userId: [Card.ObjectId, card.ObjectId]
-  }
-  deck: [],
-}
