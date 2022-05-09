@@ -15,33 +15,42 @@ class TakingSixGame {
       this.deck = data.deck;
       this.players = data.players;
       this.rows = data.rows;
+      this.gameOver = data.gameOver;
+      this.playedCards = data.playedCards;
     }
   }
 
   async setupNewGame(players){
     this.name = "Taking Six";
+    this.playedCards = [];
+    this.rows = [];
+    this.players = [];
 
     await Card.find()
-      .then(data => this.deck = (data))
+      .then(data => this.cleanDeck = (data))
       .catch(reason => console.error(reason));
-    
+      
+    this.deck = this.cleanDeck.slice();
+
     this.shuffleCards();
-    this.players = [];
     players.forEach((player) => {
       this.players.push({
        id: player.id,
        activePlayer: false,
        score: 66,
        pile: [],
-       hand: this.deck.splice(0, 11)
+       hand: this.deck.splice(0, 11),
+       choosenCard: null
       });
     });
 
+    
     // Create 4 rows
-    this.rows = [];
     for(let i = 0; i < 4; i++){
       this.rows.push([this.deck.pop()]);
     }
+
+    this.gameOver = false;
   }
 
   shuffleCards(){
@@ -52,34 +61,89 @@ class TakingSixGame {
     }
   }
 
+  setState(nextState){
+    this.currentState = nextState;
+  }
+
+  // Main function to handle player input, is this necessary?
   handleEvent(action, args){
     if (!this.gameState.action.includes(action)){
       return "Not a valid action";
     }
 
-    game[action](args);
+    switch(action){
+      case "playcard":
+
+      default:
+        break;
+    }
   }
 
+  // Automated Actions
   setupNewRound(){
+    this.deck = this.cleanDeck;
+    this.players.forEach((player) => {
+      player.pile = [];
+      player.hand = this.deck.splice(0, 11);
+      player.chooseCard = null;
+    });
+  }
 
+  calculateScores(){
+    this.players.forEach(player => {
+      const bulls = player.pile
+        .map(card => card.bulls)
+        .reduce((prev, curr) => prev + curr);
+      player.score -= bulls;
+    });
+  }
+
+  isRoundOver(){
+    return this.players.every(player => player.hand.length === 0);
+  }
+
+  isGameOver(){
+    return this.players.some(player => player.score <= 0);
+  }
+
+  orderPlayedCards(){
+    this.playedCards.sort((a, b) => (a.value < b.value) ? -1 : 1);
+  }
+
+  playersHavenChosenCards() {
+    return this.players.every(player => player.choosenCard !== null);
+  }
+
+  // Game Rules checks
+  lowestCardCheck(card){
+    return this.rows.every(row => row.slice(-1).value > card.value);
   }
 
   // User actions
-
-  playCard(args){
-
+  addCardToRow(card, rowNum){
+    if (card.value < this.row[rowNum].value){
+      throw "Card is smaller than row value";
+    }
+    this.rows[rowNum].push(card);
   }
 
-  takeRow(){
-
+  takeFullRow(player, rowNum){
+    player.pile.push.apply(player.pile, this.rows[rowNum].splice(0,5));
   }
 
-
-  placeCardInRow(){
-
+  takeAllRowCards(player, rowNum){
+    player.pile.push.apply(player.pile, this.rows[rowNum].splice());
   }
+
+  chooseCard(player, card) {
+    const selectedPlayer = this.players.filter((p) => p.id ===  player.id)[0];
+    selectedPlayer.choosenCard = card;
+  }
+
 
   // Game State Actions
+
+
 
 }
 
