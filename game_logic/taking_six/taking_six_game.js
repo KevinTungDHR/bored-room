@@ -79,23 +79,27 @@ class TakingSixGame {
     }
   }
 
+  getActivePlayer(){
+    
+  }
+
   // Automated Actions
   setupNewRound(){
     this.deck = this.cleanDeck;
+    this.shuffleCards();
+
     this.players.forEach((player) => {
       player.pile = [];
       player.hand = this.deck.splice(0, 11);
-      player.chooseCard = null;
+      player.choosenCard = null;
     });
   }
 
-  calculateScores(){
-    this.players.forEach(player => {
-      const bulls = player.pile
+  calculateScore(player){
+    player.pile
         .map(card => card.bulls)
         .reduce((prev, curr) => prev + curr);
-      player.score -= bulls;
-    });
+    player.score -= bulls;
   }
 
   isRoundOver(){
@@ -107,10 +111,10 @@ class TakingSixGame {
   }
 
   orderPlayedCards(){
-    this.playedCards.sort((a, b) => (a.value < b.value) ? -1 : 1);
+    this.playedCards.sort((a, b) => (a[1].value < b[1].value) ? -1 : 1);
   }
 
-  playersHavenChosenCards() {
+  playersHaveChosenCards() {
     return this.players.every(player => player.choosenCard !== null);
   }
 
@@ -137,9 +141,6 @@ class TakingSixGame {
 
   // User actions
   addCardToRow(card, rowNum){
-    if (card.value < this.row[rowNum].value){
-      throw "Card is smaller than row value";
-    }
     this.rows[rowNum].push(card);
   }
 
@@ -156,22 +157,76 @@ class TakingSixGame {
     selectedPlayer.choosenCard = card;
   }
 
-
-  // State Management Actions
+  // State Actions
   playCard(data){
     this.chooseCard(data.player, data.card);
-    if (playersHavenChosenCards()){
-      const nextState = takingSixState[this.currentState.STATE_NEXT];
+    if (playersHaveChosenCards()){
+      this.players.forEach(player => {
+        this.playedCards.push([player.id, play.choosenCard]);
+      });
+      this.orderPlayedCards();
+      // Organize playedCards To keep track of playerId
+
+      const nextState = takingSixState[this.currentState.CHECK_PLAYED_CARDS];
       this.setState(nextState);
     }
   }
 
+  checkPlayedCards(){
+    const nextCard = this.playedCards[0][1];
 
+    if(cardSmallerThanAllRows(nextCard)){
+      const nextState = takingSixState[this.currentState.TAKE_ROW];
+      this.setState(nextState);
+    } else {
+      const nextState = takingSixState[this.currentState.AUTO_PLACE_CARD];
+      this.setState(nextState);
+    }
+  }
+
+  takeRow(data){
+    const [playerId, card] = this.playedCards.shift();
+    const player = this.players.find(p => p.id === player);
+
+    this.takeAllRowCards(player, data.row);
+    this.calculateScore(player);
+    this.addCardToRow(card, data.row);
+
+    if(this.playedCards.length > 0){
+      const nextState = takingSixState[this.currentState.CHECK_PLAYED_CARDS];
+      this.setState(nextState);
+    }
+  }
+
+  autoPlaceCard(){
+    const [playerId, card] = this.playedCards.shift();
+
+    const rowNum = this.findClosestRow(card);
+    this.addCardToRow(card, rowNum);
+    
+    if(this.rows[rowNum].length > 5){
+      const player = this.players.find(p => p.id === player);
+      this.takeFullRow(player, rowNum);
+      this.calculateScore(player);
+    }
+
+    if(this.playedCards.length > 0){
+      const nextState = takingSixState[this.currentState.CHECK_PLAYED_CARDS];
+      this.setState(nextState);
+    } else {
+      const nextState = takingSixState[this.currentState.CHECK_TURN_END];
+      this.setState(nextState);
+    }
+  }
+
+  CHECK_TURN_END(){
+    
+  }
+  
 }
 
-
 game = new TakingSixGame();
-game.setupNewGame([{ id: 1 }, {id: 2 }, { id: 3 }])
+game.setupNewGame([{ id: 1 }, { id: 2 }, { id: 3 }])
   .then(() => console.log(game.rows));
 
 

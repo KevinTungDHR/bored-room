@@ -1,3 +1,4 @@
+// action will be called onEnter
 state = {
   1: {
     name: "GAME_SETUP",
@@ -12,39 +13,60 @@ state = {
     name: "PLAYER_CHOOSE_CARD",
     description: "Players must choose a card",
     type: "multipleActivePlayer",
-    actions: ["playCard"],
+    possibleActions: ["playCard"],
     transitions: {
-      TAKE_ROW: 3,
-      AUTO_PLACE_CARD: 4
+      CHECK_PLAYED_CARDS: 3
     }
   },
   3: {
+    name: "CHECK_PLAYED_CARDS",
+    type: "automated",
+    actions: ['checkPlayedCards'],
+    transitions: {
+      TAKE_ROW: 4,
+      AUTO_PLACE_CARD: 5,
+    }
+  },
+  4: {
     name: "TAKE_ROW",
     type: "activePlayer",
-    actions: ["takeRow"],
+    possibleActions: ["takeRow"],
     description: function(activePlayer) {
       return (`${activePlayer} must take a row`);
     },
     transitions: {
-      TAKE_ROW: 3,
-      AUTO_PLACE_CARD: 4,
-    }
-  },
-  4: {
-    name: "AUTO_PLACE_CARD",
-    type: "automated",
-    transitions: {
-      AUTO_PLACE_CARD: 4,
-      CHECK_FULL_ROW: 5,
-      ROUND_SETUP: 10
+      CHECK_PLAYED_CARDS: 3
     }
   },
   5: {
-    name: "CHECK_FULL_ROW",
+    name: "AUTO_PLACE_CARD",
     type: "automated",
     transitions: {
-      
+      CHECK_PLAYED_CARDS: 3,
+      CHECK_TURN_END: 7
     }
+  },
+  7: {
+    name: "CHECK_TURN_END",
+    type: "automated",
+    actions: [''],
+    transitions: {
+      ROUND_SETUP: 10,
+      GAME_END: 99
+    }
+  },
+  10: {
+    name: "ROUND_SETUP",
+    type: "automated",
+    action: ["setupNewRound"],
+    transitions: {
+      PLAYER_CHOOSE_CARD: 2
+    }
+  },
+  99: {
+    name: "GAME_END",
+    type: "automated",
+    action: ["gameEnd"]
   }
 };
 
