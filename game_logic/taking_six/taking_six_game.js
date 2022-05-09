@@ -65,18 +65,18 @@ class TakingSixGame {
     this.currentState = nextState;
   }
 
+  getState(){
+    return this.currentState;
+  }
+
   // Main function to handle player input, is this necessary?
   handleEvent(action, args){
     if (!this.gameState.action.includes(action)){
       return "Not a valid action";
     }
 
-    switch(action){
-      case "playcard":
+    this[action](args);
 
-      default:
-        break;
-    }
   }
 
   getActivePlayer(){
@@ -186,7 +186,7 @@ class TakingSixGame {
 
   takeRow(data){
     const [playerId, card] = this.playedCards.shift();
-    const player = this.players.find(p => p.id === player);
+    const player = this.players.find(p => p.id === playerId);
 
     this.takeAllRowCards(player, data.row);
     this.calculateScore(player);
@@ -205,7 +205,7 @@ class TakingSixGame {
     this.addCardToRow(card, rowNum);
     
     if(this.rows[rowNum].length > 5){
-      const player = this.players.find(p => p.id === player);
+      const player = this.players.find(p => p.id === playerId);
       this.takeFullRow(player, rowNum);
       this.calculateScore(player);
     }
@@ -219,15 +219,25 @@ class TakingSixGame {
     }
   }
 
-  CHECK_TURN_END(){
-    
+  checkTurnEnd(){
+    if(this.isRoundOver() && this.isGameOver()){
+      const nextState = takingSixState[this.currentState.GAME_END];
+      this.setState(nextState);
+    } else if(this.isRoundOver()){
+      const nextState = takingSixState[this.currentState.ROUND_SETUP];
+      this.setState(nextState);
+    } else {
+      const nextState = takingSixState[this.currentState.PLAYER_CHOOSE_CARD];
+      this.setState(nextState);
+    }
   }
   
 }
 
 game = new TakingSixGame();
 game.setupNewGame([{ id: 1 }, { id: 2 }, { id: 3 }])
-  .then(() => console.log(game.rows));
+  .then(() => console.log(game.rows))
+  .then(() =>  mongoose.connection.close());
 
 
 module.exports = TakingSixGame;

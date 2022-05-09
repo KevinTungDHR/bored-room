@@ -49,8 +49,9 @@ state = {
   7: {
     name: "CHECK_TURN_END",
     type: "automated",
-    actions: [''],
+    actions: ['checkTurnEnd'],
     transitions: {
+      PLAYER_CHOOSE_CARD: 2,
       ROUND_SETUP: 10,
       GAME_END: 99
     }
