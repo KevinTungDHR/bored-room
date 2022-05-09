@@ -2,7 +2,7 @@
 @import '../../stylesheets/colors.scss';
 
 .btn {
-    background: $tan;
+    background: $coral;
     margin-bottom: 16px;
     border: none;
     width: 100%;
@@ -11,10 +11,12 @@
     color: white;
     font-weight: bold;
     cursor: pointer;
+    color: $bronze;
 }
 
 .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: $tan;
 }
