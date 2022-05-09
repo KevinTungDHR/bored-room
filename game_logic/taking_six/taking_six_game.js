@@ -5,15 +5,15 @@ class TakingSixGame {
     this.deck = options.deck;
     
     this.currentPlayer = options.currentPlayer;
-    this.players = options.players
+    this.players = options.players;
     this.currentState = options.currentState;
       
   }
 
   setupNewGame(players, options){
-    this.name = "Taking Six"
-    this.deck = await Card.find()
-    this.shuffleCards()
+    this.name = "Taking Six";
+    this.deck = await Card.find();
+    this.shuffleCards();
 
     players.forEach((player) => {
       this.players.push({
@@ -22,8 +22,8 @@ class TakingSixGame {
        score: 66,
        pile: [],
        hand: this.deck.splice(0, 11)
-      })
-    })
+      });
+    });
   }
 
   shuffleCards(){

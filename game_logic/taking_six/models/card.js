@@ -12,6 +12,6 @@ const TakingSixCardSchema = new Schema({
   },
 },  {
     timestamps: true
-})
+});
 
-module.exports = TakingSixCard = mongoose.model("TakingSixCard", TakingSixCardSchema)
+module.exports = TakingSixCard = mongoose.model("TakingSixCard", TakingSixCardSchema);
