@@ -115,9 +115,25 @@ class TakingSixGame {
   }
 
   // Game Rules checks
-  lowestCardCheck(card){
+  cardSmallerThanAllRows(card){
     return this.rows.every(row => row.slice(-1).value > card.value);
   }
+
+  findClosestRow(card){
+    let rowNum = 0;
+    let diff = 104;
+    for(let i = 0; i < this.rows.length; i++){
+      const lastCardInRow = this.rows[i].slice(-1);
+      if(lastCardInRow.value > card.value && 
+        lastCardInRow.value - card.value < diff){
+          rowNum = i;
+          diff = lastCardInRow.value - card.value;
+      }
+    }
+
+    return rowNum;
+  }
+
 
   // User actions
   addCardToRow(card, rowNum){
@@ -141,8 +157,14 @@ class TakingSixGame {
   }
 
 
-  // Game State Actions
-
+  // State Management Actions
+  playCard(data){
+    this.chooseCard(data.player, data.card);
+    if (playersHavenChosenCards()){
+      const nextState = takingSixState[this.currentState.STATE_NEXT];
+      this.setState(nextState);
+    }
+  }
 
 
 }
