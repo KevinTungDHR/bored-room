@@ -7,6 +7,12 @@ const keys = require('../../config/keys');
 const passport = require('passport');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
+const validateUpdateHandle = require('../../validation/update/update_handle');
+const validateUpdateEmail = require('../../validation/update/update_email');
+const validateUpdatePassword = require('../../validation/update/update_password');
+const validateUpdateAvatar = require('../../validation/update/update_avatar');
+const { db } = require("../../models/User");
+const { json } = require("express/lib/response");
 
 router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
@@ -41,7 +47,7 @@ router.post('/register', (req, res) => {
                 jwt.sign(
                   payload,
                   keys.secretOrKey,
-                  {expiresIn: 7200},
+                  {expiresIn: 72000},
                   (err, token) => {
                     res.json({
                       success: true,
@@ -81,7 +87,7 @@ router.post('/login', (req, res) => {
             jwt.sign(
               payload,
               keys.secretOrKey,
-              {expiresIn: 7200},
+              {expiresIn: 72000},
               (err, token) => {
                 res.json({
                   success: true,
@@ -96,10 +102,67 @@ router.post('/login', (req, res) => {
     })
 })
 
-router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   res.json({
     id: req.user.id,
     handle: req.user.handle,
-    email: req.user.email
+    email: req.user.email,
+    avatar: req.user.avatar,
+    experience: req.user.experience
   });
+})
+
+router.patch('/update-handle', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const { errors, isValid } = validateUpdateHandle(req.body);
+  
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
+
+  User.findById(req.user.id)
+    .then(user => {
+      user.set(req.body)
+      res.json(user)})
+    .catch(errors => res.status(400).json({errors}))
+})
+
+router.patch('/update-email', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const { errors, isValid } = validateUpdateEmail(req.body);
+  
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
+
+  User.findById(req.user.id)
+    .then(user => {
+      user.set(req.body)
+      res.json(user)})
+    .catch(errors => res.status(400).json({errors}))
+})
+
+// router.patch('/update-password', passport.authenticate('jwt', {session: false}), (req, res) => {
+//   const { errors, isValid } = validateUpdatePassword(req.body);
+  
+//   if (!isValid){
+//     return res.status(400).json(errors);
+//   }
+
+//   User.findById(req.user.id)
+//     .then(user => {
+//       user.set(req.body)
+//       res.json(user)})
+//     .catch(errors => res.status(400).json({errors}))
+// })
+
+router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const { errors, isValid } = validateUpdateAvatar(req.body);
+  
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
+
+  User.findById(req.user.id)
+    .then(user => {
+      user.set(req.body)
+      res.json(user)})
 })
