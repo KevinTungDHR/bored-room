@@ -21,18 +21,32 @@ export const receiveUserSignIn = () => {
     }
 };
 
-export const receiveErrors = errors => ({
-    type: RECEIVE_SESSION_ERRORS,
-    errors
-});
+export const receiveErrors = errors => {
+    return {
+        type: RECEIVE_SESSION_ERRORS,
+        errors
+    }
+};
 
-export const signup = user => dispatch => (
-    APIUtil.signup(user).then(() => (
-        dispatch(receiveUserSignIn())
-    ), err => (
-        dispatch(receiveErrors(err.response.data))
-    ))
-);
+
+export const signup = user => dispatch => {
+    return APIUtil.signup(user)
+        .then((res) => {
+            const { token } = res.data;
+            localStorage.setItem('jwtToken', token);
+            APIUtil.setAuthToken(token);
+            const decoded = jwt_decode(token);
+            dispatch(receiveCurrentUser(decoded))
+        })
+}
+// export const signup = user => dispatch => (
+//     APIUtil.signup(user).then((data) => (
+        
+//         dispatch(receiveCurrentUser(data))
+//     ), err => (
+//         dispatch(receiveErrors(err.response.data))
+//     ))
+// );
 
 export const login = user => dispatch => (
     APIUtil.login(user).then(res => {   

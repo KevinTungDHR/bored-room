@@ -12,6 +12,7 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case RECEIVE_CURRENT_USER:
+            // action (decoded) { email: , exp: , handle: , id: }
             return {
                 ...state,
                 isAuthenticated: !!action.currentUser,

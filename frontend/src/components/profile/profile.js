@@ -7,7 +7,12 @@ class Profile extends React.Component {
 
     render() {
         return (
-            <div></div>
+            <div className='profile-container'>
+                <div className='profile-card'>
+                    {/* Avatar in form of a Card */}
+                    <h1></h1>
+                </div>
+            </div>
         )
     }
 }
