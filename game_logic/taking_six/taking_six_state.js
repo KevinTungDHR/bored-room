@@ -3,7 +3,7 @@ state = {
     name: "Game Setup",
     description: "Game is setting up",
     type: "automated",
-    action: "gameSetup",
+    actions: "gameSetup",
     transitions: {
       "": 'STATE_PLAYER_PLAY_CARD'
     }
@@ -12,7 +12,7 @@ state = {
     name: "STATE_PLAYER_PLAY_CARD",
     description: "Players must choose a card",
     type: "playerAction",
-    action: "playCard",
+    actions: "playCard",
     transitions: {
 
     }
@@ -20,11 +20,11 @@ state = {
   3: {
     name: "STATE_TAKE_ROW",
     type: "playerAction",
-    action: "takeRow",
+    actions: "takeRow",
     description: function(activePlayer) {
       return (`${activePlayer} must take a row`);
     }
   }
 };
 
-console.log(state[3].description("Jon"));
+// console.log(state[3].description("Jon"));

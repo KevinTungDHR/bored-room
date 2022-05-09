@@ -1,20 +1,32 @@
 const takingSixState = require('./taking_six_state');
+const Card = require('./models/card');
+const mongoose = require('mongoose');
+const db = require('../../config/keys').mongoURI;
+
+mongoose
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log("Connected to MongoDB successfully"))
+  .catch(err => console.log(err));
 
 class TakingSixGame {
-  constructor(options){
-    this.deck = options.deck;
-    
-    this.currentPlayer = options.currentPlayer;
-    this.players = options.players;
-    this.currentState = options.currentState;
-      
+  constructor(data){
+    this.name = "Taking Six";
+    if (data) {
+      this.deck = data.deck;
+      this.players = data.players;
+      this.rows = data.rows;
+    }
   }
 
-  setupNewGame(players, options){
+  async setupNewGame(players){
     this.name = "Taking Six";
-    this.deck = await Card.find();
-    this.shuffleCards();
 
+    await Card.find()
+      .then(data => this.deck = (data))
+      .catch(reason => console.error(reason));
+    
+    this.shuffleCards();
+    this.players = [];
     players.forEach((player) => {
       this.players.push({
        id: player.id,
@@ -24,6 +36,12 @@ class TakingSixGame {
        hand: this.deck.splice(0, 11)
       });
     });
+
+    // Create 4 rows
+    this.rows = [];
+    for(let i = 0; i < 4; i++){
+      this.rows.push([this.deck.pop()]);
+    }
   }
 
   shuffleCards(){
@@ -34,9 +52,19 @@ class TakingSixGame {
     }
   }
 
+  handleEvent(action, args){
+    if (!this.gameState.action.includes(action)){
+      return "Not a valid action";
+    }
+
+    game[action](args);
+  }
+
   setupNewRound(){
 
   }
+
+  // User actions
 
   playCard(args){
 
@@ -46,11 +74,19 @@ class TakingSixGame {
 
   }
 
+
   placeCardInRow(){
 
   }
 
+  // Game State Actions
 
 }
 
-module.exports = TakingSixGame
+
+game = new TakingSixGame();
+game.setupNewGame([{ id: 1 }, {id: 2 }, { id: 3 }])
+  .then(() => console.log(game.rows));
+
+
+module.exports = TakingSixGame;
