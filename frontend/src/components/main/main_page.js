@@ -1,17 +1,22 @@
 import React from 'react';
 import { motion } from "framer-motion";
-import styles from '../../stylesheets/main/main.module.scss';
+import { Link } from 'react-router-dom';
 
 class MainPage extends React.Component {
     render() {
         return (
-            <div className={styles.background}>
-                <div>
+            <div className="main-background">
+                <div className="main-card">
                     <motion.div 
-                        className={styles.welcome}
-                        animate={{ rotate: 360, scale: [0, 0.2, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5] }}
-                        transition={{ duration: 1 }}
-                    >Welcome to Bored Room!</motion.div>
+                        className='main-welcome'
+                        animate={{ rotate: 360, scale: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] }}
+                        transition={{ duration: 0.5 }}>
+                            <div>
+                                <h1>Welcome to</h1>
+                                <span>Bored Room</span>
+                                <p>Play your favorite board games with friends and family!</p>
+                            </div>
+                    </motion.div>
                 </div>
 
             </div>

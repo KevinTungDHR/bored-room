@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import styles from "../../stylesheets/session/signup.module.scss";
 
 class SignupForm extends React.Component {
     constructor(props) {
@@ -58,35 +57,31 @@ class SignupForm extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
-                <form onSubmit={this.handleSubmit}>
-                    <div>
-                        <br />
-                        <input className={styles.input} type="text"
+            <div className="signup-container">
+                <form className='signup-form' onSubmit={this.handleSubmit}>
+                    <div className='signup-form-inputs'>
+                        <h1>Signup Here!</h1>
+                        <input type="text"
                             value={this.state.email}
                             onChange={this.update('email')}
                             placeholder="Email"
                         />
-                        <br />
-                        <input className={styles.input} type="text"
+                        <input type="text"
                             value={this.state.handle}
                             onChange={this.update('handle')}
                             placeholder="Handle"
                         />
-                        <br />
-                        <input className={styles.input} type="password"
+                        <input type="password"
                             value={this.state.password}
                             onChange={this.update('password')}
                             placeholder="Password"
                         />
-                        <br />
-                        <input className={styles.input} type="password"
+                        <input type="password"
                             value={this.state.password2}
                             onChange={this.update('password2')}
                             placeholder="Confirm Password"
                         />
-                        <br />
-                        <input className={styles.btn} type="submit" value="Submit" />
+                        <input className='signup-btn' type="submit" value="Sign Up" />
                         {this.renderErrors()}
                     </div>
                 </form>

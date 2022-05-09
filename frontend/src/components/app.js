@@ -6,7 +6,7 @@ import LoginFormContainer from './session/login_form_container';
 import SignupFormContainer from './session/signup_form_container';
 import MainPage from './main/main_page';
 import Footer from './footer/footer';
-import styles from '../stylesheets/app.scss';
+import '../stylesheets/app.scss';
 
 const App = () => (
     <div>

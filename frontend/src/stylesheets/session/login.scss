@@ -1,0 +1,76 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('../../assets/images/game_table.jpg');
+    font-family: 'Really-Free';
+    font-size: 32px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 28px;
+    width: 40%;
+    max-height: 500px;
+    border-radius: 12px;
+    background-color: $champ;
+
+    .login-form-inputs {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            border-radius: 12px;
+        }
+    input {
+        width: 90%;
+        height: 60px;
+        border: 2px solid coral;
+        opacity: 0.8;
+        margin: 8px 0px;
+        border-radius: 8px;
+    }
+
+    input:first-child {
+        margin-top: 16px;
+    }
+
+    input::placeholder {
+        font-family: 'Really-Free';
+        font-size: 32px;
+        padding-left: 10px;
+    }
+
+    input[type=text] {
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+    }
+}
+
+.login-btn {
+    background: inherit;
+    font-size: 52px;
+    font-family: 'Really-Free';
+    border: 2px solid black;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: $coral;
+    height: 40px;
+    width: 100px;
+    margin-right: 14px;
+}
+
+.login-btn:hover {
+    opacity: 0.8;
+    color: $turq;
+    background-color: $coral;
+}

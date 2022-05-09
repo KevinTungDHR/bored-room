@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../../stylesheets/navbar/navbar.module.scss';
 
 class NavBar extends React.Component {
     constructor(props) {
@@ -27,8 +26,8 @@ class NavBar extends React.Component {
         } else {
             return (
                 <div>
-                    <button className={styles.btn}><Link to={'/register'} className={styles.default}>Register</Link></button>
-                    <button className={styles.btn}><Link to={'/login'} className={styles.default}>Login</Link></button>
+                    <button className="nav-btn"><Link to={'/register'} className="nav-default">Register</Link></button>
+                    <button className="nav-btn"><Link to={'/login'} className="nav-default">Login</Link></button>
                 </div>
             );
         }
@@ -36,9 +35,9 @@ class NavBar extends React.Component {
 
     render() {
         return (
-            <div className={styles.container}>
+            <div className="nav-container">
                 <div>
-                    <h1 className={styles.title}>Bored Room</h1>
+                    <Link to="/" className="nav-title"> Bored Room</Link>
                 </div>
                 {this.getLinks()}
             </div>
