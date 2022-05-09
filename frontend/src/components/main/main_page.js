@@ -1,10 +1,19 @@
 import React from 'react';
+import { motion } from "framer-motion";
+import styles from './main.module.css';
 
 class MainPage extends React.Component {
     render() {
         return (
             <div>
                 <h1>This is the Homepage</h1>
+
+                <motion.div 
+                    className={styles.welcome}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1 }}
+                />
+
                 <footer>
                     Copyright &copy; KevPeteSean
                 </footer>
