@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Dropdown from './dropdown';
 
 class NavBar extends React.Component {
     constructor(props) {
@@ -19,11 +20,7 @@ class NavBar extends React.Component {
 
             // if logged in display
             return (
-                <div className='nav-logout-div'>
-                    <button className='logout-btn' onClick={this.logoutUser}>Logout</button>
-                    <div className='profile-icon'></div>
-                    
-                </div>
+                <Dropdown logout={this.props.logout}/>
             );
         } else {
             return (

@@ -1,0 +1,43 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    // background-color: ;
+    min-width: 160px;
+    border-radius: 8px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    top: 68px;
+    right: 6px;
+    z-index: 10;
+}
+
+.profile-icon {
+    background-image: url('../../assets/images/user_prof.png');
+    background-size: contain;
+    width: 42px;
+    height: 42px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.dropdown-content a {
+    font-family: 'Really-Free';
+    color: $coral;
+    font-size: 32px;
+    margin: 12px 0px;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.profile-icon:hover .dropdown-content {
+    background-color: $tan;
+    display: block;
+}
