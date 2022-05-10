@@ -42,6 +42,7 @@ const state = {
   5: {
     name: "AUTO_PLACE_CARD",
     type: "automated",
+    action: ["autoPlaceCard"],
     transitions: {
       CHECK_PLAYED_CARDS: 3,
       CHECK_TURN_END: 7
