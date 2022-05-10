@@ -5,6 +5,8 @@ import configureStore from './store/store';
 import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
+import TakingSixGame from './logic_testing/taking_six_game';
+import state from './logic_testing/taking_six_state';
 
 document.addEventListener('DOMContentLoaded', () => {
     let store;
@@ -38,6 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render our root component and pass in the store as a prop
 
     window.getState = store.getState;
+    const game = new TakingSixGame();
+    game.setupNewGame([{id: 1},{ id: 2}])
+    window.game =  game;
+    window.player1 = game.players[0];
+    window.player2 = game.players[1];
+    window.allStates = state;
+    window.state = game.getState;
+
+
     const root = document.getElementById('root');
 
     ReactDOM.render(<Root store={store} />, root);

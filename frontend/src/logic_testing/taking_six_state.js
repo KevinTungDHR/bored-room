@@ -1,5 +1,5 @@
 // action will be called onEnter
-state = {
+const state = {
   1: {
     name: "GAME_SETUP",
     description: "Game is setting up",
@@ -42,7 +42,6 @@ state = {
   5: {
     name: "AUTO_PLACE_CARD",
     type: "automated",
-    actions: ['autoPlaceCard'],
     transitions: {
       CHECK_PLAYED_CARDS: 3,
       CHECK_TURN_END: 7
