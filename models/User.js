@@ -14,15 +14,20 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  experience: {
+  eloRating: {
     type: Number,
     required: true,
-    default: 0
+    default: 800
   },
   avatar: {
     type: String,
     required: false,
     default: "noimage"
+  },
+  bio: {
+    type: String,
+    required: false,
+    default: ""
   }
 }, {
   timestamps: true

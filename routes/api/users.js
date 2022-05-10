@@ -109,7 +109,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     email: req.user.email,
     avatar: req.user.avatar,
     experience: req.user.experience,
-    password: req.user.password
+    bio: req.user.bio
   });
 })
 
@@ -181,4 +181,22 @@ router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (
     .then(user => {
       user.set(req.body)
       res.json(user)})
+})
+
+router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {
+  
+  User.findById(req.user.id)
+    .then(user => {
+      user.set(req.body)
+      res.json(user)})
+    .catch(errors => res.status(400).json({errors}))
+})
+
+router.patch('/update-elo-rating', passport.authenticate('jwt', {session: false}), (req, res) => {
+  
+  User.findById(req.user.id)
+    .then(user => {
+      user.set(req.body)
+      res.json(user)})
+    .catch(errors => res.status(400).json({errors}))
 })
