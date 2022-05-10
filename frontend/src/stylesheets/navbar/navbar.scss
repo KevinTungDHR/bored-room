@@ -53,20 +53,3 @@
 }
 
 
-.logout-btn {
-    background-color: inherit;
-    border: 2px solid $champ;
-    border-radius: 8px;
-    cursor: pointer;
-    color: $coral;
-    height: 40px;
-    width: 100px;
-    margin-right: 14px;
-    font-family: 'Really-Free';
-    font-size: 32px;
-}
-
-.logout-btn:hover {
-    opacity: 0.8;
-    transition: 0.2;
-}

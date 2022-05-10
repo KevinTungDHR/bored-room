@@ -3,13 +3,96 @@
 
 .profile-container {
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.profile-card {
-    height: 70%;
-    width: 30%;
+.separator {
+    height: 60px;
+    width: 100%;
+}
+
+.profile-inner-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    width: 90%;
+    margin: auto;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 600px;
+    height: 700px;
+    margin-left: 40px;
     background-color: $tan;
+
+    .avatar-ctnr {
+        display: flex;
+        align-items: center;
+        height: 200px;
+        width: 200px;
+        background-color: $seaweed;
+        border-radius: 50%;
+    }
+
+    .profile-avatar {
+        height: 200px;
+        width: 200px;
+        background-image: url('../../assets/images/yoda.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        // border-radius: 50%;
+    }
+
+    h1 {
+        font-family: 'Toley-Hand';
+        font-size: 50px;
+    }
+}
+
+.profile-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 10px;
+    margin: auto;
+    height: 700px;
+    width: 700px;
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 132px;
+        height: 132px;
+        text-align: center;
+        font-family: 'Toley-Hand';
+        font-size: 36px;
+    }
+
+    div:nth-child(4n + 1) {
+        background-color: $tan;
+    }
+
+    div:nth-child(4n + 2) {
+        background-color: $coral;
+    }
+
+    div:nth-child(4n + 3) {
+        background-color: $turq;
+    }
+
+    #prize {
+        background-color: $bronze;
+    }
+
+    div:nth-child(4n + 4) {
+        background-color: $champ;
+    }
+
+    div:nth-child(4n + 5) {
+        background-color: $seaweed;
+    }
+
 }
