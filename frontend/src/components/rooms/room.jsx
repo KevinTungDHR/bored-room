@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 const socket = io();
+
 const Room = ({ roomCode }) => {
   const [message, setMessage] = useState("");
   const [list, setList] = useState([]);
-
   useEffect(() => {
+    socket.emit("join_room", roomCode);
+    
     return () => socket.disconnect();
   }, []);
 
@@ -20,9 +22,8 @@ const Room = ({ roomCode }) => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.emit('send_message', { message: message });
-    console.log("test")
-  }
+    socket.emit('send_message', { message: message, roomCode: roomCode });
+  };
 
   return(
     <div>

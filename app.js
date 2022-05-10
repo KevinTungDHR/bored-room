@@ -28,14 +28,20 @@ const io = require('socket.io')(server, { cors: { origin: "*"}});
 
 io.on("connection", socket => {
   console.log("New WS Connection");
-  console.log(socket.id);
+
+  socket.on("join_room", (data)=>{
+    console.log(`joining ${data}`)
+    socket.join(data);
+  });
 
   socket.emit('message', "Connected to Backend");
   socket.broadcast.emit('message', "User has connected");
 
   socket.on('send_message', (data) => {
-    socket.broadcast.emit("receive_message", data);
-  })
+    // socket.broadcast.emit("receive_message", data);
+
+    socket.to(data.roomCode).emit("receive_message", data);
+  });
 
   socket.on("disconnect", () => {
     io.emit("message", "user has left");
