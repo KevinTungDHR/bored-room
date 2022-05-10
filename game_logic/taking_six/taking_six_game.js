@@ -45,6 +45,7 @@ class TakingSixGame {
     });
 
     
+    this.currentState = takingSixState[2];
     // Create 4 rows
     for(let i = 0; i < 4; i++){
       this.rows.push([this.deck.pop()]);
@@ -71,7 +72,7 @@ class TakingSixGame {
 
   // Main function to handle player input, is this necessary?
   handleEvent(action, args){
-    if (!this.gameState.action.includes(action)){
+    if (!this.currentState.possibleActions.includes(action)){
       return "Not a valid action";
     }
 
@@ -234,10 +235,23 @@ class TakingSixGame {
   
 }
 
+const readline = require('readline');
+const reader = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 game = new TakingSixGame();
 game.setupNewGame([{ id: 1 }, { id: 2 }, { id: 3 }])
-  .then(() => console.log(game.rows))
-  .then(() =>  mongoose.connection.close());
+  .then(() =>  mongoose.connection.close())
+  .then(() => { 
+    console.log(game.getState())
+    reader.question(game.getState().description, answer => {
+    game.handleEvent(answer);
+  })
+  })
+
+
 
 
 module.exports = TakingSixGame;

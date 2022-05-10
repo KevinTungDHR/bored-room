@@ -21,6 +21,7 @@ state = {
   3: {
     name: "CHECK_PLAYED_CARDS",
     type: "automated",
+    description: "Game is checking played cards",
     actions: ['checkPlayedCards'],
     transitions: {
       TAKE_ROW: 4,
@@ -72,3 +73,5 @@ state = {
 };
 
 // console.log(state[3].description("Jon"));
+
+module.exports = state;
