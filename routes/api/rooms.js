@@ -26,13 +26,16 @@ router.post('/', passport.authenticate("jwt", { session: false }),
     newRoom.save().then(room => res.json(room));
 });
 
-
+router.get('/', (req, res) => {
+  Room.find()
+    .then(rooms => res.json(rooms))
+    .catch(err => res.status(404).json({ noRoomsFound: "No Rooms Found"}));
+});
 
 router.get('/:code', (req, res) => {
   Room.findOne({ code: req.params.code })
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
-
     );
 });
 
