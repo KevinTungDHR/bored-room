@@ -1,0 +1,49 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.main-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../../assets/images/game_table.jpg');
+    min-height: 80vh;
+}
+
+.main-card {
+    width: 100%;
+    height: 100%;
+    font-family: 'Really-Free';
+    h1 {
+        font-size: 82px;
+        margin-bottom: 12px;
+        
+    }
+
+    span {
+        font-family: 'Toley-Hand';
+        font-size: 56px;
+        color: $coral;
+    }
+
+    p {
+        font-size:56px;
+        padding-top: 40px;
+    }
+}
+
+.main-welcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $turq;
+    opacity: 0.5;
+    border-radius: 20px;
+    height: 400px;
+    width: 400px;
+    margin: auto;
+    text-align: center;
+
+    div {
+        margin: 0 10px;
+    }
+}

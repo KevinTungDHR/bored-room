@@ -1,0 +1,15 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.profile-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-card {
+    height: 70%;
+    width: 30%;
+    background-color: $tan;
+}
