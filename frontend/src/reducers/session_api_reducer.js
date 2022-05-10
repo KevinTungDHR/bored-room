@@ -1,4 +1,4 @@
-import { UPDATE_USER } from '../actions/profile_actions';
+import { UPDATE_USER } from '../actions/user_actions';
 import {
     RECEIVE_CURRENT_USER,
     RECEIVE_USER_LOGOUT,
@@ -13,7 +13,6 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case RECEIVE_CURRENT_USER:
-            // action (decoded) { email: , exp: , handle: , id: }
             return {
                 ...state,
                 isAuthenticated: !!action.currentUser,
@@ -30,9 +29,15 @@ export default function (state = initialState, action) {
                 isSignedIn: true
             }
         case UPDATE_USER:
+            const { _id, handle, email, bio } = action.user.data;
+            let newState = Object.assign({}, state);
+            debugger;
+            newState.user.id = _id;
+            newState.user.handle = handle;
+            newState.user.email = email;
+            newState.user.bio = bio;
             debugger
-            return {
-            }
+            return newState;
         default:
             return state;
     }

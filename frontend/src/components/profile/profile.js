@@ -7,12 +7,13 @@ class Profile extends React.Component {
             user: this.props.user,
             rating: 64,            
             btn: 'Edit',
-            bio: ''
+            bio: this.props.bio
         }
         // this.generateGrid = this.generateGrid.bind(this);
         this.toggleBtn = this.toggleBtn.bind(this);
         this.handleChangeBio = this.handleChangeBio.bind(this);
         this.handleChangeHandle = this.handleChangeHandle.bind(this);
+        this.handleChangeEmail = this.handleChangeEmail.bind(this);
     }
 
     handleChangeBio(e) {
@@ -28,10 +29,17 @@ class Profile extends React.Component {
         this.setState(newState);
     }
 
+    handleChangeEmail(e) {
+        let newState = this.state;
+        newState.user.email = e.target.value;
+        this.setState(newState);
+    }
+
     toggleBtn(e) {
         e.preventDefault();
         let handle = document.getElementById('profile-handle');
         let description = document.getElementById('profile-description');
+        let email = document.getElementById('profile-email');
         let newState = this.state;
         let prevBtn = newState.btn;
 
@@ -39,11 +47,12 @@ class Profile extends React.Component {
 
         (newState.btn === 'Edit') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
         (newState.btn === 'Edit') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
+        (newState.btn === 'Edit') ? email.setAttribute("disabled", "true") : description.removeAttribute("disabled");
 
         let button = document.getElementById('profile-btn');
         button.innerText = (newState.btn === 'Submit') ? 'Submit' : "Edit";
+        button.className = (prevBtn === 'Edit') ? 'profile-submit-btn' : 'profile-edit-btn';
 
-        debugger;
         if (prevBtn === 'Submit') {
             this.props.updateUser(this.state.user);
             this.setState({ newState })
@@ -63,7 +72,8 @@ class Profile extends React.Component {
                             <div className='profile-avatar'>
                         </div>
                         </div>
-                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='20'/>
+                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
+                        <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />
                         <div>ELO +106</div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>

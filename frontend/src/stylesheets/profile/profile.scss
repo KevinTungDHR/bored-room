@@ -53,8 +53,12 @@
     textarea:focus {
         outline: none;
     }
-
     
+}
+
+#profile-email {
+    font-size: 22px;
+    color: $coral;
 }
 
 .avatar-ctnr {
@@ -72,7 +76,6 @@
     background-image: url('../../assets/images/yoda.png');
     background-repeat: no-repeat;
     background-size: contain;
-    // border-radius: 50%;
 }
 
 .profile-edit-btn {
@@ -93,6 +96,24 @@
     color: white;
     transition: 0.2s;
     cursor: pointer;
+}
+
+.profile-submit-btn {
+    background-color: $seaweed;
+    border: 2px solid $coral;
+    border-radius: 8px;
+    color: #fff;
+    height: 40px;
+    width: 100px;
+    margin-right: 14px;
+    margin-top: 14px;
+    font-family: 'Really-Free';
+    font-size: 32px;
+}
+
+.profile-submit-btn:hover {
+    opacity: 0.9;
+    transition: 0.2s;
 }
 
 .profile-edit-btn:focus, .profile-submit-btn:focus {

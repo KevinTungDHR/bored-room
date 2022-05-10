@@ -1,10 +1,9 @@
-import * as APIUtil from '../util/profile_api_util';
+import * as APIUtil from '../util/user_api_util';
 import { receiveErrors } from './session_actions';
 
 export const UPDATE_USER = "UPDATE_USER";
 
-const receiveUser = (user) => {
-    debugger;
+const patchUser = (user) => {
     return {
         type: UPDATE_USER,
         user
@@ -12,8 +11,8 @@ const receiveUser = (user) => {
 };
 
 export const updateUser = user => dispatch => {
-    debugger;
     return APIUtil.updateUser(user)
-        .then(res => dispatch(receiveUser(res)),
+        .then(res => dispatch(patchUser(res)),
         errors => dispatch(receiveErrors(errors)))
 }
+
