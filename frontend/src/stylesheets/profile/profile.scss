@@ -2,19 +2,19 @@
 @import '../fonts.scss';
 
 .profile-container {
-    height: 100vh;
+    height: 90vh;
     color: $text;
 }
 
 .separator {
-    height: 60px;
+    height: 30px;
     width: 100%;
 }
 
 .profile-inner-container {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
-    width: 90%;
+    width: 95%;
     margin: auto;
 }
 
