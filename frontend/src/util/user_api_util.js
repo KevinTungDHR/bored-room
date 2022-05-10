@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const updateUser = (user) => {
+    debugger;
     return axios.patch('/api/users/update-profile', user)
 }
 

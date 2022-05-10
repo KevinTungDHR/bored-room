@@ -89,16 +89,16 @@
     margin-top: 14px;
     font-family: 'Really-Free';
     font-size: 32px;
+    cursor: pointer;
 }
 
 .profile-edit-btn:hover {
     background-color: $seaweed;
     color: white;
     transition: 0.2s;
-    cursor: pointer;
 }
 
-.profile-submit-btn {
+.profile-save-btn {
     background-color: $seaweed;
     border: 2px solid $coral;
     border-radius: 8px;
@@ -109,14 +109,15 @@
     margin-top: 14px;
     font-family: 'Really-Free';
     font-size: 32px;
+    cursor: pointer;
 }
 
-.profile-submit-btn:hover {
+.profile-save-btn:hover {
     opacity: 0.9;
     transition: 0.2s;
 }
 
-.profile-edit-btn:focus, .profile-submit-btn:focus {
+.profile-edit-btn:focus, .profile-save-btn:focus {
     border: $coral;
 }
 

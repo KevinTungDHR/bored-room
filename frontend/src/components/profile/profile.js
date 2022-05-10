@@ -4,10 +4,8 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: this.props.user,
-            rating: 64,            
-            btn: 'Edit',
-            bio: this.props.bio
+            user: this.props.user,    
+            btn: 'Edit'
         }
         // this.generateGrid = this.generateGrid.bind(this);
         this.toggleBtn = this.toggleBtn.bind(this);
@@ -17,10 +15,10 @@ class Profile extends React.Component {
     }
 
     handleChangeBio(e) {
-        // remember to include bio in user
         let newState = this.state;
-        newState.bio = e.target.value;
+        newState.user.bio = e.target.value;
         this.setState(newState);
+
     }
 
     handleChangeHandle(e) {
@@ -43,17 +41,18 @@ class Profile extends React.Component {
         let newState = this.state;
         let prevBtn = newState.btn;
 
-        newState.btn = (newState.btn === 'Edit') ? 'Submit' : 'Edit'; // switch state value
+        newState.btn = (newState.btn === 'Edit') ? 'Save' : 'Edit'; // switch state value
 
         (newState.btn === 'Edit') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
         (newState.btn === 'Edit') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
         (newState.btn === 'Edit') ? email.setAttribute("disabled", "true") : description.removeAttribute("disabled");
 
         let button = document.getElementById('profile-btn');
-        button.innerText = (newState.btn === 'Submit') ? 'Submit' : "Edit";
-        button.className = (prevBtn === 'Edit') ? 'profile-submit-btn' : 'profile-edit-btn';
+        button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit";
+        button.className = (prevBtn === 'Edit') ? 'profile-save-btn' : 'profile-edit-btn';
 
-        if (prevBtn === 'Submit') {
+        if (prevBtn === 'Save') {
+            debugger;
             this.props.updateUser(this.state.user);
             this.setState({ newState })
         }
@@ -61,20 +60,21 @@ class Profile extends React.Component {
     }
 
     render() {
-        const { email, bio, handle } = this.state.user;
+        const { email, bio, handle, eloRating } = this.state.user;
 
+        // "url(" + { Background } + ")"
         return (
             <div className='profile-container'>
                 <div className='separator'></div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>
                         <div className='avatar-ctnr'>
-                            <div className='profile-avatar'>
+                            <div className='profile-avatar' >
                         </div>
                         </div>
                         <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
                         <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />
-                        <div>ELO +106</div>
+                        <div>ELO {eloRating}</div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>
