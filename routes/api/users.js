@@ -108,7 +108,8 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     handle: req.user.handle,
     email: req.user.email,
     avatar: req.user.avatar,
-    experience: req.user.experience
+    experience: req.user.experience,
+    password: req.user.password
   });
 })
 
@@ -140,19 +141,34 @@ router.patch('/update-email', passport.authenticate('jwt', {session: false}), (r
     .catch(errors => res.status(400).json({errors}))
 })
 
-// router.patch('/update-password', passport.authenticate('jwt', {session: false}), (req, res) => {
-//   const { errors, isValid } = validateUpdatePassword(req.body);
+router.patch('/update-password', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const { errors, isValid } = validateUpdatePassword(req.body);
   
-//   if (!isValid){
-//     return res.status(400).json(errors);
-//   }
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
 
-//   User.findById(req.user.id)
-//     .then(user => {
-//       user.set(req.body)
-//       res.json(user)})
-//     .catch(errors => res.status(400).json({errors}))
-// })
+  if (req.body.password === req.body.password2){
+    User.findById(req.user.id)
+      .then((user) => {
+        user.password = req.body.password;
+        const updatedUser = {user};
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(user.password, salt, (err, hash) => {
+            if (err) throw err;
+            updatedUser.password = hash
+            user.set(updatedUser);
+            user.save()
+            res.json(
+              user
+            );
+            }
+          )
+        })
+      })
+    .catch(errors => res.status(400).json({errors}))
+  }
+})
 
 router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (req, res) => {
   const { errors, isValid } = validateUpdateAvatar(req.body);
