@@ -36,6 +36,8 @@
         opacity: 0.8;
         margin: 8px 0px;
         border-radius: 8px;
+        outline: none;
+        text-indent: 12px;
     }
 
     input:first-child {
@@ -52,6 +54,10 @@
         color: inherit;
         font-family: inherit;
         font-size: inherit;
+    }
+
+    input[type=password] {
+        font-size: 32px;
     }
 }
 

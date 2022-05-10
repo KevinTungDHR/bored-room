@@ -1,3 +1,4 @@
+import { UPDATE_USER } from '../actions/profile_actions';
 import {
     RECEIVE_CURRENT_USER,
     RECEIVE_USER_LOGOUT,
@@ -27,6 +28,10 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isSignedIn: true
+            }
+        case UPDATE_USER:
+            debugger
+            return {
             }
         default:
             return state;

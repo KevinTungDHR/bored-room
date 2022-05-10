@@ -2,14 +2,144 @@
 @import '../fonts.scss';
 
 .profile-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 90vh;
+    color: $text;
 }
 
-.profile-card {
-    height: 70%;
-    width: 30%;
+.separator {
+    height: 30px;
+    width: 100%;
+}
+
+.profile-inner-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    width: 95%;
+    margin: 0px auto;
+    height: 90%;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 550px;
+    margin-right: 20px;
+    padding-bottom: 10px;
     background-color: $tan;
+    font-family: 'Really-Free';
+    font-size: 48px;
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.5);
+
+    input[type=text] {
+        font-family: 'Om-Botak';
+        font-size: 50px;
+        background: none;
+        border: none;
+        color: $text;
+        text-align: center;
+    }
+
+    textarea {
+        border: none;
+        padding: 10px;
+        color: $text;
+        border-radius: 10px;
+        background-color: #f8f8ff;
+    }
+
+    textarea:focus {
+        outline: none;
+    }
+
+    
+}
+
+.avatar-ctnr {
+    display: flex;
+    align-items: center;
+    height: 200px;
+    width: 200px;
+    background-color: $seaweed;
+    border-radius: 50%;
+}
+
+.profile-avatar {
+    height: 200px;
+    width: 200px;
+    background-image: url('../../assets/images/yoda.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    // border-radius: 50%;
+}
+
+.profile-edit-btn {
+    background-color: inherit;
+    border: 2px solid $seaweed;
+    border-radius: 8px;
+    color: $coral;
+    height: 40px;
+    width: 100px;
+    margin-right: 14px;
+    margin-top: 14px;
+    font-family: 'Really-Free';
+    font-size: 32px;
+}
+
+.profile-edit-btn:hover {
+    background-color: $seaweed;
+    color: white;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.profile-edit-btn:focus, .profile-submit-btn:focus {
+    border: $coral;
+}
+
+.profile-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 10px;
+    height: 500px;
+    width: 500px;
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+        text-align: center;
+        font-family: 'Om-Botak';
+        font-size: 36px;
+    }
+
+    div:nth-child(4n + 1) {
+        background-color: $tan;
+    }
+
+    div:nth-child(4n + 2) {
+        background-color: $coral;
+    }
+
+    div:nth-child(4n + 3) {
+        background-color: $turq;
+    }
+
+    #prize {
+        background-color: $bronze;
+    }
+
+    div:nth-child(4n + 4) {
+        background-color: $champ;
+    }
+
+    div:nth-child(4n + 5) {
+        background-color: $seaweed;
+    }
+
 }
