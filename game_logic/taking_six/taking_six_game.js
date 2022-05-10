@@ -96,7 +96,7 @@ class TakingSixGame {
   }
 
   calculateScore(player){
-    player.pile
+    const bulls = player.pile
         .map(card => card.bulls)
         .reduce((prev, curr) => prev + curr);
     player.score -= bulls;
@@ -160,9 +160,9 @@ class TakingSixGame {
   // State Actions
   playCard(data){
     this.chooseCard(data.player, data.card);
-    if (playersHaveChosenCards()){
+    if (this.playersHaveChosenCards()){
       this.players.forEach(player => {
-        this.playedCards.push([player.id, play.choosenCard]);
+        this.playedCards.push([player.id, player.choosenCard]);
       });
       this.orderPlayedCards();
       // Organize playedCards To keep track of playerId
@@ -175,7 +175,7 @@ class TakingSixGame {
   checkPlayedCards(){
     const nextCard = this.playedCards[0][1];
 
-    if(cardSmallerThanAllRows(nextCard)){
+    if(this.cardSmallerThanAllRows(nextCard)){
       const nextState = takingSixState[this.currentState.TAKE_ROW];
       this.setState(nextState);
     } else {
