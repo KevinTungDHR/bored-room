@@ -48,7 +48,7 @@ class SignupForm extends React.Component {
         return (
             <ul>
                 {Object.keys(this.state.errors).map((error, i) => (
-                    <li key={`error-${i}`}>
+                    <li key={`error-${i}`} className="session-error">
                         {this.state.errors[error]}
                     </li>
                 ))}
