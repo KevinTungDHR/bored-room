@@ -42,14 +42,6 @@ export const signup = user => dispatch => {
             dispatch(receiveErrors(err.response.data));
         })
 }
-// export const signup = user => dispatch => (
-//     APIUtil.signup(user).then((data) => (
-        
-//         dispatch(receiveCurrentUser(data))
-//     ), err => (
-//         dispatch(receiveErrors(err.response.data))
-//     ))
-// );
 
 export const login = user => dispatch => (
     APIUtil.login(user).then(res => {   

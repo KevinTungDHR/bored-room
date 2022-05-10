@@ -4,35 +4,56 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rating: 64,
-            username: 'Demo',
-            bio: 'I like party games',
-            btn: 'Edit'
+            user: this.props.user,
+            rating: 64,            
+            btn: 'Edit',
+            bio: ''
         }
         // this.generateGrid = this.generateGrid.bind(this);
-        this.toggleEdit = this.toggleEdit.bind(this);
+        this.toggleBtn = this.toggleBtn.bind(this);
+        this.handleChangeBio = this.handleChangeBio.bind(this);
+        this.handleChangeHandle = this.handleChangeHandle.bind(this);
     }
 
-    // generateGrid() {
+    handleChangeBio(e) {
+        // remember to include bio in user
+        let newState = this.state;
+        newState.bio = e.target.value;
+        this.setState(newState);
+    }
 
-    //     [5, 4, 3, 2, 1].map((x) => {
-    //         let thresh = (x * 10)
-    //         let klass = thresh > this.state.rating ? '' : 'profile-star';
-    //         return <div className={klass} data-value={row + " " + col} data-threshold={thresh}></div>
-    //     })
-    // }
+    handleChangeHandle(e) {
+        let newState = this.state;
+        newState.user.handle = e.target.value;
+        this.setState(newState);
+    }
 
-    toggleEdit(e) {
+    toggleBtn(e) {
         e.preventDefault();
-        let newState = this.state.btn === 'Edit' ? 'Submit' : 'Edit';
-        document.getElementsByClassName('profile-handle').disabled = newState === 'Edit' ? true : false;
-        document.getElementsByClassName('profile-description').disabled = newState === 'Edit' ? true : false;
-        let btn = document.getElementsByClassName('profile-btn');
-        btn.innerText = 'Submit';
-        this.setState({ btn: newState })
+        let handle = document.getElementById('profile-handle');
+        let description = document.getElementById('profile-description');
+        let newState = this.state;
+        let prevBtn = newState.btn;
+
+        newState.btn = (newState.btn === 'Edit') ? 'Submit' : 'Edit'; // switch state value
+
+        (newState.btn === 'Edit') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
+        (newState.btn === 'Edit') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
+
+        let button = document.getElementById('profile-btn');
+        button.innerText = (newState.btn === 'Submit') ? 'Submit' : "Edit";
+
+        debugger;
+        if (prevBtn === 'Submit') {
+            this.props.updateUser(this.state.user);
+            this.setState({ newState })
+        }
+        
     }
 
     render() {
+        const { email, bio, handle } = this.state.user;
+
         return (
             <div className='profile-container'>
                 <div className='separator'></div>
@@ -42,10 +63,10 @@ class Profile extends React.Component {
                             <div className='profile-avatar'>
                         </div>
                         </div>
-                        <input className='profile-handle' type="text" value="Baby Yoda" />
+                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='20'/>
                         <div>ELO +106</div>
-                        <textarea className='profile-description' value="I love owning noobs" rows="14" cols="50" />
-                        <button className='profile-btn' onClick={this.toggleEdit}>{this.state.btn}</button>
+                        <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
+                        <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>
                     
                     <div className='profile-board'>

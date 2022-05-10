@@ -14,8 +14,22 @@
     }
 }
 
+.left-nav-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.logo {
+    background-image: url('../../assets/images/logo.png');
+    width: 72px;
+    height: 72px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 .nav-title {
-    font-family: 'Toley-Hand';
+    font-family: 'Om-Botak';
     font-size: 34px;
     color: $coral;
     margin-left: 12px;
