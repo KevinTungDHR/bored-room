@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const Room = require("../../models/Room");
 
-
 const generateRoomCode = (length = 6) => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let roomCode = '';
@@ -39,6 +38,7 @@ router.post('/', passport.authenticate("jwt", { session: false }),
 });
 
 router.get('/', (req, res) => {
+
   Room.find()
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(rooms => {
@@ -50,17 +50,24 @@ router.get('/', (req, res) => {
 });
 
 router.patch('/:code/join', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let io = req.app.get("io");
+
   // Only add to room if they aren't already in it.
   // Need validations for game size in the future
   Room.findOneAndUpdate({ code: req.params.code },
     { $addToSet: { seatedUsers: { _id: req.user._id }}},
     { new: true })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .then(room => res.json(room))
+    .then(room => {
+      io.to(req.params.code).emit("user_sits", room)
+      res.json("success");
+    })
     .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
 })
 
 router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let io = req.app.get("io");
+
   Room.findOne({ code: req.params.code })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(room => {
@@ -76,7 +83,10 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
           .then(deleted => res.json(deleted))
       } else {
         room.save()
-        .then(room => res.json(room))
+          .then(room => {
+            io.to(req.params.code).emit("user_leaves", room);
+            res.json("success");
+          })
         .catch(errs => res.json(errs))
       }
     })

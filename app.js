@@ -44,26 +44,25 @@ if (process.env.NODE_ENV === 'production') {
 // proxySetup(app)
 const server = app.listen(port, () => console.log(`Server is running on port ${port}`));
 const io = require('socket.io')(server, { cors: { origin: "*"}});
+app.set("io", io);
 
 io.on("connection", socket => {
   console.log("New WS Connection");
-
-  socket.on("join_room", (data)=>{
-    console.log(`joining ${data}`)
-    socket.join(data);
-  });
-
   socket.emit('message', "Connected to Backend");
   socket.broadcast.emit('message', "User has connected");
 
+  socket.on("join_room", (data)=>{
+    console.log(`joining ${data}`);
+    socket.join(data);
+  });
+
   socket.on('send_message', (data) => {
     // socket.broadcast.emit("receive_message", data);
-
     socket.to(data.roomCode).emit("receive_message", data);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (reason) => {
     io.emit("message", "user has left");
-    console.log("User Disconnected");
+    console.log(`User Disconnected: ${reason}`);
   });
 });
