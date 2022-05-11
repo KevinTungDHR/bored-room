@@ -21,7 +21,6 @@ class NavBar extends React.Component {
     // Selectively render links dependent on whether the user is logged in
     getLinks() {
         if (this.props.loggedIn) {
-
             // if logged in display
             return (
                 <Dropdown logout={this.props.logout} user={this.props.user}/>

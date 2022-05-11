@@ -27,18 +27,33 @@ class Lobby extends React.Component {
     }
 
     render() {
-        const { rooms } = this.props
+        const { rooms } = this.props;
         return (
             <div className='lobby-background'>
-                <form onSubmit={this.handleSubmit}>
+                <form className='create-room' onSubmit={this.handleSubmit}>
                     <div>Create a Room</div>
-                    <input value={this.state.roomName} onChange={this.handleChange}/>
-                    <input type="submit" value="Create" />
+                    <div>
+                        <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange}/>
+                        <input className='create-btn' type="submit" value="Create" />
+                        
+                    </div>
                 </form>
 
-                <ul>
-                    {rooms.map(room => {
-                        return <li>{room.name} <Link to={`/rooms/${room.code}`}><button>Join Room</button></Link></li>
+                <ul className='lobby-rooms'>
+                    {rooms.slice().reverse().map((room, idx) => {
+                        return <li key={idx} className='room-container'>
+                            <h1>{room.name}</h1>
+                            <ul>
+                                {room.seatedUsers.map((user) => {
+                                    return (
+                                        <li>{user.handle + " " + user.eloRating}</li>
+
+                                    )
+                                })}
+                            </ul>
+                           
+                            <Link to={`/rooms/${room.code}`}><button>Join Room</button></Link>
+                        </li>
                     })}
                 </ul>
                 <div className='lobby-game-1'>

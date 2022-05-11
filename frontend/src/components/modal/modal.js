@@ -28,7 +28,7 @@ function Modal ({ modal, user, closeModal, updateUser }) {
 
 const mapStateToProps = state => ({
     modal: state.ui.modal,
-    user: state.users[state.session.user.id]
+    user: state.entities.users[state.session.user.id]
 })
 
 const mapDispatchToProps = dispatch => ({

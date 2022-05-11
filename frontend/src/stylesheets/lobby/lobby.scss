@@ -2,5 +2,82 @@
 @import '../fonts.scss';
 
 .lobby-background {
-    
+    background-image: url(../../assets/images/game_table.jpg);
+    background-repeat: repeat-y;
+    font-family: "Really-Free";
+    font-size: 32px;
+    color: $text;
 }
+
+.create-room {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  div:first-child {
+    font-size: 56px;
+    font-family: 'Really-Free';
+    margin-top: 10px;
+    padding-right: 100px;
+    color: $title;
+  }
+
+  .create-room-input {
+    height: 40px;
+    width: 500px;
+    border: none;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+  }
+
+  .create-room-input:focus {
+    outline: none;
+    font-family: 'Really-Free';
+    font-size: 32px;
+    
+  }
+
+  .create-btn {
+    margin-left: 10px;
+    background-color: $seaweed;
+    height: 40px;
+    width: 100px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    border: none;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+  }
+
+}
+
+.lobby-rooms {
+  display: grid;
+  grid-template-columns: fit-content(300px) fit-content(300px) 1fr;
+  gap: 20px;
+  justify-content: space-evenly;
+  margin-left: 25%;
+
+  .room-container {
+    height: 300px;
+    width: 300px;
+    border-radius: 12px;
+
+    h1 {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 52px;
+      color: #000018;
+    }
+  }
+
+  @for $i from 1 through length($colors) {
+    .room-container:nth-child(#{length($colors)}n+#{$i}) {
+      background: nth($colors, $i)
+    }
+  }
+}
+
+
