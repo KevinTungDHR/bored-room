@@ -128,7 +128,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
   });
 })
 
-router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.patch('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   const { errors, isValid } = validateUpdateProfile(req.body);
   
   if (!isValid){
@@ -137,7 +137,8 @@ router.patch('/update-profile', passport.authenticate('jwt', {session: false}), 
 
   User.findById(req.user.id)
     .then(user => {
-      user.set(req.body)
+      user.set(res.body)
+      user.save()
       res.json(user)})
     .catch(errors => res.status(400).json({errors}))
 })

@@ -6,6 +6,7 @@ export const UPDATE_AVATAR = 'UPDATE_AVATAR';
 export const FETCH_USER = 'FETCH_USER';
 
 const patchUser = (user) => {
+    debugger
     return {
         type: UPDATE_USER,
         user

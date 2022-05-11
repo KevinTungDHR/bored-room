@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export const updateUser = (user) => {
-    return axios.patch('/api/users/update-profile', user)
+    debugger
+    return axios.patch('/api/users/profile', user)
 }
 
 export const fetchUser = (userId) => {
