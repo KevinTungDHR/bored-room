@@ -6,16 +6,16 @@ export const UPDATE_AVATAR = 'UPDATE_AVATAR';
 export const RECEIVE_USER = 'RECEIVE_USER';
 
 const patchUser = (user) => {
-    debugger
     return {
         type: UPDATE_USER,
         user
     }
 };
 
-const receiveUser = () => {
+const receiveUser = (user) => {
     return {
-        type: RECEIVE_USER
+        type: RECEIVE_USER,
+        user
     }
 }
 

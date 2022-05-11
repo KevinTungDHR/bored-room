@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import { updateUser, fetchUser } from '../../actions/user_actions';
-import { receiveErrors } from '../../actions/session_actions';
 
 import Profile from './profile';
 import { openModal } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
-    user: state.session.user
+    user: state.users[state.session.user.id],
+    // avatar: state.users[state.session.user.id].avatar
 });
 
 const mapDispatchToProps = dispatch => ({

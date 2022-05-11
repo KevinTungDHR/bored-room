@@ -10,7 +10,7 @@ const initialState = {
     user: {}
 };
 
-export default function (state = initialState, action) {
+const sessionApiReducer = (state = initialState, action) => {
     switch (action.type) {
         case RECEIVE_CURRENT_USER:
             return {
@@ -28,15 +28,9 @@ export default function (state = initialState, action) {
                 ...state,
                 isSignedIn: true
             }
-        case UPDATE_USER:
-            const { _id, handle, email, bio } = action.user.data;
-            let newState = Object.assign({}, state);
-            newState.user.id = _id;
-            newState.user.handle = handle;
-            newState.user.email = email;
-            newState.user.bio = bio;
-            return newState;
         default:
             return state;
     }
 }
+
+export default sessionApiReducer;

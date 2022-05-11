@@ -9,7 +9,7 @@ class Profile extends React.Component {
         super(props);
 
         this.state = {
-            user: this.props.user,    
+            user: this.props.user,
             btn: 'Edit',
             // currImg: 1
         }
@@ -18,10 +18,13 @@ class Profile extends React.Component {
         this.handleChangeBio = this.handleChangeBio.bind(this);
         this.handleChangeHandle = this.handleChangeHandle.bind(this);
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
+        this.profile = this.profile.bind(this);
     }
 
     componentDidMount() {
-        this.props.fetchUser();
+        this.props.fetchUser().then(() => {
+            this.setState({user: this.props.user})
+        });
     }
 
     handleChangeBio(e) {
@@ -68,19 +71,17 @@ class Profile extends React.Component {
         
     }
 
-    render() {
+    profile() {
         const avatars = {
             'noimage': user_prof,
             'yoda': yoda,
             'monkey': monkey,
             'socrates': socrates
         };
-
-        const { email, bio, handle, eloRating } = this.state.user;
-        const { avatar } = this.props.user;
-        // const urlString = `url('${images[this.state.currImg]}')`;
+        const { email, bio, handle, eloRating, avatar } = this.props.user;
+        debugger
         return (
-            <div className='profile-container'>
+        <div className='profile-container'>
                 <div className='separator'></div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>
@@ -126,6 +127,13 @@ class Profile extends React.Component {
                     </div>
                 </div>
             </div>
+        )
+    }
+
+    render() {
+        
+        return (
+            this.props.user && this.profile()
         )
     }
 }

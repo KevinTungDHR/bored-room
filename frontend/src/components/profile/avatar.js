@@ -13,7 +13,8 @@ class Avatar extends React.Component {
 
     handleClick(e) {
         e.preventDefault();
-        this.props.updateAvatar(e.target.value).then(() => 
+        this.props.user.avatar = e.target.value;
+        this.props.updateUser(this.props.user).then(() => 
             this.props.closeModal(),
             errors => receiveErrors(errors));
         
