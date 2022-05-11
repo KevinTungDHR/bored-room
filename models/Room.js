@@ -10,10 +10,10 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
-  joinedUsers: {
-    type: Array,
-    default: [],
-  },
+  joinedUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   gameStarted: {
     type: Boolean,
     required: true,

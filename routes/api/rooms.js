@@ -20,6 +20,9 @@ router.post('/', passport.authenticate("jwt", { session: false }),
     
     const newRoom = new Room({
       name: req.body.name,
+      joinedUsers: [{
+        _id: req.user._id
+      }],
       code: generateRoomCode()
     });
 
@@ -34,6 +37,7 @@ router.get('/', (req, res) => {
 
 router.get('/:code', (req, res) => {
   Room.findOne({ code: req.params.code })
+    .populate("joinedUsers")
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
     );
