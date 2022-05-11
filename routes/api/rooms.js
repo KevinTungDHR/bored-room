@@ -16,14 +16,21 @@ const generateRoomCode = (length = 6) => {
 };
 
 router.post('/', passport.authenticate("jwt", { session: false }), 
-  (req, res) => {
+  async (req, res) => {
     
+    let codeExists = true;
+    let roomCode;
+    while (codeExists){ 
+      roomCode = generateRoomCode()
+      codeExists = await Room.exists({ code: roomCode })
+    }
+
     const newRoom = new Room({
       name: req.body.name,
       joinedUsers: [{
         _id: req.user._id
       }],
-      code: generateRoomCode()
+      code: roomCode
     });
 
     newRoom.save().then(room => res.json(room));
@@ -35,7 +42,40 @@ router.get('/', (req, res) => {
     .catch(err => res.status(404).json({ noRoomsFound: "No Rooms Found"}));
 });
 
+const ObjectId = mongoose.Types.ObjectId;
+router.patch('/:code/join', passport.authenticate('jwt', {session: false}), (req, res) => {
+  // Only add to room if they aren't already in it.
+  // Need validations for game size in the future
+  Room.findOneAndUpdate({ code: req.params.code },
+    { $addToSet: { joinedUsers: { _id: req.user._id }}},
+    { new: true })
+    .then(room => res.json(room))
+    .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
+})
+
+router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Room.findOne({ code: req.params.code })
+    .then(room => {
+      if(!room) {
+        return res.status(404).json("No room");
+      }
+
+      room.joinedUsers.pull(req.user._id)
+
+      // Delete the room if empty. Might need to change json response
+      if(room.joinedUsers.length < 1) {
+        Room.findOneAndDelete({ code: req.params.code })
+          .then(deleted => res.json(deleted))
+      } else {
+        room.save()
+        .then(room => res.json(room))
+      }
+    })
+})
+
+
 router.get('/:code', (req, res) => {
+  // populate will join the associated ref for their name.
   Room.findOne({ code: req.params.code })
     .populate("joinedUsers")
     .then(room => res.json(room))
