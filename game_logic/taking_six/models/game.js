@@ -7,18 +7,8 @@ const TakingSixGameSchema = new Schema({
     required: true
   },
   deck: [{
-    cardId: {
-      type: Schema.Types.ObjectId,
-      ref: 'cards'
-    },
-    value: {
-      type: Number,
-      required: true
-    },
-    bulls: {
-      type: Number,
-      required: true
-    },
+    value: Number,
+    bulls: Number,
   }],
   players: [{
     userId: {
@@ -34,36 +24,26 @@ const TakingSixGameSchema = new Schema({
       required: true
     },
     hand: [{
-      cardId: {
-        type: Schema.Types.ObjectId,
-        ref: 'cards'
-      },
-      value: {
-        type: Number,
-        required: true
-      },
-      bulls: {
-        type: Number,
-        required: true
-      },
+      value: Number,
+      bulls: Number,
     }],
     pile: [{
-      cardId: {
-        type: Schema.Types.ObjectId,
-        ref: 'cards'
-      },
-      value: {
-        type: Number,
-        required: true
-      },
-      bulls: {
-        type: Number,
-        required: true
-      },
-    }]
+      value: Number,
+      bulls: Number,
+    }],
+    chosenCard: {
+      value: Number,
+      bulls: Number,
+    }
   }],
+  playedCards: [[]],
+  rows: [[{
+    value: Number,
+    bulls: Number,
+  }]],
+  currentState: Number
 },  {
     timestamps: true
-})
+});
 
-module.exports = TakingSixGame = mongoose.model("TakingSixGame", TakingSixGameSchema)
+module.exports = TakingSixGame = mongoose.model("TakingSixGame", TakingSixGameSchema);

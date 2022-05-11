@@ -5,12 +5,9 @@ import configureStore from './store/store';
 import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
-<<<<<<< HEAD
 import TakingSixGame from './logic_testing/taking_six_game';
 import state from './logic_testing/taking_six_state';
-=======
 import { createRoom, fetchAllRooms, fetchRoom, joinRoom, leaveRoom } from './actions/room_actions';
->>>>>>> main
 
 document.addEventListener('DOMContentLoaded', () => {
     let store;

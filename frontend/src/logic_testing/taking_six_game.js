@@ -1,5 +1,5 @@
 const takingSixState = require('./taking_six_state');
-const seedCards = require('./cards')
+const seedCards = require('./cards');
 
 class TakingSixGame {
   constructor(data){
@@ -187,7 +187,6 @@ class TakingSixGame {
   takeRow(data){
     const [playerId, card] = this.playedCards.shift();
     const player = this.players.find(p => p.id === playerId);
-    debugger;
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
 
@@ -266,3 +265,4 @@ class TakingSixGame {
 
 
 module.exports = TakingSixGame;
+
