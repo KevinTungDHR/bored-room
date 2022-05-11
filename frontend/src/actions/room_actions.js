@@ -11,7 +11,7 @@ const receiveRooms = (rooms) => {
   }
 };
 
-const receiveRoom = (room) => {
+export const receiveRoom = (room) => {
   return {
     type: RECEIVE_ROOM,
     room
