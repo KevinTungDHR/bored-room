@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 export const updateUser = (user) => {
-    debugger
     return axios.patch('/api/users/profile', user)
 }
 
-export const fetchUser = (userId) => {
+export const fetchUser = () => {
     return axios.get('/api/users/profile')
 }
 

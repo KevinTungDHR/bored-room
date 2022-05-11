@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { updateUser } from '../../actions/user_actions';
+import { updateUser, fetchUser } from '../../actions/user_actions';
 import { receiveErrors } from '../../actions/session_actions';
 
 import Profile from './profile';
@@ -11,7 +11,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
     updateUser: user => dispatch(updateUser(user)),
-    openModal: (modal) => dispatch(openModal(modal))
+    openModal: (modal) => dispatch(openModal(modal)),
+    fetchUser: () => dispatch(fetchUser())
     // receiveErrors: errors => dispatch(receiveErrors(errors))
 })
 

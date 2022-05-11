@@ -3,7 +3,7 @@ import * as APIUtil from '../util/user_api_util';
 
 export const UPDATE_USER = "UPDATE_USER";
 export const UPDATE_AVATAR = 'UPDATE_AVATAR';
-export const FETCH_USER = 'FETCH_USER';
+export const RECEIVE_USER = 'RECEIVE_USER';
 
 const patchUser = (user) => {
     debugger
@@ -13,11 +13,23 @@ const patchUser = (user) => {
     }
 };
 
+const receiveUser = () => {
+    return {
+        type: RECEIVE_USER
+    }
+}
+
 const receiveAvatar = (avatar) => {
     return {
         type: UPDATE_AVATAR,
         avatar
     }
+}
+
+export const fetchUser = () => dispatch => {
+    return APIUtil.fetchUser()
+        .then(res => dispatch(receiveUser(res)),
+        errors => dispatch(receiveErrors(errors)))
 }
 
 export const updateUser = user => dispatch => {

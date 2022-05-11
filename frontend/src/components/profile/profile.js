@@ -20,6 +20,10 @@ class Profile extends React.Component {
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
     }
 
+    componentDidMount() {
+        this.props.fetchUser();
+    }
+
     handleChangeBio(e) {
         let newState = this.state;
         newState.user.bio = e.target.value;
