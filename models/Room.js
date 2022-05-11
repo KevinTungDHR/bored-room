@@ -10,7 +10,7 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
-  joinedUsers: [{
+  seatedUsers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
