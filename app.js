@@ -22,8 +22,6 @@ require('./config/passport')(passport);
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
 
-
-
 // async function postImage({image, description}) {
 //   const formData = new FormData();
 //   formData.append("avatar-image", image)

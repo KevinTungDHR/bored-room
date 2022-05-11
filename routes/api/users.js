@@ -143,7 +143,6 @@ router.patch('/update-avatar-image', upload.single('avatar-image'), passport.aut
     .then(user => {
       const file = req.file;
       const result = uploadFile(file);
-      res.send({imagePath: `/images/${result.Key}`})
       user.avatar = result.Key
       user.set(req.body)
       user.save()
