@@ -94,9 +94,9 @@ router.post('/login', (req, res) => {
               id: user.id, 
               handle: user.handle, 
               email: user.email,
-              avatar: req.user.avatar,
-              eloRating: req.user.eloRating,
-              bio: req.user.bio
+              avatar: user.avatar,
+              eloRating: user.eloRating,
+              bio: user.bio
             };
 
             jwt.sign(
@@ -126,6 +126,47 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     eloRating: req.user.eloRating,
     bio: req.user.bio
   });
+})
+
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+const { uploadFile, getFileStream } = require('../../s3');
+
+router.patch('/update-avatar-image', upload.single('avatar-image'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  const { errors, isValid } = validateUpdateAvatar(req.body);
+  
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
+  
+  User.findById(req.user.id)
+    .then(user => {
+      const file = req.file;
+      const result = uploadFile(file);
+      res.send({imagePath: `/images/${result.Key}`})
+      user.avatar = result.Key
+      user.set(req.body)
+      user.save()
+
+      const readStream = getFileStream(result.Key)
+      readStream.pipe(res)
+
+      res.json(user)})
+    .catch(errors => res.status(400).json({errors}))
+})
+
+
+
+router.patch('/images', upload.single('avatar-image'), (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
+
+  const file = req.file;
+  const description = req.body.description;
+  res.send('good')
 })
 
 router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -197,19 +238,6 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
       })
     .catch(errors => res.status(400).json({errors}))
   }
-})
-
-router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateAvatar(req.body);
-  
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
 })
 
 router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {

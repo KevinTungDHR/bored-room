@@ -6,6 +6,8 @@ const db = require('./config/keys').mongoURI;
 const users = require("./routes/api/users");
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 mongoose
   .connect(db, { useNewUrlParser: true })
@@ -19,3 +21,15 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
+
+
+
+// async function postImage({image, description}) {
+//   const formData = new FormData();
+//   formData.append("avatar-image", image)
+//   formData.append("description", description)
+
+//   const result = await axios.post('/images', 
+//     formData, {headers: {'Content-Type': 'multipart/form-data'}})
+//   return result.data
+// }
