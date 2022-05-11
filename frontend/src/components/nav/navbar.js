@@ -9,6 +9,10 @@ class NavBar extends React.Component {
         this.getLinks = this.getLinks.bind(this);
     }
 
+    componentDidMount() {
+        this.props.fetchUser();
+    }
+
     logoutUser(e) {
         e.preventDefault();
         this.props.logout();
@@ -40,7 +44,7 @@ class NavBar extends React.Component {
                     <Link to="/" className="nav-title"> Bored Room</Link>
                 </div>
                 
-                {this.getLinks()}
+                {this.props.user && this.getLinks()}
             </div>
         );
     }

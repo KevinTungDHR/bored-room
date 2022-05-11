@@ -129,9 +129,7 @@ class Profile extends React.Component {
         )
     }
 
-    render() {
-        debugger
-        
+    render() {        
         return (
             this.props.user && this.profile()
         )
