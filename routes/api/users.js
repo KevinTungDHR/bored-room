@@ -128,47 +128,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
   });
 })
 
-const multer = require('multer');
-const upload = multer({dest: 'uploads/'});
-const { uploadFile, getFileStream } = require('../../s3');
-
-router.patch('/update-avatar-image', upload.single('avatar-image'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateAvatar(req.body);
-  
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-  
-  User.findById(req.user.id)
-    .then(user => {
-      const file = req.file;
-      const result = uploadFile(file);
-      user.avatar = result.Key
-      user.set(req.body)
-      user.save()
-
-      const readStream = getFileStream(result.Key)
-      readStream.pipe(res)
-
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
-
-
-
-router.patch('/images', upload.single('avatar-image'), (req, res) => {
-  const { errors, isValid } = validateLoginInput(req.body);
-
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-
-  const file = req.file;
-  const description = req.body.description;
-  res.send('good')
-})
-
-router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.patch('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   const { errors, isValid } = validateUpdateProfile(req.body);
   
   if (!isValid){
@@ -178,37 +138,62 @@ router.patch('/update-profile', passport.authenticate('jwt', {session: false}), 
   User.findById(req.user.id)
     .then(user => {
       user.set(req.body)
+      user.save()
       res.json(user)})
     .catch(errors => res.status(400).json({errors}))
 })
 
-router.patch('/update-handle', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateHandle(req.body);
+const fs = require('fs')
+const util = require('util')
+const multer = require('multer')
+const upload = multer({ dest: 'avatar_uploads/' })
+
+router.patch('/update-avatar', upload.single('avatar'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  const { errors, isValid } = validateUpdateAvatar(req.body);
   
   if (!isValid){
     return res.status(400).json(errors);
   }
 
   User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
+  .then(user => {
+    const file = req.file;
+    user.avatar = file.path;
+    user.set(user.avatar)
+    user.save()
+    res.json(user)
+  })
+    
     .catch(errors => res.status(400).json({errors}))
 })
 
-router.patch('/update-email', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateEmail(req.body);
+// router.patch('/update-handle', passport.authenticate('jwt', {session: false}), (req, res) => {
+//   const { errors, isValid } = validateUpdateHandle(req.body);
   
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
+//   if (!isValid){
+//     return res.status(400).json(errors);
+//   }
 
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
+//   User.findById(req.user.id)
+//     .then(user => {
+//       user.set(req.body)
+//       res.json(user)})
+//     .catch(errors => res.status(400).json({errors}))
+// })
+
+// router.patch('/update-email', passport.authenticate('jwt', {session: false}), (req, res) => {
+//   const { errors, isValid } = validateUpdateEmail(req.body);
+  
+//   if (!isValid){
+//     return res.status(400).json(errors);
+//   }
+
+//   User.findById(req.user.id)
+//     .then(user => {
+//       user.set(req.body)
+//       res.json(user)})
+//     .catch(errors => res.status(400).json({errors}))
+// })
 
 router.patch('/update-password', passport.authenticate('jwt', {session: false}), (req, res) => {
   const { errors, isValid } = validateUpdatePassword(req.body);
@@ -239,20 +224,20 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
   }
 })
 
-router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {
+// router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {
   
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
+//   User.findById(req.user.id)
+//     .then(user => {
+//       user.set(req.body)
+//       res.json(user)})
+//     .catch(errors => res.status(400).json({errors}))
+// })
 
-router.patch('/update-elo-rating', passport.authenticate('jwt', {session: false}), (req, res) => {
+// router.patch('/update-elo-rating', passport.authenticate('jwt', {session: false}), (req, res) => {
   
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
+//   User.findById(req.user.id)
+//     .then(user => {
+//       user.set(req.body)
+//       res.json(user)})
+//     .catch(errors => res.status(400).json({errors}))
+// })
