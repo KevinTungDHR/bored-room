@@ -7,6 +7,7 @@
     font-family: "Really-Free";
     font-size: 32px;
     color: $text;
+    width: 100%;
 }
 
 .create-room {
@@ -16,7 +17,8 @@
   align-items: center;
 
   div:first-child {
-    font-size: 56px;
+    font-size: 62px;
+    font-weight: 600;
     font-family: 'Really-Free';
     margin-top: 10px;
     padding-right: 100px;
@@ -55,21 +57,45 @@
 
 .lobby-rooms {
   display: grid;
-  grid-template-columns: fit-content(300px) fit-content(300px) 1fr;
-  gap: 20px;
-  justify-content: space-evenly;
-  margin-left: 25%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 40px;
+  justify-content: center;
+  width: 80%;
+  margin: auto;
 
   .room-container {
     height: 300px;
     width: 300px;
     border-radius: 12px;
+    margin: auto;
+    margin-bottom: 20px;
+    position: relative;
 
     h1 {
       text-align: center;
       margin-top: 22px;
       font-size: 52px;
       color: #000018;
+    }
+
+    li {
+      margin-left: 10px;
+    }
+
+    .join-btn {
+      position: absolute;
+      top: 82%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      height: 30px;
+      width: 100px;
+      border-radius: 12px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+      border: none;
+      font-family: "Really-Free";
+      font-size: 32px;
+      cursor: pointer;
     }
   }
 

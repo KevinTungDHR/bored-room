@@ -43,16 +43,16 @@ class Lobby extends React.Component {
                     {rooms.slice().reverse().map((room, idx) => {
                         return <li key={idx} className='room-container'>
                             <h1>{room.name}</h1>
-                            <ul>
-                                {room.seatedUsers.map((user) => {
-                                    return (
-                                        <li>{user.handle + " " + user.eloRating}</li>
-
-                                    )
-                                })}
-                            </ul>
-                           
-                            <Link to={`/rooms/${room.code}`}><button>Join Room</button></Link>
+                            <div>
+                                <ul>
+                                    {room.seatedUsers.map((user, i) => {
+                                        return (
+                                            <li key={i}>{user.handle + " " + user.eloRating}</li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
                         </li>
                     })}
                 </ul>

@@ -2,8 +2,23 @@
 @import '../fonts.scss';
 
 .profile-container {
-    height: 90vh;
+    height: 100vh;
+    width: 100%;
     color: $text;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.separator {
+    button {
+        border: 2px solid $coral;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        color: $coral;
+        margin-left: 10px;
+        margin-top: 4px;
+    }
 }
 
 .separator {
@@ -16,7 +31,6 @@
     justify-content: space-evenly;
     align-items: flex-start;
     width: 95%;
-    margin: 0px auto;
     height: 90%;
 }
 
