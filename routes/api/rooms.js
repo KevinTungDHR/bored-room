@@ -38,6 +38,7 @@ router.post('/', passport.authenticate("jwt", { session: false }),
 
 router.get('/', (req, res) => {
   Room.find()
+    .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(rooms => res.json(rooms))
     .catch(err => res.status(404).json({ noRoomsFound: "No Rooms Found"}));
 });
@@ -77,7 +78,7 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
 router.get('/:code', (req, res) => {
   // populate will join the associated ref for their name.
   Room.findOne({ code: req.params.code })
-    .populate("seatedUsers")
+    .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
     );
