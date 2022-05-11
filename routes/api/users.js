@@ -94,9 +94,9 @@ router.post('/login', (req, res) => {
               id: user.id, 
               handle: user.handle, 
               email: user.email,
-              avatar: req.user.avatar,
-              eloRating: req.user.eloRating,
-              bio: req.user.bio
+              avatar: user.avatar,
+              eloRating: user.eloRating,
+              bio: user.bio
             };
 
             jwt.sign(
