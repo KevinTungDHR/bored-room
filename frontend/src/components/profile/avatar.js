@@ -12,15 +12,16 @@ class Avatar extends React.Component {
     }
 
     handleClick(e) {
-        e.preventDefault();
-        this.props.user.avatar = e.target.value;
-        this.props.updateUser(this.props.user).then(() => 
+        e.preventDefault()
+        const user = Object.assign({}, this.props.user, { avatar: e.target.value});
+        this.props.updateUser(user).then(() => 
             this.props.closeModal(),
             errors => receiveErrors(errors));
         
     }
 
     render() {
+        
         return (
             <div className='avatar-outer'>
                 <div className="avatar-container">

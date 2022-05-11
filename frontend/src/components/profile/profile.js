@@ -79,7 +79,6 @@ class Profile extends React.Component {
             'socrates': socrates
         };
         const { email, bio, handle, eloRating, avatar } = this.props.user;
-        debugger
         return (
         <div className='profile-container'>
                 <div className='separator'></div>
@@ -131,6 +130,7 @@ class Profile extends React.Component {
     }
 
     render() {
+        debugger
         
         return (
             this.props.user && this.profile()

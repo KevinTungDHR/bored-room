@@ -2,14 +2,17 @@ import { RECEIVE_USER, UPDATE_AVATAR, UPDATE_USER } from '../actions/user_action
 
 const usersReducer = (state = {}, action) => {
     Object.freeze(state);
+    const nextState = Object.assign({}, state)
     switch (action.type) {
         case RECEIVE_USER:
-            return {[action.user.data.id]: action.user.data};
+            nextState[action.user.data.id] = action.user.data
+            return nextState;
         case UPDATE_AVATAR:
             return Object.assign({}, state, {[state.session.user.avatar]: action.avatar});
         case UPDATE_USER:
-            let newState = Object.assign({}, state);
-            return newState;
+            debugger
+            nextState[action.user.data._id] = action.user.data
+            return nextState;
         default:
             return state;
     };
