@@ -8,7 +8,7 @@
     background-image: url('../../assets/images/game_table.jpg');
     font-family: 'Really-Free';
     font-size: 32px;
-}
+}   
 
 .signup-form {
     display: flex;
@@ -17,7 +17,7 @@
     align-items: center;
     margin-top: 28px;
     width: 40%;
-    max-height: 500px;
+    height: 700px;
     border-radius: 12px;
     background-color: $champ;
 
@@ -28,6 +28,10 @@
         align-items: center;
         width: 90%;
         border-radius: 12px;
+
+        h1 {
+            font-size: 58px;
+        }
     }
 
     input {
@@ -37,6 +41,8 @@
         opacity: 0.8;
         margin: 8px 0px;
         border-radius: 8px;
+        outline: none;
+        text-indent: 12px;
     }
 
     input:first-child {
@@ -55,9 +61,15 @@
         font-size: inherit;
     }
 
-    input:focus {
-        border: none;
+    input[type=password] {
+        font-size: 32px;
     }
+}
+
+.session-error {
+    font-size: 28px;
+    margin-top: 8px;
+    color: red;
 }
 
 .signup-btn {
@@ -79,3 +91,4 @@
     color: $turq;
     background-color: $coral;
 }
+

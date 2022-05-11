@@ -5,8 +5,12 @@ import configureStore from './store/store';
 import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
+<<<<<<< HEAD
 import TakingSixGame from './logic_testing/taking_six_game';
 import state from './logic_testing/taking_six_state';
+=======
+import { createRoom, fetchAllRooms, fetchRoom, joinRoom, leaveRoom } from './actions/room_actions';
+>>>>>>> main
 
 document.addEventListener('DOMContentLoaded', () => {
     let store;
@@ -39,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Render our root component and pass in the store as a prop
 
+    // Testing Start
     window.getState = store.getState;
     const game = new TakingSixGame();
     game.setupNewGame([{id: 1},{ id: 2}])
@@ -49,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.state = game.getState;
 
 
+    window.dispatch = store.dispatch;
+    window.fetchAllRooms = fetchAllRooms;
+    window.createRoom = createRoom;
+    window.fetchRoom = fetchRoom;
+    window.joinRoom = joinRoom;
+    window.leaveRoom = leaveRoom;
+    // Testing end
     const root = document.getElementById('root');
 
     ReactDOM.render(<Root store={store} />, root);

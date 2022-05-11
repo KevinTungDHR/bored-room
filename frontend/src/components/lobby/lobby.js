@@ -3,22 +3,51 @@ import { motion } from "framer-motion";
 import { Link } from 'react-router-dom';
 
 class Lobby extends React.Component {
-    render() {
-        return (
-            <div className="main-background">
-                <div className="main-card">
-                    <motion.div
-                        className='main-welcome'
-                        animate={{ rotate: 360, scale: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] }}
-                        transition={{ duration: 0.5 }}>
-                        <div>
-                            <h1>Welcome to</h1>
-                            <span>Bored Room</span>
-                            <p>Play your favorite board games with friends and family!</p>
-                        </div>
-                    </motion.div>
-                </div>
+    constructor(props){
+        super(props)
+        this.state = { roomName: "" };
 
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(e){
+        this.setState({ roomName: e.target.value })
+    }
+
+    handleSubmit(e){
+        e.preventDefault();
+        if(this.state.roomName !== ""){
+            this.props.createRoom(this.state.roomName)
+        }
+    }
+
+    componentDidMount(){
+        this.props.fetchAllRooms()
+    }
+
+    render() {
+        const { rooms } = this.props
+        return (
+            <div className='lobby-background'>
+                <form onSubmit={this.handleSubmit}>
+                    <div>Create a Room</div>
+                    <input value={this.state.roomName} onChange={this.handleChange}/>
+                    <input type="submit" value="Create" />
+                </form>
+
+                <ul>
+                    {rooms.map(room => {
+                        return <li>{room.name} <Link to={`/rooms/${room.code}`}><button>Join Room</button></Link></li>
+                    })}
+                </ul>
+                <div className='lobby-game-1'>
+
+                </div>
+                
+                <div className="lobby-game-2">
+                    
+                </div>
             </div>
         );
     }

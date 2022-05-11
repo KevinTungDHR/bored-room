@@ -14,8 +14,7 @@ class LoginForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.renderErrors = this.renderErrors.bind(this);
     }
-
-    // Once the user has been authenticated, redirect to the Tweets page
+    
     componentWillReceiveProps(nextProps) {
         if (nextProps.currentUser === true) {
             this.props.history.push('/lobby');
@@ -42,7 +41,7 @@ class LoginForm extends React.Component {
         };
         
         this.props.login(user).then(() => 
-            this.props.history.push("/lobby"));
+            (errors) => this.props.receiveErrors(errors));
     }
 
     // Render the session errors if there are any
@@ -50,7 +49,7 @@ class LoginForm extends React.Component {
         return (
             <ul>
                 {Object.keys(this.state.errors).map((error, i) => (
-                    <li key={`error-${i}`}>
+                    <li className='session-error' key={`error-${i}`}>
                         {this.state.errors[error]}
                     </li>
                 ))}
