@@ -31,12 +31,21 @@ class Lobby extends React.Component {
         return (
             <div className='lobby-background'>
                 <form className='create-room' onSubmit={this.handleSubmit}>
-                    <div>Create a Room</div>
-                    <div>
-                        <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange}/>
-                        <input className='create-btn' type="submit" value="Create" />
-                        
+                    <div className='flex'>
+                        <div>Create a Room</div>
+                        <div>
+                            <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} />
+                            <input className='create-btn' type="submit" value="Create" />
+                        </div>
                     </div>
+                    <div className='flex'>
+                        <div>Search for a Room</div>
+                        <div>
+                            <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} />
+                            <input className='create-btn' type="submit" value="Search" />
+                        </div>
+                    </div>
+                    
                 </form>
 
                 <ul className='lobby-rooms'>
