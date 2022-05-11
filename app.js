@@ -11,6 +11,8 @@ const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
 const proxySetup = require('./config/setupProxyFile')
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 mongoose
   .connect(db, { useNewUrlParser: true })
@@ -24,13 +26,6 @@ app.use("/api/users", users);
 app.use("/api/rooms", rooms);
 app.use(passport.initialize());
 require('./config/passport')(passport);
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('frontend/build'));
-  app.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-  })
-}
 
 
 if (process.env.NODE_ENV === 'production') {
@@ -67,3 +62,13 @@ io.on("connection", socket => {
     console.log("User Disconnected");
   });
 });
+
+// async function postImage({image, description}) {
+//   const formData = new FormData();
+//   formData.append("avatar-image", image)
+//   formData.append("description", description)
+
+//   const result = await axios.post('/images', 
+//     formData, {headers: {'Content-Type': 'multipart/form-data'}})
+//   return result.data
+// }
