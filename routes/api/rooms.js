@@ -33,7 +33,9 @@ router.post('/', passport.authenticate("jwt", { session: false }),
       code: roomCode
     });
 
-    newRoom.save().then(room => res.json(room));
+    newRoom.save()
+      .then(room => res.json(room))
+      .catch(errs => res.json(errs))
 });
 
 router.get('/', (req, res) => {
@@ -41,7 +43,7 @@ router.get('/', (req, res) => {
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(rooms => {
 
-      const objRooms = rooms.reduce((acc, curr) => (acc[curr._id] = curr, acc), {});
+      const objRooms = rooms.reduce((acc, curr) => (acc[curr.code] = curr, acc), {});
       return res.json(objRooms)
     })
     .catch(err => res.status(404).json({ noRoomsFound: "No Rooms Found"}));
@@ -75,6 +77,7 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
       } else {
         room.save()
         .then(room => res.json(room))
+        .catch(errs => res.json(errs))
       }
     })
 })

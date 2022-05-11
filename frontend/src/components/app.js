@@ -9,7 +9,7 @@ import ProfileContainer from './profile/profile_container';
 import MainPage from './main/main_page';
 import Footer from './footer/footer';
 import '../stylesheets/app.scss';
-import RoomContainer from './rooms/room_container';
+import Room from './rooms/room';
 
 const App = () => (
     <div>
@@ -17,7 +17,7 @@ const App = () => (
         <Switch>
             <AuthRoute exact path="/login" component={LoginFormContainer} />
             <AuthRoute exact path="/register" component={SignupFormContainer} />
-            <ProtectedRoute path="/rooms/:code" component={RoomContainer} />
+            <ProtectedRoute path="/rooms/:code" component={Room} />
             <ProtectedRoute path="/profile" component={ProfileContainer} />
             <ProtectedRoute path="/lobby" component={LobbyContainer} />
             <AuthRoute path="/" component={MainPage} />

@@ -10,7 +10,7 @@ const roomReducer = (state = {}, action) => {
     case RECEIVE_ROOMS:
       return action.rooms;
     case RECEIVE_ROOM:
-      nextState[action.room._id] = action.room;
+      nextState[action.room.code] = action.room;
       return nextState;
     default:
       return state;
