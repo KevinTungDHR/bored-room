@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Testing Start
     window.getState = store.getState;
     const game = new TakingSixGame();
-    game.setupNewGame([{id: 1},{ id: 2}])
+    game.setupNewGame([{_id: 1},{ _id: 2}]);
     window.game =  game;
     window.player1 = game.players[0];
     window.player2 = game.players[1];

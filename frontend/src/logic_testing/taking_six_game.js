@@ -2,7 +2,7 @@ const takingSixState = require('./taking_six_state');
 const seedCards = require('./cards');
 
 class TakingSixGame {
-  constructor(data){
+  constructor(data) {
     this.name = "Taking Six";
     if (data) {
       this.deck = data.deck;
@@ -15,96 +15,93 @@ class TakingSixGame {
     this.getState = this.getState.bind(this);
   }
 
-  setupNewGame(players){
+  async setupNewGame(players) {
     this.name = "Taking Six";
     this.playedCards = [];
     this.rows = [];
     this.players = [];
-    this.cleanDeck = seedCards
 
-      
-    this.deck = this.cleanDeck.slice();
+    this.deck = seedCards;
 
     this.shuffleCards();
     players.forEach((player) => {
       this.players.push({
-       id: player.id,
-       activePlayer: false,
-       score: 66,
-       pile: [],
-       hand: this.deck.splice(0, 11),
-       choosenCard: null
+        _id: player._id,
+        activePlayer: false,
+        score: 66,
+        pile: [],
+        hand: this.deck.splice(0, 11),
+        choosenCard: null
       });
     });
 
-    
-    this.currentState = takingSixState[2];
+
+    this.currentState = 2;
     // Create 4 rows
-    for(let i = 0; i < 4; i++){
+    for (let i = 0; i < 4; i++) {
       this.rows.push([this.deck.pop()]);
     }
 
     this.gameOver = false;
   }
 
-  shuffleCards(){
+  shuffleCards() {
     // Fisher-Yates shuffle. Make sure to skip the first element for more even randomness.
-    for(let i = this.deck.length - 1; i > 0; i--){
+    for (let i = this.deck.length - 1; i > 0; i--) {
       let randomIdx = Math.floor(Math.random() * i);
       [this.deck[i], this.deck[randomIdx]] = [this.deck[randomIdx], this.deck[i]];
     }
   }
 
-  setState(nextState){
+  setState(nextState) {
     this.currentState = nextState;
   }
 
-  getState(){
-    return this.currentState;
+  getState() {
+    return takingSixState[this.currentState];
   }
 
   // Main function to handle player input, is this necessary?
-  handleEvent(action, args){
-    if(this.currentState.type === 'automated'){
+  handleEvent(action, args) {
+    if (this.getState().type === 'automated') {
       return this[action](args);
-    } 
+    }
 
-    if (!this.currentState.possibleActions.includes(action)){
+    if (!this.getState().possibleActions.includes(action)) {
       return "Not a valid action";
     }
 
     return this[action](args);
-
   }
 
-  getActivePlayer(){
-    
+  getActivePlayer() {
+
   }
 
   // Automated Actions
- 
-  turnCleanUp(){
+
+  turnCleanUp() {
     this.players.forEach((player) => {
       player.choosenCard = null;
     });
   }
 
-  calculateScore(player, cards){
+  calculateScore(player, cards) {
     const bulls = cards
-        .map(card => card.bulls)
-        .reduce((prev, curr) => prev + curr);
+      .map(card => card.bulls)
+      .reduce((prev, curr) => prev + curr);
     player.score -= bulls;
   }
 
-  isRoundOver(){
+  isRoundOver() {
     return this.players.every(player => player.hand.length === 0);
   }
 
-  isGameOver(){
+  isGameOver() {
     return this.players.some(player => player.score <= 0);
   }
 
-  orderPlayedCards(){
+  orderPlayedCards() {
     this.playedCards.sort((a, b) => (a[1].value < b[1].value) ? -1 : 1);
   }
 
@@ -113,20 +110,20 @@ class TakingSixGame {
   }
 
   // Game Rules checks
-  cardSmallerThanAllRows(card){
+  cardSmallerThanAllRows(card) {
     return this.rows.every(row => row.slice(-1)[0].value > card.value);
     // Could also use Array.at()
   }
 
-  findClosestRow(card){
+  findClosestRow(card) {
     let rowNum = 0;
     let diff = 104;
-    for(let i = 0; i < this.rows.length; i++){
+    for (let i = 0; i < this.rows.length; i++) {
       const lastCardInRow = this.rows[i].slice(-1)[0];
-      if(lastCardInRow.value < card.value && 
-        card.value - lastCardInRow.value < diff){
-          rowNum = i;
-          diff = card.value - lastCardInRow.value;
+      if (lastCardInRow.value < card.value &&
+        card.value - lastCardInRow.value < diff) {
+        rowNum = i;
+        diff = card.value - lastCardInRow.value;
       }
     }
 
@@ -135,134 +132,114 @@ class TakingSixGame {
 
 
   // User actions
-  addCardToRow(card, rowNum){
+  addCardToRow(card, rowNum) {
     this.rows[rowNum].push(card);
   }
 
-  takeFullRow(player, rowNum){
-    const cards = this.rows[rowNum].splice(0,5)
+  takeFullRow(player, rowNum) {
+    const cards = this.rows[rowNum].splice(0, 5)
     this.calculateScore(player, cards)
     player.pile.push.apply(player.pile, cards);
   }
 
-  takeAllRowCards(player, rowNum){
-    const cards =  this.rows[rowNum].splice(0);
+  takeAllRowCards(player, rowNum) {
+    const cards = this.rows[rowNum].splice(0);
     this.calculateScore(player, cards)
     player.pile.push.apply(player.pile, cards);
   }
 
   chooseCard(player, card) {
-    const selectedPlayer = this.players.filter((p) => p.id ===  player.id)[0];
+    const selectedPlayer = this.players.filter((p) => p._id === player._id)[0];
     selectedPlayer.choosenCard = card;
   }
 
   // State Actions
-  playCard(data){
+  playCard(data) {
     this.chooseCard(data.player, data.card);
-    if (this.playersHaveChosenCards()){
+    if (this.playersHaveChosenCards()) {
       this.players.forEach(player => {
-        this.playedCards.push([player.id, player.choosenCard]);
+        this.playedCards.push([player._id, player.choosenCard]);
         player.hand = player.hand.filter(card => card.value !== player.choosenCard.value)
       });
       this.orderPlayedCards();
       // Organize playedCards To keep track of playerId
 
-      const nextState = takingSixState[this.currentState.transitions.CHECK_PLAYED_CARDS];
+      const nextState = this.getState().transitions.CHECK_PLAYED_CARDS;
       this.setState(nextState);
     }
   }
 
-  checkPlayedCards(){
+  checkPlayedCards() {
     const nextCard = this.playedCards[0][1];
 
-    if(this.cardSmallerThanAllRows(nextCard)){
-      const nextState = takingSixState[this.currentState.transitions.TAKE_ROW];
+    if (this.cardSmallerThanAllRows(nextCard)) {
+      const nextState = this.getState().transitions.TAKE_ROW;
       this.setState(nextState);
     } else {
-      const nextState = takingSixState[this.currentState.transitions.AUTO_PLACE_CARD];
+      const nextState = this.getState().transitions.AUTO_PLACE_CARD;
       this.setState(nextState);
     }
   }
 
-  takeRow(data){
+  takeRow(data) {
     const [playerId, card] = this.playedCards.shift();
-    const player = this.players.find(p => p.id === playerId);
+    const player = this.players.find(p => p._id === playerId);
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
 
-    if(this.playedCards.length > 0){
-      const nextState = takingSixState[this.currentState.transitions.CHECK_PLAYED_CARDS];
+    if (this.playedCards.length > 0) {
+      const nextState = this.getState().transitions.CHECK_PLAYED_CARDS;
       this.setState(nextState);
     }
   }
 
-  autoPlaceCard(){
+  autoPlaceCard() {
     const [playerId, card] = this.playedCards.shift();
 
     const rowNum = this.findClosestRow(card);
     this.addCardToRow(card, rowNum);
-    
-    if(this.rows[rowNum].length > 5){
-      const player = this.players.find(p => p.id === playerId);
+
+    if (this.rows[rowNum].length > 5) {
+      const player = this.players.find(p => p._id === playerId);
       this.takeFullRow(player, rowNum);
     }
 
-    if(this.playedCards.length > 0){
-      const nextState = takingSixState[this.currentState.transitions.CHECK_PLAYED_CARDS];
+    if (this.playedCards.length > 0) {
+      const nextState = this.getState().transitions.CHECK_PLAYED_CARDS;
       this.setState(nextState);
     } else {
-      const nextState = takingSixState[this.currentState.transitions.CHECK_TURN_END];
+      const nextState = this.getState().transitions.CHECK_TURN_END;
       this.setState(nextState);
     }
   }
 
-  checkTurnEnd(){
-    if(this.isRoundOver() && this.isGameOver()){
-      const nextState = takingSixState[this.currentState.transitions.GAME_END];
+  checkTurnEnd() {
+    if (this.isRoundOver() && this.isGameOver()) {
+      const nextState = this.getState().transitions.GAME_END;
       this.setState(nextState);
-    } else if(this.isRoundOver()){
-      const nextState = takingSixState[this.currentState.transitions.ROUND_SETUP];
+    } else if (this.isRoundOver()) {
+      const nextState = this.getState().transitions.ROUND_SETUP;
       this.setState(nextState);
     } else {
       this.turnCleanUp()
-      const nextState = takingSixState[this.currentState.transitions.PLAYER_CHOOSE_CARD];
+      const nextState = this.getState().transitions.PLAYER_CHOOSE_CARD;
       this.setState(nextState);
     }
   }
 
-  setupNewRound(){
+  setupNewRound() {
     this.players.forEach((player) => {
-      this.deck = this.deck.concat(player.pile)
+      this.deck = this.deck.concat(player.pile);
       player.pile = [];
       player.choosenCard = null;
     });
 
     this.shuffleCards();
-    this.players.forEach(player => player.hand = this.deck.splice(0, 11))
+    this.players.forEach(player => player.hand = this.deck.splice(0, 11));
 
-    const nextState = takingSixState[this.currentState.transitions.PLAYER_CHOOSE_CARD];
+    const nextState = this.getState().transitions.PLAYER_CHOOSE_CARD;
     this.setState(nextState);
   }
 }
 
-// const readline = require('readline');
-// const reader = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout
-// });
-
-// game = new TakingSixGame();
-// game.setupNewGame([{ id: 1 }, { id: 2 }, { id: 3 }])
-//   .then(() =>  mongoose.connection.close())
-//   .then(() => { 
-//     console.log(game.getState())
-//     reader.question(game.getState().description, answer => {
-//     game.handleEvent(answer);
-//   })
-//   })
-
-
-
-
 module.exports = TakingSixGame;
-
