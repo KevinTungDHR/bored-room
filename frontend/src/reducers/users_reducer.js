@@ -1,10 +1,11 @@
-// case UPDATE_USER:
-// const { _id, handle, email, bio } = action.user.data;
-// let newState = Object.assign({}, state);
-// debugger;
-// newState.user.id = _id;
-// newState.user.handle = handle;
-// newState.user.email = email;
-// newState.user.bio = bio;
-// debugger
-// return newState;
+import { UPDATE_AVATAR, UPDATE_USER } from '../actions/user_actions';
+
+export default function (state = initialState, action) {
+    Object.freeze(state);
+    switch (action.type) {
+        case UPDATE_AVATAR:
+            return Object.assign({}, state, {[state.session.user.avatar]: action.avatar} )
+        default:
+            return state;
+    }
+}

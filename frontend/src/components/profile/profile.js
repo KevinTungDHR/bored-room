@@ -1,13 +1,19 @@
 import React from 'react';
+import yoda from '../../assets/images/yoda.png';
+import monkey from '../../assets/images/coolMonkey.png';
+import socrates from '../../assets/images/socrates.png';
+import user_prof from '../../assets/images/user_prof.png';
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             user: this.props.user,    
-            btn: 'Edit'
+            btn: 'Edit',
+            // currImg: 1
         }
-        // this.generateGrid = this.generateGrid.bind(this);
+
         this.toggleBtn = this.toggleBtn.bind(this);
         this.handleChangeBio = this.handleChangeBio.bind(this);
         this.handleChangeHandle = this.handleChangeHandle.bind(this);
@@ -45,14 +51,13 @@ class Profile extends React.Component {
 
         (newState.btn === 'Edit') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
         (newState.btn === 'Edit') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
-        (newState.btn === 'Edit') ? email.setAttribute("disabled", "true") : description.removeAttribute("disabled");
+        (newState.btn === 'Edit') ? email.setAttribute("disabled", "true") : email.removeAttribute("disabled");
 
         let button = document.getElementById('profile-btn');
         button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit";
         button.className = (prevBtn === 'Edit') ? 'profile-save-btn' : 'profile-edit-btn';
 
         if (prevBtn === 'Save') {
-            debugger;
             this.props.updateUser(this.state.user);
             this.setState({ newState })
         }
@@ -60,17 +65,25 @@ class Profile extends React.Component {
     }
 
     render() {
-        const { email, bio, handle, eloRating } = this.state.user;
+        const avatars = {
+            'noimage': user_prof,
+            'yoda': yoda,
+            'monkey': monkey,
+            'socrates': socrates
+        };
 
-        // "url(" + { Background } + ")"
+        const { email, bio, handle, eloRating } = this.state.user;
+        const { avatar } = this.props.user;
+        // const urlString = `url('${images[this.state.currImg]}')`;
         return (
             <div className='profile-container'>
                 <div className='separator'></div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>
-                        <div className='avatar-ctnr'>
-                            <div className='profile-avatar' >
-                        </div>
+                        <div className='avatar-image'>
+                            <div className='profile-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}} >
+                                <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>
+                            </div>
                         </div>
                         <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
                         <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />

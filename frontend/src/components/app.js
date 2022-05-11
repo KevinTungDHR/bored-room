@@ -8,10 +8,12 @@ import LobbyContainer from './lobby/lobby_container';
 import ProfileContainer from './profile/profile_container';
 import MainPage from './main/main_page';
 import Footer from './footer/footer';
+import Modal from './modal/modal';
 import '../stylesheets/app.scss';
 
 const App = () => (
     <div>
+        <Modal />
         <NavBarContainer />
         <Switch>
             <AuthRoute exact path="/login" component={LoginFormContainer} />

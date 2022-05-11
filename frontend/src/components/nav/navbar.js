@@ -20,7 +20,7 @@ class NavBar extends React.Component {
 
             // if logged in display
             return (
-                <Dropdown logout={this.props.logout}/>
+                <Dropdown logout={this.props.logout} user={this.props.user}/>
             );
         } else {
             return (
