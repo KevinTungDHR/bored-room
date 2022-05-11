@@ -91,8 +91,8 @@ router.post('/login', (req, res) => {
         .then(isMatch => {
           if (isMatch) {
             const payload = {
-              id: user.id, 
-              handle: user.handle, 
+              id: user.id,
+              handle: user.handle,
               email: user.email,
               avatar: user.avatar,
               eloRating: user.eloRating,
@@ -128,7 +128,8 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
   });
 })
 
-router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.patch('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+
   const { errors, isValid } = validateUpdateProfile(req.body);
   
   if (!isValid){
@@ -137,7 +138,10 @@ router.patch('/update-profile', passport.authenticate('jwt', {session: false}), 
 
   User.findById(req.user.id)
     .then(user => {
+      // res.json("found")
+    // })
       user.set(req.body)
+      user.save()
       res.json(user)})
     .catch(errors => res.status(400).json({errors}))
 })
