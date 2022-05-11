@@ -11,7 +11,7 @@ const validateUpdateHandle = require('../../validation/update/update_handle');
 const validateUpdateEmail = require('../../validation/update/update_email');
 const validateUpdatePassword = require('../../validation/update/update_password');
 const validateUpdateAvatar = require('../../validation/update/update_avatar');
-const validateProfileUpdate = require('../../validation/update/update_profile');
+const validateUpdateProfile = require('../../validation/update/update_profile');
 const { db } = require("../../models/User");
 const { json } = require("express/lib/response");
 
@@ -43,7 +43,14 @@ router.post('/register', (req, res) => {
             newUser.password = hash;
             newUser.save()
               .then(user => {
-                const payload = { id: user.id, handle: user.handle, email: user.email }
+                const payload = { 
+                  id: user.id, 
+                  handle: user.handle, 
+                  email: user.email,
+                  avatar: user.avatar,
+                  eloRating: user.eloRating,
+                  bio: user.bio
+                }
 
                 jwt.sign(
                   payload,
@@ -83,7 +90,14 @@ router.post('/login', (req, res) => {
       bcrypt.compare(password, user.password)
         .then(isMatch => {
           if (isMatch) {
-            const payload = {id: user.id, handle: user.handle, email: user.email};
+            const payload = {
+              id: user.id, 
+              handle: user.handle, 
+              email: user.email,
+              avatar: user.avatar,
+              eloRating: user.eloRating,
+              bio: user.bio
+            };
 
             jwt.sign(
               payload,
@@ -109,13 +123,13 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     handle: req.user.handle,
     email: req.user.email,
     avatar: req.user.avatar,
-    eloRating: req.user.experience,
+    eloRating: req.user.eloRating,
     bio: req.user.bio
   });
 })
 
 router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateHandle(req.body);
+  const { errors, isValid } = validateUpdateProfile(req.body);
   
   if (!isValid){
     return res.status(400).json(errors);
