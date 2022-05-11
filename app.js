@@ -24,7 +24,6 @@ app.use("/api/users", users);
 app.use("/api/rooms", rooms);
 app.use(passport.initialize());
 require('./config/passport')(passport);
-const path = require('path');
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('frontend/build'));
