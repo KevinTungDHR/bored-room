@@ -9,6 +9,7 @@ const rooms = require("./routes/api/rooms");
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
+const path = require('path');
 
 mongoose
   .connect(db, { useNewUrlParser: true })
@@ -22,6 +23,13 @@ app.use("/api/users", users);
 app.use("/api/rooms", rooms);
 app.use(passport.initialize());
 require('./config/passport')(passport);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('frontend/build'));
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  })
+}
 
 const server = app.listen(port, () => console.log(`Server is running on port ${port}`));
 const io = require('socket.io')(server, { cors: { origin: "*"}});
