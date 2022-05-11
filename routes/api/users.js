@@ -91,8 +91,8 @@ router.post('/login', (req, res) => {
         .then(isMatch => {
           if (isMatch) {
             const payload = {
-              id: user.id, 
-              handle: user.handle, 
+              id: user.id,
+              handle: user.handle,
               email: user.email,
               avatar: user.avatar,
               eloRating: user.eloRating,
@@ -137,6 +137,8 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), (req, r
 
   User.findById(req.user.id)
     .then(user => {
+      // res.json("found")
+    // })
       user.set(req.body)
       user.save()
       res.json(user)})
