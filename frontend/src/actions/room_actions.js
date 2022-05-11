@@ -27,30 +27,30 @@ const receiveRoomErrors = (errors) => {
 
 export const fetchAllRooms = () => dispatch => {
   return RoomUtil.fetchAllRooms()
-      .then(rooms => dispatch(receiveRooms(rooms)))
+      .then(res => dispatch(receiveRooms(res.data)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }
 
 export const createRoom = (roomName) => dispatch => {
   return RoomUtil.createRoom(roomName)
-      .then(room => dispatch(receiveRoom(room)))
+      .then(res => dispatch(receiveRoom(res.data)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }
 
 export const fetchRoom = (roomCode) => dispatch => {
-  return RoomUtil.createRoom(roomCode)
-      .then(room => dispatch(receiveRoom(room)))
+  return RoomUtil.fetchRoom(roomCode)
+      .then(res => dispatch(receiveRoom(res.data)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }
 
 export const joinRoom = (roomCode) => dispatch => {
   return RoomUtil.joinRoom(roomCode)
-      .then(room => dispatch(receiveRoom(room)))
+      .then(res => dispatch(receiveRoom(res.data)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }
 
 export const leaveRoom = (roomCode) => dispatch => {
   return RoomUtil.leaveRoom(roomCode)
-      .then(room => dispatch(receiveRoom(room)))
+      .then(res => dispatch(receiveRoom(res.data)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }

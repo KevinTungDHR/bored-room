@@ -39,23 +39,28 @@ router.post('/', passport.authenticate("jwt", { session: false }),
 router.get('/', (req, res) => {
   Room.find()
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .then(rooms => res.json(rooms))
+    .then(rooms => {
+
+      const objRooms = rooms.reduce((acc, curr) => (acc[curr._id] = curr, acc), {});
+      return res.json(objRooms)
+    })
     .catch(err => res.status(404).json({ noRoomsFound: "No Rooms Found"}));
 });
 
-const ObjectId = mongoose.Types.ObjectId;
 router.patch('/:code/join', passport.authenticate('jwt', {session: false}), (req, res) => {
   // Only add to room if they aren't already in it.
   // Need validations for game size in the future
   Room.findOneAndUpdate({ code: req.params.code },
     { $addToSet: { seatedUsers: { _id: req.user._id }}},
     { new: true })
+    .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(room => res.json(room))
     .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
 })
 
 router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (req, res) => {
   Room.findOne({ code: req.params.code })
+    .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(room => {
       if(!room) {
         return res.status(404).json("No room");

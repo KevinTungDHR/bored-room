@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
+const proxySetup = require('./config/setupProxyFile')
 
 mongoose
   .connect(db, { useNewUrlParser: true })
@@ -30,7 +31,9 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
   })
 }
-
+// Might need this if things error out. Keep this here just in case
+// Actually this is freaking out. Need to fix
+// proxySetup(app)
 const server = app.listen(port, () => console.log(`Server is running on port ${port}`));
 const io = require('socket.io')(server, { cors: { origin: "*"}});
 
