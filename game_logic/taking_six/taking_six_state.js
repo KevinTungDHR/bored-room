@@ -44,7 +44,7 @@ const state = {
   5: {
     name: "AUTO_PLACE_CARD",
     type: "automated",
-    action: ["autoPlaceCard"],
+    actions: ["autoPlaceCard"],
     transitions: {
       CHECK_PLAYED_CARDS: 3,
       CHECK_TURN_END: 7
@@ -63,7 +63,7 @@ const state = {
   10: {
     name: "ROUND_SETUP",
     type: "automated",
-    action: ["setupNewRound"],
+    actions: ["setupNewRound"],
     transitions: {
       PLAYER_CHOOSE_CARD: 2
     }
@@ -71,7 +71,7 @@ const state = {
   99: {
     name: "GAME_END",
     type: "automated",
-    action: ["gameEnd"]
+    actions: ["gameEnd"]
   }
 };
 

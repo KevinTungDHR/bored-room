@@ -37,6 +37,7 @@ const Room = () => {
       socket.on("user_leaves", (room) => dispatch(receiveRoom(room)));
       socket.on("game_started", (room) => dispatch(receiveRoom(room)));
       socket.on("game_created", (game) => dispatch(receiveGame(game)));
+
   },[]);
 
   const handleCreate = (e) =>{
@@ -64,7 +65,7 @@ const Room = () => {
   const renderSeatButtons = () => (
     rooms[roomCode]?.gameStarted ? 
     <div>
-      <GameComponent roomCode={roomCode}/>
+      <GameComponent socket={socket} roomCode={roomCode}/>
     </div> 
     : 
     <div>

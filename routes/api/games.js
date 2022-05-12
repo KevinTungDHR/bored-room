@@ -55,10 +55,12 @@ router.get('/:code', (req, res) => {
 
 
 router.patch('/:code', passport.authenticate("jwt", { session: false }), (req, res) => {
-  TakingSixModel.findOne({ code: req.params.code })
-    .then(assets => {
+  let io = req.app.get("io");
 
-      const g = new games.TakingSixGame(assets);
+  TakingSixModel.findOne({ code: req.params.code })
+    .then(game => {
+
+      const g = new games.TakingSixGame(game);
 
       try {
         const player = req.user
@@ -66,10 +68,18 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), (req, r
       } catch (err) {
         console.error(err)
       }
-      assets.set(g);
-      assets.save();
-      const gameState = takingSixState[assets.currentState]
-      res.json({assets, gameState})
+      game.set(g);
+      game.save()
+      .then(assets => {
+        const gameState = takingSixState[assets.currentState]
+        try {
+          io.to(req.params.code).emit("game_updated", { assets, gameState })
+          console.log("working")
+        } catch (e) {
+          console.log(`error ${e}`)
+        }
+        res.json("success");
+      })
     })
     .catch(err => res.status(404).json(["Game Not Found"]));
 });
