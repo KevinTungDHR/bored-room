@@ -1,0 +1,89 @@
+// test.js - construct a card
+.board-background {
+  height: 100vh;
+  background-image: url('../../assets/images/game_table.jpg');
+  position: relative;
+}
+
+.game-state-description {
+  font-size: 16px;
+  font-family: 'Marker';
+  height: 28px;
+  text-align: center;
+}
+
+.hand-container {
+  height: 160px;
+  max-width: fit-content;
+  background-color: $champ;
+  opacity: 0.8;
+}
+
+.bull-logo {
+  top: 18%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  position: absolute;
+  opacity: 0.2;
+}
+
+.card-container {
+  display: block;
+  margin-left: 10px;
+}
+
+.card {
+  float: left;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 0px 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  align-items: center;
+  background-color: #fff;
+  color: $title;
+  height: 140px;
+  width: 100px;
+  font-family: 'Marker';
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.card-number {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 56px;
+  z-index: 1;
+}
+
+.top-card {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.small-bull {
+  margin: auto;
+  align-content: center;
+}
+
+.small-bulls-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 60%;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  transform: rotate(180deg) scaleX(-1);
+}

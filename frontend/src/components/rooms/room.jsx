@@ -7,7 +7,7 @@ import { joinRoom, leaveRoom } from '../../util/rooms_util';
 import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
 import { createGame } from '../../util/game_util';
-import GameComponent from './game_component';
+import GameComponent from '../nimmt/game_component';
 
 const socket = io();
 
@@ -77,6 +77,7 @@ const Room = () => {
 
   return(
     <div>
+      {renderSeatButtons()}
       In Room {roomCode}
       <input type="text" onChange={(e) => setMessage(e.target.value)}/>
       <button onClick={sendMessage} >Send</button>
@@ -88,7 +89,7 @@ const Room = () => {
       <ul>
         {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
       </ul>
-        {renderSeatButtons()}
+        
     </div>
   );
 }
