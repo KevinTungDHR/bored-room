@@ -152,15 +152,19 @@ router.post('/profile', passport.authenticate('jwt', {session: false}), (req, re
 //   res.json(friendList)
 // })
 
-// router.get('/friend', passport.authenticate('jwt', {session: false}, (req, res) => {
-//   const friendHandle = req.user.friend.id
+router.get('/friend', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const friendHandle = {handle: req.body.friendHandle}
 
-//   User.findOne(friendHandle)
-//     .then(friend => {
-//       user.friend
-//       res.json(friend)
-//     })
-// }))
+  User.findOne(friendHandle)
+    .then(friend => {
+      res.json({
+        handle: friend.handle,
+        avatar: friend.avatar,
+        eloRating: friend.eloRating,
+        bio: friend.bio
+      })
+    })
+})
 
 router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   const { errors, isValid } = validateUpdateProfile(req.body);
