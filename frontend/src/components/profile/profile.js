@@ -96,8 +96,8 @@ class Profile extends React.Component {
         return (
             <div className='profile-container' style={{ backgroundImage: "url(" + this.state.background + ")" }}>
                 <div className='separator'>
-                    <button onClick={this.changeBackground} value="space" >Go to Space</button>
-                    <button onClick={this.changeBackground} value="earth" >Stay on Earth</button>
+                    <button className='space-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
+                    <button className='earth-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
                 </div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>

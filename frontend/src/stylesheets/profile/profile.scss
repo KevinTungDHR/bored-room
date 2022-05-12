@@ -15,7 +15,7 @@
         border-radius: 8px;
         font-weight: bold;
         cursor: pointer;
-        color: $coral;
+        color: $text;
         margin-left: 10px;
         margin-top: 4px;
     }
@@ -196,4 +196,20 @@
         background-color: $seaweed;
     }
 
+}
+
+.space-btn:focus {
+    background-color: $seaweed;
+
+    .earth-btn {
+        background-color: $tan;
+    }
+}
+
+.earth-btn:focus {
+    background-color: $seaweed;
+
+    .space-btn {
+        background-color: $tan;
+    }
 }

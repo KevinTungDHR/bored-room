@@ -24,6 +24,8 @@ class Lobby extends React.Component {
         if(this.state.roomName !== ""){
             this.props.createRoom(this.state.roomName)
         }
+
+        this.setState({ roomName: "" });
     }
 
     componentDidMount(){
@@ -50,7 +52,7 @@ class Lobby extends React.Component {
                             <div>Search for a Room</div>
                             <div>
                                 <input className='create-room-input' value={this.state.search} onChange={this.updateSearch} />
-                                <input className='create-btn' type="submit" value="Search" />
+                                {/* <input className='create-btn' type="submit" value="Search" /> */}
                             </div>
                         </div>
                     </form>
