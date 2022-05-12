@@ -20,7 +20,7 @@ class NavBar extends React.Component {
 
     // Selectively render links dependent on whether the user is logged in
     getLinks() {
-        if (this.props.loggedIn) {
+        if (this.props.loggedIn && this.props.user) {
             // if logged in display
             return (
                 <Dropdown logout={this.props.logout} user={this.props.user}/>
@@ -43,7 +43,7 @@ class NavBar extends React.Component {
                     <Link to="/" className="nav-title"> Bored Room</Link>
                 </div>
                 
-                {this.props.user && this.getLinks()}
+                {this.getLinks()}
             </div>
         );
     }

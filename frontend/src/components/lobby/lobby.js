@@ -1,18 +1,22 @@
 import React from 'react';
-import { motion } from "framer-motion";
 import { Link } from 'react-router-dom';
 
 class Lobby extends React.Component {
     constructor(props){
         super(props)
-        this.state = { roomName: "" };
+        this.state = { roomName: "", search: "" };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.updateSearch = this.updateSearch.bind(this);
     }
 
     handleChange(e){
         this.setState({ roomName: e.target.value })
+    }
+
+    updateSearch(e) {
+        this.setState({ search: e.target.value })
     }
 
     handleSubmit(e){
@@ -30,26 +34,30 @@ class Lobby extends React.Component {
         const { rooms } = this.props;
         return (
             <div className='lobby-background'>
-                <form className='create-room' onSubmit={this.handleSubmit}>
-                    <div className='flex'>
-                        <div>Create a Room</div>
-                        <div>
-                            <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} />
-                            <input className='create-btn' type="submit" value="Create" />
+                <div className='search-container'>
+                    <form className='create-room' onSubmit={this.handleSubmit}>
+                        <div className='flex'>
+                            <div>Create a Room</div>
+                            <div>
+                                <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} />
+                                <input className='create-btn' type="submit" value="Create" />
+                            </div>
                         </div>
-                    </div>
-                    <div className='flex'>
-                        <div>Search for a Room</div>
-                        <div>
-                            <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} />
-                            <input className='create-btn' type="submit" value="Search" />
-                        </div>
-                    </div>
-                    
-                </form>
+                    </form>
 
+                    <form className='search-rooms'>
+                        <div className='flex'>
+                            <div>Search for a Room</div>
+                            <div>
+                                <input className='create-room-input' value={this.state.search} onChange={this.updateSearch} />
+                                <input className='create-btn' type="submit" value="Search" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <ul className='lobby-rooms'>
                     {rooms.slice().reverse().map((room, idx) => {
+                        if (room.name.toLowerCase().startsWith(this.state.search.toLowerCase())) {
                         return <li key={idx} className='room-container'>
                             <h1>{room.name}</h1>
                             <div>
@@ -63,6 +71,7 @@ class Lobby extends React.Component {
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
                         </li>
+                        }
                     })}
                 </ul>
                 <div className='lobby-game-1'>

@@ -18,6 +18,7 @@ class Dropdown extends React.Component {
             'socrates': socrates
         }
 
+        debugger;
         const { avatar } = this.props.user;
 
         return (

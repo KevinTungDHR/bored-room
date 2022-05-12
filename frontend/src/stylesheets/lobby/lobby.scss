@@ -1,6 +1,12 @@
 @import '../colors.scss';
 @import '../fonts.scss';
 
+.search-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .flex {
   display: flex;
   flex-direction: column;
@@ -14,22 +20,17 @@
     background-image: url(../../assets/images/game_table.jpg);
     background-repeat: repeat-y;
     font-family: "Really-Free";
+    min-height: 100vh;
     font-size: 32px;
     color: $text;
     width: 100%;
 }
 
-.create-room {
+.create-room, .search-rooms {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
-  div:first-child {
-    font-weight: 600;
-    font-family: 'Really-Free';
-    color: $title;
-  }
-
+  
   .create-room-input {
     height: 40px;
     width: 500px;

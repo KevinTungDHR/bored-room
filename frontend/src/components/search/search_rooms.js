@@ -3,6 +3,10 @@ import React from "react";
 class SearchRooms extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      search: ''
+    }
   }
 
   componentDidMount() {
