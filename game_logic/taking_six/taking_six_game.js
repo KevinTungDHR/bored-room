@@ -40,7 +40,7 @@ class TakingSixGame {
         score: 66,
         pile: [],
         hand: this.deck.splice(0, 11),
-        chosenCard: -1
+        chosenCard: { value: -1, bulls: 0 }
       });
     });
 
@@ -91,7 +91,7 @@ class TakingSixGame {
 
   turnCleanUp() {
     this.players.forEach((player) => {
-      player.chosenCard = -1;
+      player.chosenCard = { value: -1, bulls: 0 };
     });
   }
 
@@ -115,7 +115,7 @@ class TakingSixGame {
   }
 
   playersHaveChosenCards() {
-    return this.players.every(player => player.chosenCard !== -1);
+    return this.players.every(player => player.chosenCard.value !== -1);
   }
 
   // Game Rules checks
@@ -158,7 +158,7 @@ class TakingSixGame {
   }
 
   chooseCard(player, card) {
-    const selectedPlayer = this.players.filter((p) => p._id === player._id)[0];
+    const selectedPlayer = this.players.filter((p) => p._id.toString() === player._id)[0];
     selectedPlayer.chosenCard = card;
   }
 
@@ -192,7 +192,7 @@ class TakingSixGame {
 
   takeRow(data) {
     const [playerId, card] = this.playedCards.shift();
-    const player = this.players.find(p => p._id === playerId);
+    const player = this.players.find(p => p._id.toString() === playerId);
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
 
@@ -209,7 +209,7 @@ class TakingSixGame {
     this.addCardToRow(card, rowNum);
 
     if (this.rows[rowNum].length > 5) {
-      const player = this.players.find(p => p._id === playerId);
+      const player = this.players.find(p => p._id.toString() === playerId);
       this.takeFullRow(player, rowNum);
     }
 
@@ -240,7 +240,7 @@ class TakingSixGame {
     this.players.forEach((player) => {
       this.deck = this.deck.concat(player.pile);
       player.pile = [];
-      player.chosenCard = -1;
+      player.chosenCard = { value: -1, bulls: 0 }
     });
 
     this.shuffleCards();

@@ -14,6 +14,7 @@ const state = {
     description: "Players must choose a card",
     type: "multipleActivePlayer",
     possibleActions: ["playCard"],
+    actions: ["playCard"],
     transitions: {
       CHECK_PLAYED_CARDS: 3
     }
@@ -32,6 +33,7 @@ const state = {
     name: "TAKE_ROW",
     type: "activePlayer",
     possibleActions: ["takeRow"],
+    actions: ["takeRow"],
     description: function (activePlayer) {
       return (`${activePlayer} must take a row`);
     },

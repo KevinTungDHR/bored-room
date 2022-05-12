@@ -1,6 +1,7 @@
 const takingSixState = require('./taking_six_state');
 const seedCards = require('./cards');
 
+
 class TakingSixGame {
   constructor(data) {
     this.name = "Taking Six";
@@ -10,8 +11,8 @@ class TakingSixGame {
       this.rows = data.rows;
       this.gameOver = data.gameOver;
       this.playedCards = data.playedCards;
+      this.currentState = data.currentState;
     }
-
     this.getState = this.getState.bind(this);
   }
 
@@ -31,7 +32,7 @@ class TakingSixGame {
         score: 66,
         pile: [],
         hand: this.deck.splice(0, 11),
-        choosenCard: null
+        chosenCard: { value: -1, bulls: 0 }
       });
     });
 
@@ -82,7 +83,7 @@ class TakingSixGame {
 
   turnCleanUp() {
     this.players.forEach((player) => {
-      player.choosenCard = null;
+      player.chosenCard = { value: -1, bulls: 0 };
     });
   }
 
@@ -106,7 +107,7 @@ class TakingSixGame {
   }
 
   playersHaveChosenCards() {
-    return this.players.every(player => player.choosenCard !== null);
+    return this.players.every(player => player.chosenCard.value !== -1);
   }
 
   // Game Rules checks
@@ -149,8 +150,8 @@ class TakingSixGame {
   }
 
   chooseCard(player, card) {
-    const selectedPlayer = this.players.filter((p) => p._id === player._id)[0];
-    selectedPlayer.choosenCard = card;
+    const selectedPlayer = this.players.filter((p) => p._id.toString() === player._id)[0];
+    selectedPlayer.chosenCard = card;
   }
 
   // State Actions
@@ -158,8 +159,8 @@ class TakingSixGame {
     this.chooseCard(data.player, data.card);
     if (this.playersHaveChosenCards()) {
       this.players.forEach(player => {
-        this.playedCards.push([player._id, player.choosenCard]);
-        player.hand = player.hand.filter(card => card.value !== player.choosenCard.value)
+        this.playedCards.push([player._id, player.chosenCard]);
+        player.hand = player.hand.filter(card => card.value !== player.chosenCard.value)
       });
       this.orderPlayedCards();
       // Organize playedCards To keep track of playerId
@@ -183,7 +184,7 @@ class TakingSixGame {
 
   takeRow(data) {
     const [playerId, card] = this.playedCards.shift();
-    const player = this.players.find(p => p._id === playerId);
+    const player = this.players.find(p => p._id.toString() === playerId);
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
 
@@ -200,7 +201,7 @@ class TakingSixGame {
     this.addCardToRow(card, rowNum);
 
     if (this.rows[rowNum].length > 5) {
-      const player = this.players.find(p => p._id === playerId);
+      const player = this.players.find(p => p._id.toString() === playerId);
       this.takeFullRow(player, rowNum);
     }
 
@@ -231,7 +232,7 @@ class TakingSixGame {
     this.players.forEach((player) => {
       this.deck = this.deck.concat(player.pile);
       player.pile = [];
-      player.choosenCard = null;
+      player.chosenCard = { value: -1, bulls: 0 }
     });
 
     this.shuffleCards();
