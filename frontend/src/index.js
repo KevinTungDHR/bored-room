@@ -5,7 +5,8 @@ import configureStore from './store/store';
 import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
-import { createRoom, fetchAllRooms, fetchRoom, joinRoom, leaveRoom } from './actions/room_actions';
+import { createGame, fetchGame, updateGame } from './actions/game_actions';
+
 
 document.addEventListener('DOMContentLoaded', () => {
     let store;
@@ -40,12 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Testing Start
     window.getState = store.getState;
+
+
+
     window.dispatch = store.dispatch;
-    window.fetchAllRooms = fetchAllRooms;
-    window.createRoom = createRoom;
-    window.fetchRoom = fetchRoom;
-    window.joinRoom = joinRoom;
-    window.leaveRoom = leaveRoom;
+    window.fetchGame = fetchGame;
+    window.createGame = createGame;
+    window.updateGame = updateGame;
     // Testing end
     const root = document.getElementById('root');
 
