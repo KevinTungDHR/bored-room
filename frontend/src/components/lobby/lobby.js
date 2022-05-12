@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from "framer-motion";
 
 class Lobby extends React.Component {
     constructor(props){
@@ -34,6 +35,8 @@ class Lobby extends React.Component {
 
     render() {
         const { rooms } = this.props;
+        let count = 0;
+        let sign = 2000;
         return (
             <div className='lobby-background'>
                 <div className='search-container'>
@@ -57,10 +60,21 @@ class Lobby extends React.Component {
                         </div>
                     </form>
                 </div>
+
+                {/* 0, 1, 2 // 3, 4, 5 // 6, 7, 8 */}
                 <ul className='lobby-rooms'>
                     {rooms.slice().reverse().map((room, idx) => {
+                        
                         if (room.name.toLowerCase().startsWith(this.state.search.toLowerCase())) {
-                        return <li key={idx} className='room-container'>
+                            count += 1;
+                            // debugger
+                            if (count === 4) {
+                                // debugger
+                                count = 0;
+                                sign = sign * -1;
+                            }
+
+                            return <motion.li key={idx} className='room-container' animate={{ x: [sign, 0], scale: [0.1, 1] }} transition={{ ease: "easeOut", duration: 0.8 }}>
                             <h1>{room.name}</h1>
                             <div>
                                 <ul>
@@ -72,7 +86,7 @@ class Lobby extends React.Component {
                                 </ul>
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
-                        </li>
+                        </motion.li>
                         }
                     })}
                 </ul>
