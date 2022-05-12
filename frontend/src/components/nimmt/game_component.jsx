@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchGame, receiveGame } from '../../actions/game_actions';
 import { updateGame } from '../../util/game_util';
 import { Card } from './card';
-import { GridRow } from './grid_row';
+import GridRow from './grid_row';
 import bull_brown from '../../assets/images/bull_brown.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
@@ -12,6 +12,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
   const [chosenRow, setChosenRow] = useState();
   const { gameState, assets } = useSelector(state => state.game);
+  
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
   const dispatch = useDispatch();
@@ -49,15 +50,13 @@ const GameComponent = ({ roomCode, socket }) => {
               {bullLogo}
               <div className="card-container">
                 {player?.hand.map(c => {
-                  return Card(c);
+                  return Card(c, setChosenCard);
                 })}
               </div>
             </div>
             <div className='grid-container'>
               <div className='game-grid'>
-                {Array.from(Array(24).keys()).map((square) => 
-                  <div className='blank-square'></div> 
-                )}
+                {assets.rows.map(row => GridRow(row))}
               </div>
               <div></div>
             </div>

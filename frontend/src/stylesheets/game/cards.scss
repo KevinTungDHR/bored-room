@@ -51,6 +51,14 @@
   cursor: pointer;
 }
 
+.blank-square {
+  height: 140px;
+  width: 100px;;
+  background-color: $champ;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
 .card-number {
   position: absolute;
   top: 35%;

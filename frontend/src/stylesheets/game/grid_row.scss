@@ -1,0 +1,18 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.grid-container {
+  display: flex;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.row-container {
+  display: flex;
+  justify-content: flex-start;
+}
