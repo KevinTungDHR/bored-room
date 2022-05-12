@@ -7,14 +7,13 @@ import { joinRoom, leaveRoom } from '../../util/rooms_util';
 import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
 import { createGame } from '../../util/game_util';
+import GameComponent from './game_component';
 
 const socket = io();
 
 const Room = () => {
   const [message, setMessage] = useState("");
   const [list, setList] = useState([]);
-  // const [joinFulfilled, setJoinFulfilled] = useState(true);
-  // const [leaveFulfilled, setLeaveFulfilled] = useState(true);
 
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
@@ -25,6 +24,7 @@ const Room = () => {
     dispatch(fetchRoom(roomCode));
     return () => {
       socket.emit("leave_room", roomCode);
+      socket.removeAllListeners();
     }
   }, []);
 
@@ -35,8 +35,8 @@ const Room = () => {
       });
       socket.on("user_sits", (room) => dispatch(receiveRoom(room)));
       socket.on("user_leaves", (room) => dispatch(receiveRoom(room)));
-      socket.on("game_started", (room) => dispatch(receiveRoom(room)))
-      socket.on("game_created", (game) => dispatch(receiveGame(game)))
+      socket.on("game_started", (room) => dispatch(receiveRoom(room)));
+      socket.on("game_created", (game) => dispatch(receiveGame(game)));
   },[]);
 
   const handleCreate = (e) =>{
@@ -61,6 +61,19 @@ const Room = () => {
     leaveRoom(roomCode)
   };
 
+  const renderSeatButtons = () => (
+    rooms[roomCode]?.gameStarted ? 
+    <div>
+      <GameComponent roomCode={roomCode}/>
+    </div> 
+    : 
+    <div>
+      <button onClick={joinSeat}>Sit</button>
+      <button onClick={leaveSeat}>Get Up</button>
+      <button onClick={handleCreate}>Start Game</button>
+    </div>
+  )
+
   return(
     <div>
       In Room {roomCode}
@@ -74,9 +87,7 @@ const Room = () => {
       <ul>
         {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
       </ul>
-      <button onClick={joinSeat}>Sit</button>
-      <button onClick={leaveSeat}>Get Up</button>
-      {rooms[roomCode]?.gameStarted ? <></> : <button onClick={handleCreate}>Start Game</button>}
+        {renderSeatButtons()}
     </div>
   );
 }

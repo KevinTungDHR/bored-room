@@ -2,12 +2,7 @@ import {
   RECEIVE_GAME, 
 } from "../actions/game_actions";
 
-const initialState = {
-  assets: null,
-  gameState: null
-}
-
-const gameReducer = (state = initialState, action) => {
+const gameReducer = (state = {}, action) => {
   Object.freeze(state)
   switch(action.type){
     case RECEIVE_GAME:
