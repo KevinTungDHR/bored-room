@@ -199,9 +199,13 @@ class TakingSixGame {
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
 
-    const nextState = this.getState().transitions.CHECK_PLAYED_CARDS;
-    this.setState(nextState);
-  
+    if (this.playedCards.length > 0) {
+      const nextState = this.getState().transitions.CHECK_PLAYED_CARDS;
+      this.setState(nextState);
+    } else {
+      const nextState = this.getState().transitions.CHECK_TURN_END;
+      this.setState(nextState);
+    }
   }
 
   autoPlaceCard() {

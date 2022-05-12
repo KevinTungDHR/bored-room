@@ -38,7 +38,8 @@ const state = {
       return (`${activePlayer} must take a row`);
     },
     transitions: {
-      CHECK_PLAYED_CARDS: 3
+      CHECK_PLAYED_CARDS: 3,
+      CHECK_TURN_END: 7
     }
   },
   5: {
