@@ -2,9 +2,9 @@ import {
   RECEIVE_GAME, 
 } from "../actions/game_actions";
 
-initialState = {
-  assets: {},
-  gameState: {}
+const initialState = {
+  assets: null,
+  gameState: null
 }
 
 const gameReducer = (state = initialState, action) => {

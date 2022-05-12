@@ -158,7 +158,9 @@ class TakingSixGame {
   }
 
   chooseCard(player, card) {
-    const selectedPlayer = this.players.filter((p) => p._id.toString() === player._id)[0];
+    
+    const selectedPlayer = this.players.filter((p) => {
+      return p._id.toString() === player._id})[0];
     selectedPlayer.chosenCard = card;
   }
 

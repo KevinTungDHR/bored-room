@@ -4,13 +4,17 @@ export const RECEIVE_GAME = "RECEIVE_GAME";
 export const RECEIVE_GAME_ERRORS = 'RECEIVE_GAME_ERRORS';
 
 const receiveGame = (game) => {
-  type: RECEIVE_GAME,
-  game
+  return {
+    type: RECEIVE_GAME,
+    game
+  }
 }
 
 const receiveGameErrors = (errors) => {
-  type: RECEIVE_GAME_ERRORS,
-  errors
+  return {
+    type: RECEIVE_GAME_ERRORS,
+    errors
+  }
 }
 
 export const fetchGame = (gameId) => (dispatch) => {
@@ -28,5 +32,5 @@ export const createGame = (users) => (dispatch) => {
 export const updateGame = (gameId, payload) => dispatch => {
   return GameAPIUtil.updateGame(gameId, payload)
     .then(res => dispatch(receiveGame(res.data)))
-    .then(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors)))
 }
