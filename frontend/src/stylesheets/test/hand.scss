@@ -13,9 +13,11 @@
 }
 
 .bull-logo {
-  top: 50%;
+  top: 18%;
   left: 50%;
+  transform: translate(-50%, 0);
   position: absolute;
+  opacity: 0.5;
 }
 
 .card-container {
