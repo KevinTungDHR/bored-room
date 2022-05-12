@@ -1,0 +1,45 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.game-background {
+  height: 100vh;
+  background-image: url('../../assets/images/game_table.jpg');
+  position: relative;
+}
+
+.game-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-state-description {
+  font-size: 16px;
+  font-family: 'Marker';
+  height: 28px;
+  text-align: center;
+}
+
+.board-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.hand-container {
+  background-color: $champ;
+  opacity: 0.8;
+}
+
+.bull-logo {
+  top: 18%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  position: absolute;
+  opacity: 0.2;
+}
+
+.card-container {
+  display: block;
+  margin-left: 10px;
+  width: 100%;
+  height: 100%;
+}

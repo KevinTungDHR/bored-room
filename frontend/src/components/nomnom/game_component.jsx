@@ -4,6 +4,7 @@ import { fetchGame, receiveGame } from '../../actions/game_actions';
 import { updateGame } from '../../util/game_util';
 import { Card } from './card';
 import GridRow from './grid_row';
+import CardSelection from './card_selection';
 import bull_brown from '../../assets/images/bull_brown.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
@@ -44,36 +45,48 @@ const GameComponent = ({ roomCode, socket }) => {
           <div>
             <h1 className='game-state-description'>{gameState.description}</h1>
           </div>
-          <div className='board-background'>
-            
-            <div className='hand-container'>
-              {bullLogo}
-              <div className="card-container">
-                {player?.hand.map(c => {
-                  return Card(c, setChosenCard);
-                })}
-              </div>
-            </div>
-            <div className='grid-container'>
-              <div className='game-grid'>
-                {assets.rows.map(row => GridRow(row))}
-              </div>
-              <div></div>
-            </div>
 
-            <ul>
-              <li onClick={() => setChosenRow(0)}>row 0: {assets.rows[0].map(card => card.value).join(", ")}</li>
-              <li onClick={() => setChosenRow(1)}>row 1: {assets.rows[1].map(card => card.value).join(", ")}</li>
-              <li onClick={() => setChosenRow(2)}>row 2: {assets.rows[2].map(card => card.value).join(", ")}</li>
-              <li onClick={() => setChosenRow(3)}>row 3: {assets.rows[3].map(card => card.value).join(", ")}</li>
-            </ul>
-            <ul>
-              <li>possible_actions: {gameState.possibleActions}</li>
-              <li>actions: {gameState.actions}</li>
-              <li>type: {gameState.type}</li>
-              <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
-            </ul> 
-            <button onClick={handleUpdate}>Update Game</button>
+          <div className='game-background'>
+            <div className='game-container'>
+
+              <div className='board-container'>
+                <div className='hand-container'>
+                  {bullLogo}
+                  <div className="card-container">
+                    {player?.hand.map(c => {
+                      return <Card card={c} setChosenCard={setChosenCard}/>;
+                    })}
+                  </div>
+                </div>
+
+                <div className='grid-container'>
+                  <div className='game-grid'>
+                    {assets.rows.map((row, idx) => <GridRow idx={idx} setChosenRow={setChosenRow} row={row}/>)}
+                  </div>
+                  <div></div>
+                </div>
+
+                {/* insert player selections */}
+                
+
+              </div>
+
+              <div className='scoreboard-container'>
+                    
+              </div>
+
+              <ul>
+                
+                <li>possible_actions: {gameState.possibleActions}</li>
+                <li>description: {gameState.description}</li>
+                <li>name: {gameState.name}</li>
+                <li>actions: {gameState.actions}</li>
+                <li>type: {gameState.type}</li>
+                <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
+              </ul> 
+              <button onClick={handleUpdate}>Update Game</button>
+              
+            </div>
           </div>
         </div>
     )
