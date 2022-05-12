@@ -3,6 +3,8 @@ import yoda from '../../assets/images/yoda.png';
 import monkey from '../../assets/images/coolMonkey.png';
 import socrates from '../../assets/images/socrates.png';
 import user_prof from '../../assets/images/user_prof.png';
+import space from '../../assets/images/space.jpg';
+import earth from '../../assets/images/earth.jpg';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -11,6 +13,7 @@ class Profile extends React.Component {
         this.state = {
             user: this.props.user,
             btn: 'Edit',
+            background: null
             // currImg: 1
         }
 
@@ -19,6 +22,7 @@ class Profile extends React.Component {
         this.handleChangeHandle = this.handleChangeHandle.bind(this);
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.profile = this.profile.bind(this);
+        this.changeBackground = this.changeBackground.bind(this);
     }
 
     componentDidMount() {
@@ -31,7 +35,7 @@ class Profile extends React.Component {
         let newState = this.state;
         newState.user.bio = e.target.value;
         this.setState(newState);
-
+        debugger;
     }
 
     handleChangeHandle(e) {
@@ -63,12 +67,21 @@ class Profile extends React.Component {
         let button = document.getElementById('profile-btn');
         button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit";
         button.className = (prevBtn === 'Edit') ? 'profile-save-btn' : 'profile-edit-btn';
-
+        debugger
         if (prevBtn === 'Save') {
+            debugger;
             this.props.updateUser(this.state.user);
             this.setState({ newState })
         }
         
+    }
+
+    changeBackground(e) {
+        e.preventDefault();
+        const image = (e.target.value === 'space') ? space : earth;
+        let newState = this.state;
+        newState.background = image;
+        this.setState({ newState });
     }
 
     profile() {
@@ -79,9 +92,13 @@ class Profile extends React.Component {
             'socrates': socrates
         };
         const { email, bio, handle, eloRating, avatar } = this.props.user;
+        
         return (
-        <div className='profile-container'>
-                <div className='separator'></div>
+            <div className='profile-container' style={{ backgroundImage: "url(" + this.state.background + ")" }}>
+                <div className='separator'>
+                    <button className='space-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
+                    <button className='earth-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
+                </div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>
                         <div className='avatar-image'>
@@ -130,8 +147,12 @@ class Profile extends React.Component {
     }
 
     render() {        
+        
         return (
-            this.props.user && this.profile()
+            <div>
+                {this.props.user && this.profile()}
+            </div>
+
         )
     }
 }

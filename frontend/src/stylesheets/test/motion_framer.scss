@@ -1,0 +1,32 @@
+.motion-one {
+    background-color: aqua;
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+}
+
+.motion-two {
+    background-color: aqua;
+    height: 100px;
+    width: 100px;
+    // position: absolute;
+    // top: 20%;
+    // left: 50%;
+}
+
+.contain {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+}
+
+.target {
+    height: 100px;
+    width: 100px;
+    background-color: black;
+    margin: auto;
+}
