@@ -7,7 +7,6 @@ import { receiveErrors } from '../../actions/session_actions';
 class Avatar extends React.Component {
     constructor(props) {
         super(props);
-
         this.handleClick = this.handleClick.bind(this);
     }
 

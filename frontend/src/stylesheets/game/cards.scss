@@ -5,10 +5,17 @@
   position: relative;
 }
 
+.game-state-description {
+  font-size: 16px;
+  font-family: 'Marker';
+  height: 28px;
+  text-align: center;
+}
+
 .hand-container {
-  height: 200px;
+  height: 160px;
   max-width: fit-content;
-  background-color: $bronze;
+  background-color: $champ;
   opacity: 0.8;
 }
 
@@ -17,7 +24,7 @@
   left: 50%;
   transform: translate(-50%, 0);
   position: absolute;
-  opacity: 0.5;
+  opacity: 0.2;
 }
 
 .card-container {
@@ -36,26 +43,26 @@
   position: relative;
   align-items: center;
   background-color: #fff;
-  opacity: 0.9;
-  height: 160px;
+  color: $title;
+  height: 140px;
   width: 100px;
-  font-family: 'Salt-Rock';
-  font-size: 10px;
+  font-family: 'Marker';
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .card-number {
   position: absolute;
-  top: 40%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, 0);
-  font-size: 42px;
+  font-size: 56px;
   z-index: 1;
 }
 
 .top-card {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
   padding-left: 10px;
   padding-right: 10px;
@@ -64,17 +71,19 @@
 .small-bull {
   margin: auto;
   align-content: center;
-  padding: 0px -4px;
 }
 
 .small-bulls-container {
   display: flex;
   flex-wrap: wrap;
+  max-width: 60%;
 }
 
 .card-bottom {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
   transform: rotate(180deg) scaleX(-1);
 }
