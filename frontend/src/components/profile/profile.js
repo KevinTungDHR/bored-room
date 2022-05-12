@@ -1,25 +1,37 @@
 import React from 'react';
+import yoda from '../../assets/images/yoda.png';
+import monkey from '../../assets/images/coolMonkey.png';
+import socrates from '../../assets/images/socrates.png';
+import user_prof from '../../assets/images/user_prof.png';
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             user: this.props.user,
-            rating: 64,            
             btn: 'Edit',
-            bio: ''
+            // currImg: 1
         }
-        // this.generateGrid = this.generateGrid.bind(this);
+
         this.toggleBtn = this.toggleBtn.bind(this);
         this.handleChangeBio = this.handleChangeBio.bind(this);
         this.handleChangeHandle = this.handleChangeHandle.bind(this);
+        this.handleChangeEmail = this.handleChangeEmail.bind(this);
+        this.profile = this.profile.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.fetchUser().then(() => {
+            this.setState({user: this.props.user})
+        });
     }
 
     handleChangeBio(e) {
-        // remember to include bio in user
         let newState = this.state;
-        newState.bio = e.target.value;
+        newState.user.bio = e.target.value;
         this.setState(newState);
+
     }
 
     handleChangeHandle(e) {
@@ -28,43 +40,58 @@ class Profile extends React.Component {
         this.setState(newState);
     }
 
+    handleChangeEmail(e) {
+        let newState = this.state;
+        newState.user.email = e.target.value;
+        this.setState(newState);
+    }
+
     toggleBtn(e) {
         e.preventDefault();
         let handle = document.getElementById('profile-handle');
         let description = document.getElementById('profile-description');
+        let email = document.getElementById('profile-email');
         let newState = this.state;
         let prevBtn = newState.btn;
 
-        newState.btn = (newState.btn === 'Edit') ? 'Submit' : 'Edit'; // switch state value
+        newState.btn = (newState.btn === 'Edit') ? 'Save' : 'Edit'; // switch state value
 
         (newState.btn === 'Edit') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
         (newState.btn === 'Edit') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
+        (newState.btn === 'Edit') ? email.setAttribute("disabled", "true") : email.removeAttribute("disabled");
 
         let button = document.getElementById('profile-btn');
-        button.innerText = (newState.btn === 'Submit') ? 'Submit' : "Edit";
+        button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit";
+        button.className = (prevBtn === 'Edit') ? 'profile-save-btn' : 'profile-edit-btn';
 
-        debugger;
-        if (prevBtn === 'Submit') {
+        if (prevBtn === 'Save') {
             this.props.updateUser(this.state.user);
             this.setState({ newState })
         }
         
     }
 
-    render() {
-        const { email, bio, handle } = this.state.user;
-
+    profile() {
+        const avatars = {
+            'noimage': user_prof,
+            'yoda': yoda,
+            'monkey': monkey,
+            'socrates': socrates
+        };
+        const { email, bio, handle, eloRating, avatar } = this.props.user;
         return (
-            <div className='profile-container'>
+        <div className='profile-container'>
                 <div className='separator'></div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>
-                        <div className='avatar-ctnr'>
-                            <div className='profile-avatar'>
+                        <div className='avatar-image'>
+                            <div className='profile-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}} >
+                                <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>
+                            </div>
                         </div>
-                        </div>
-                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='20'/>
-                        <div>ELO +106</div>
+                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
+                        <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />
+                        <div>ELO {eloRating}</div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>
@@ -99,6 +126,12 @@ class Profile extends React.Component {
                     </div>
                 </div>
             </div>
+        )
+    }
+
+    render() {        
+        return (
+            this.props.user && this.profile()
         )
     }
 }

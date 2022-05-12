@@ -5,6 +5,7 @@ import configureStore from './store/store';
 import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
+import { createRoom, fetchAllRooms, fetchRoom, joinRoom, leaveRoom } from './actions/room_actions';
 
 document.addEventListener('DOMContentLoaded', () => {
     let store;
@@ -37,7 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Render our root component and pass in the store as a prop
 
+    // Testing Start
     window.getState = store.getState;
+    window.dispatch = store.dispatch;
+    window.fetchAllRooms = fetchAllRooms;
+    window.createRoom = createRoom;
+    window.fetchRoom = fetchRoom;
+    window.joinRoom = joinRoom;
+    window.leaveRoom = leaveRoom;
+    // Testing end
     const root = document.getElementById('root');
 
     ReactDOM.render(<Root store={store} />, root);

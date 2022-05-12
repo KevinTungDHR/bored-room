@@ -57,7 +57,7 @@ class SignupForm extends React.Component {
     }
 
     render() {
-        const { errros } = this.props;
+        const { errors } = this.props;
         return (
             <div className="signup-container">
                 <form className='signup-form' onSubmit={this.handleSubmit}>
