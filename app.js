@@ -10,7 +10,8 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
-const proxySetup = require('./config/setupProxyFile')
+const games = require("./routes/api/games");
+const proxySetup = require('./config/setupProxyFile');
 
 mongoose
   .connect(db, { useNewUrlParser: true })
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());  
 app.use("/api/users", users);
 app.use("/api/rooms", rooms);
+app.use("/api/games", games)
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
@@ -48,6 +50,18 @@ io.on("connection", socket => {
   socket.on("join_room", (data)=>{
     console.log(`joining ${data}`);
     socket.join(data);
+    console.log(socket.adapter.rooms)
+
+  });
+
+  socket.on("leave_room", (data)=>{
+    console.log(`leaving ${data}`);
+    try{
+      socket.leave(data);
+      console.log(socket.adapter.rooms)
+    } catch (e){
+      console.log(e)
+    }
   });
 
   socket.on('send_message', (data) => {
