@@ -2,14 +2,16 @@ import React from "react";
 import { motion, useAnimation } from "framer-motion";
 import bull_brown from '../assets/images/bull_brown.png';
 import bull_purp from '../assets/images/bull_purp.png';
-// import bull_brown from '../assets/images/bull_brown.png';
+import bull_logo from '../assets/images/bull_logo.png';
 
 export const Test = () => {
   const bullBrown = <img src={bull_brown} height="70px" width="70px" />
   const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
+  const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
   // const bullLightPurp
   return (
     <div className="board-background">
+      {bullLogo}
       <div className="hand-container">
         <div>Your hand</div>
         <div className="card-container">
