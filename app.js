@@ -56,12 +56,15 @@ io.on("connection", socket => {
   socket.on("join_room", (data)=>{
     console.log(`joining ${data}`);
     socket.join(data);
+    console.log(socket.adapter.rooms)
+
   });
 
   socket.on("leave_room", (data)=>{
     console.log(`leaving ${data}`);
     try{
       socket.leave(data);
+      console.log(socket.adapter.rooms)
     } catch (e){
       console.log(e)
     }

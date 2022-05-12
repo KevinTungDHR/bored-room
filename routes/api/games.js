@@ -32,7 +32,9 @@ router.post('/create', (req, res) => {
           io.to(req.body.code).emit("game_created", { assets, gameState })
           Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
             new: true
-          }).then(room => io.to(req.body.code).emit("game_started", room))
+          })
+          .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+          .then(room => io.to(req.body.code).emit("game_started", room))
             
           res.json("success") 
         })
