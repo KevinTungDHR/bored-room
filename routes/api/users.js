@@ -94,9 +94,9 @@ router.post('/login', (req, res) => {
               id: user.id, 
               handle: user.handle, 
               email: user.email,
-              avatar: req.user.avatar,
-              eloRating: req.user.eloRating,
-              bio: req.user.bio
+              avatar: user.avatar,
+              eloRating: user.eloRating,
+              bio: user.bio
             };
 
             jwt.sign(
@@ -124,9 +124,43 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     email: req.user.email,
     avatar: req.user.avatar,
     eloRating: req.user.eloRating,
-    bio: req.user.bio
+    bio: req.user.bio,
+    friends: req.user.friends
   });
 })
+
+router.post('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const friendHandle = {handle: req.body.friendHandle}
+
+  // need to add condition to not add if already in friend list.
+  
+  User.findOne(friendHandle)
+    .then(friend => {
+      req.user.friends.push({
+        id: friend.id,
+        handle: friend.handle
+      })
+      req.user.save()
+      res.json(req.user)
+    })
+})
+
+// router.delete('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+//   const friendHandle = {handle: req.body.friendHandle}
+//   const friendList = req.user.friends
+//   // friendList.deleteOne({handle: friendHandle})
+//   res.json(friendList)
+// })
+
+// router.get('/friend', passport.authenticate('jwt', {session: false}, (req, res) => {
+//   const friendHandle = req.user.friend.id
+
+//   User.findOne(friendHandle)
+//     .then(friend => {
+//       user.friend
+//       res.json(friend)
+//     })
+// }))
 
 router.patch('/update-profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   const { errors, isValid } = validateUpdateProfile(req.body);
