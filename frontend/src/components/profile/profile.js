@@ -147,8 +147,12 @@ class Profile extends React.Component {
     }
 
     render() {        
+        
         return (
-            this.props.user && this.profile()
+            <div>
+                {this.props.user && this.profile()}
+            </div>
+
         )
     }
 }
