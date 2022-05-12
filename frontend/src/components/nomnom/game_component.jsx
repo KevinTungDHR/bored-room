@@ -41,9 +41,9 @@ const GameComponent = ({ roomCode, socket }) => {
 
     if (gameState) {
       return (
-        <div>
+        <div className='page-container'>
           <div>
-            <h1 className='game-state-description'>{gameState.description}</h1>
+            <h1 className='game-state-description'>{gameState.description + '...'}</h1>
           </div>
 
           <div className='game-background'>
@@ -51,6 +51,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
               <div className='board-container'>
                 <div className='hand-container'>
+                  
                   {bullLogo}
                   <div className="card-container">
                     {player?.hand.map(c => {
@@ -67,7 +68,6 @@ const GameComponent = ({ roomCode, socket }) => {
                 </div>
 
                 {/* insert player selections */}
-                
 
               </div>
 
@@ -75,7 +75,7 @@ const GameComponent = ({ roomCode, socket }) => {
                     
               </div>
 
-              <ul>
+              {/* <ul>
                 
                 <li>possible_actions: {gameState.possibleActions}</li>
                 <li>description: {gameState.description}</li>
@@ -84,8 +84,8 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>type: {gameState.type}</li>
                 <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
               </ul> 
-              <button onClick={handleUpdate}>Update Game</button>
-              
+              <button onClick={handleUpdate}>Update Game</button> */}
+
             </div>
           </div>
         </div>

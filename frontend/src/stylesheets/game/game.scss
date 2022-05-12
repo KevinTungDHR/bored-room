@@ -1,6 +1,12 @@
 @import '../colors.scss';
 @import '../fonts.scss';
 
+.page-container {
+  background-image: url('../../assets/images/game_table.jpg');
+  display: flex;
+  flex-direction: column;
+}
+
 .game-background {
   height: 100vh;
   background-image: url('../../assets/images/game_table.jpg');
@@ -13,8 +19,9 @@
 }
 
 .game-state-description {
-  font-size: 16px;
+  font-size: 20px;
   font-family: 'Marker';
+  background-color: #fff;
   height: 28px;
   text-align: center;
 }
@@ -22,11 +29,14 @@
 .board-container {
   display: flex;
   flex-direction: column;
+  margin-left: 0px 10px;
 }
 
 .hand-container {
   background-color: $champ;
+  margin: 0px 10px;
   opacity: 0.8;
+  width: 100%;
 }
 
 .bull-logo {
@@ -39,7 +49,4 @@
 
 .card-container {
   display: block;
-  margin-left: 10px;
-  width: 100%;
-  height: 100%;
 }
