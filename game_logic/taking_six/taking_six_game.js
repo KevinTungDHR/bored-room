@@ -80,11 +80,21 @@ class TakingSixGame {
       return "Not a valid action";
     }
 
+    if(this.getState().type === 'activePlayer'){
+      if (!args.player._id.equals(this.getActivePlayer()._id)) {
+        return;
+      }
+    }
+
     return this[action](args);
   }
 
   getActivePlayer() {
-
+    for(let player of this.players){
+      if(player.activePlayer) {
+        return player;
+      }
+    }
   }
 
   // Automated Actions
@@ -185,6 +195,8 @@ class TakingSixGame {
     const nextCard = this.playedCards[0][1];
 
     if (this.cardSmallerThanAllRows(nextCard)) {
+      let currentPlayer = this.players.find(player => player._id.equals(this.playedCards[0][0]));
+      currentPlayer.activePlayer = true;
       const nextState = this.getState().transitions.TAKE_ROW;
       this.setState(nextState);
     } else {
@@ -195,9 +207,10 @@ class TakingSixGame {
 
   takeRow(data) {
     const [playerId, card] = this.playedCards.shift();
-    const player = this.players.find(p => p._id.equals(playerId));
+    let player = this.players.find(p => p._id.equals(playerId));
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
+    player.activePlayer = false;
 
     if (this.playedCards.length > 0) {
       const nextState = this.getState().transitions.CHECK_PLAYED_CARDS;

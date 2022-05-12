@@ -18,7 +18,7 @@ const Room = () => {
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
   const rooms = useSelector(state => state.entities.rooms);
-
+  
   useEffect(() => {
     socket.emit("join_room", roomCode);
     dispatch(fetchRoom(roomCode));

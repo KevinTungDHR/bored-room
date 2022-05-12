@@ -15,6 +15,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
   const dispatch = useDispatch();
+
   // const bullBrown = <img src={bull_brown} height="70px" width="70px" />
   // const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
@@ -49,7 +50,7 @@ const GameComponent = ({ roomCode, socket }) => {
               {bullLogo}
               <div className="card-container">
                 {player?.hand.map(c => {
-                  return Card(c);
+                  return <Card clicked={setChosenCard} card={c} />;
                 })}
               </div>
             </div>
@@ -69,6 +70,8 @@ const GameComponent = ({ roomCode, socket }) => {
               <li onClick={() => setChosenRow(3)}>row 3: {assets.rows[3].map(card => card.value).join(", ")}</li>
             </ul>
             <ul>
+              <li>name: {gameState.name}</li>
+              <li>score: {player?.score}</li>
               <li>possible_actions: {gameState.possibleActions}</li>
               <li>actions: {gameState.actions}</li>
               <li>type: {gameState.type}</li>

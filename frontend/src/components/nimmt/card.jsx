@@ -5,13 +5,13 @@ import bull_light from '../../assets/images/bull_light_purp.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
 
-export const Card = (card) => {
+export const Card = ({card, clicked}) => {
   const bullLight = <img src={bull_light} height="70px" width="70px" />
   const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
-  
+
   return ( 
-        <div className="card">
+        <div className="card" onClick={() => clicked(card)}>
           <div className="card-number">{card.value}</div>
           <div className="top-card">
             <p>{card.value}</p>
