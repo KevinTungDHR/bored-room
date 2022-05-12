@@ -11,12 +11,15 @@ import Footer from './footer/footer';
 import Modal from './modal/modal';
 import '../stylesheets/app.scss';
 import Room from './rooms/room';
+import { ProfileMotion } from './profile/profile_motion';
+import { Test } from './test';
 
 const App = () => (
     <div>
         <Modal />
         <NavBarContainer />
         <Switch>
+            <Route exact path="/test" component={Test} />
             <AuthRoute exact path="/login" component={LoginFormContainer} />
             <AuthRoute exact path="/register" component={SignupFormContainer} />
             <ProtectedRoute path="/rooms/:code" component={Room} />
