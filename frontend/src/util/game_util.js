@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 
-export const fetchGame = (gameId) => {
-  return axios.get(`/api/games/${gameId}`)
+export const fetchGame = (code) => {
+  return axios.get(`/api/games/${code}`)
 }
 
-export const createGame = (users) => {
-  return axios.post('/api/games/create', { users })
+export const createGame = (code, users) => {
+  return axios.post('/api/games/create', { code, users })
 }
 
-export const updateGame = (gameId, payload) => {
-  return axios.patch(`/api/games/${gameId}`, payload)
+export const updateGame = (code, payload) => {
+  return axios.patch(`/api/games/${code}`, payload)
 }

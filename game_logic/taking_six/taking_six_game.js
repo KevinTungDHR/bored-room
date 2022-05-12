@@ -158,9 +158,10 @@ class TakingSixGame {
   }
 
   chooseCard(player, card) {
-    
     const selectedPlayer = this.players.filter((p) => {
-      return p._id.toString() === player._id})[0];
+      
+      // _id is new Object_id
+      return p._id.equals(player._id)})[0];
     selectedPlayer.chosenCard = card;
   }
 
@@ -194,7 +195,7 @@ class TakingSixGame {
 
   takeRow(data) {
     const [playerId, card] = this.playedCards.shift();
-    const player = this.players.find(p => p._id.toString() === playerId);
+    const player = this.players.find(p => p._id.equals(playerId));
     this.takeAllRowCards(player, data.row);
     this.addCardToRow(card, data.row);
 
@@ -211,7 +212,7 @@ class TakingSixGame {
     this.addCardToRow(card, rowNum);
 
     if (this.rows[rowNum].length > 5) {
-      const player = this.players.find(p => p._id.toString() === playerId);
+      const player = this.players.find(p => p._id.equals(playerId));
       this.takeFullRow(player, rowNum);
     }
 
