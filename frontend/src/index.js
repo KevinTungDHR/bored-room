@@ -5,9 +5,8 @@ import configureStore from './store/store';
 import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
-import TakingSixGame from './logic_testing/taking_six_game';
-import state from './logic_testing/taking_six_state';
-import { createRoom, fetchAllRooms, fetchRoom, joinRoom, leaveRoom } from './actions/room_actions';
+import { createGame, fetchGame, updateGame } from './actions/game_actions';
+
 
 document.addEventListener('DOMContentLoaded', () => {
     let store;
@@ -42,21 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Testing Start
     window.getState = store.getState;
-    const game = new TakingSixGame();
-    game.setupNewGame([{_id: 1},{ _id: 2}]);
-    window.game =  game;
-    window.player1 = game.players[0];
-    window.player2 = game.players[1];
-    window.allStates = state;
-    window.state = game.getState;
+
 
 
     window.dispatch = store.dispatch;
-    window.fetchAllRooms = fetchAllRooms;
-    window.createRoom = createRoom;
-    window.fetchRoom = fetchRoom;
-    window.joinRoom = joinRoom;
-    window.leaveRoom = leaveRoom;
+    window.fetchGame = fetchGame;
+    window.createGame = createGame;
+    window.updateGame = updateGame;
     // Testing end
     const root = document.getElementById('root');
 

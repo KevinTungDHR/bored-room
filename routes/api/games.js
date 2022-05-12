@@ -23,17 +23,17 @@ router.post('/create', (req, res) => {
       const gameState = takingSixState[g.currentState]
 
       gameModel.save()
-        .then(game => res.json({game, gameState}))
+        .then(assets => res.json({assets, gameState}))
         .catch(err => res.status(422).json(err));
     });
 });
 
 router.get('/:id', (req, res) => {
   TakingSixModel.findById(req.params.id)
-    .then(game => {
+    .then(assets => {
       const gameState = takingSixState[g.currentState]
 
-      res.json({game, gameState})
+      res.json({assets, gameState})
     })
     .catch(err => res.status(404).json(["Game Not Found"]));
 })
@@ -41,9 +41,9 @@ router.get('/:id', (req, res) => {
 
 router.patch('/:id', (req, res) => {
   TakingSixModel.findById(req.params.id)
-    .then(game => {
+    .then(assets => {
 
-      const g = new games.TakingSixGame(game);
+      const g = new games.TakingSixGame(assets);
 
       try {
         g.handleEvent(req.body.action, req.body);
@@ -53,7 +53,7 @@ router.patch('/:id', (req, res) => {
       game.set(g);
       game.save();
       const gameState = takingSixState[g.currentState]
-      res.json({game, gameState})
+      res.json({assets, gameState})
     })
     .catch(err => res.status(404).json(["Game Not Found"]));
 });
