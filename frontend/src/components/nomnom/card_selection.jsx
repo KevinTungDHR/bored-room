@@ -5,13 +5,12 @@ import { Card } from './card';
 // entities.users
 
 const CardSelection = ({cards}) => {
+    if (!cards[0]) return null;
     return (
         <div className='selected-cards-container'>
-            {cards.map((card, i) => {
+            {cards[0].map((card, i) => {
                 if (i % 2 !== 0) {
-                    return <Card card = {card[1]} key = { i } />
-                } else {
-                    
+                    return <Card card={card} key = { i } />
                 }
             })}
         </div>

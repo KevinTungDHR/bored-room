@@ -23,6 +23,7 @@
   justify-content: flex-start;
   width: 100%;
   flex-wrap: wrap;
+  position: relative  ;
 }
 
 .game-state-description {
@@ -59,4 +60,8 @@
 
 .card-container {
   display: block;
+}
+
+.ai-star-icon {
+  color: #ff9933;
 }
