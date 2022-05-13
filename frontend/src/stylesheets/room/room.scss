@@ -1,3 +1,7 @@
 @import '../colors.scss';
 @import '../fonts.scss';
 
+.room-page-container {
+    background-image: url('../../assets/images/game_table.jpg');
+    background-repeat: repeat-y;
+}

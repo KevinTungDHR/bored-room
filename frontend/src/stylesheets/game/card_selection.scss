@@ -1,0 +1,13 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.selected-cards-container {
+    display: flex;
+    
+}
+
+.selected-cards-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
