@@ -11,7 +11,7 @@ import bull_logo from '../../assets/images/bull_logo.png';
 
 const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
-  const [chosenRow, setChosenRow] = useState([]);
+  const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
   const { gameState, assets } = useSelector(state => state.game);
