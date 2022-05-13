@@ -1,6 +1,7 @@
 import { 
   RECEIVE_ROOMS, 
-  RECEIVE_ROOM 
+  RECEIVE_ROOM, 
+  REMOVE_ROOM
 } from "../actions/room_actions";
 
 const roomReducer = (state = {}, action) => {
@@ -11,6 +12,9 @@ const roomReducer = (state = {}, action) => {
       return action.rooms;
     case RECEIVE_ROOM:
       nextState[action.room.code] = action.room;
+      return nextState;
+    case REMOVE_ROOM:
+      delete nextState[action.roomCode]
       return nextState;
     default:
       return state;

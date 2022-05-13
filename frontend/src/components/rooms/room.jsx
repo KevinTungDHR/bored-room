@@ -7,7 +7,7 @@ import { joinRoom, leaveRoom } from '../../util/rooms_util';
 import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
 import { createGame } from '../../util/game_util';
-import GameComponent from '../nimmt/game_component';
+import GameComponent from '../nomnom/game_component';
 
 const socket = io();
 
@@ -18,7 +18,7 @@ const Room = () => {
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
   const rooms = useSelector(state => state.entities.rooms);
-
+  
   useEffect(() => {
     socket.emit("join_room", roomCode);
     dispatch(fetchRoom(roomCode));
@@ -76,7 +76,7 @@ const Room = () => {
   )
 
   return(
-    <div>
+    <div className='room-page-container'>
       {renderSeatButtons()}
       In Room {roomCode}
       <input type="text" onChange={(e) => setMessage(e.target.value)}/>

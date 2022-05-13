@@ -24,19 +24,19 @@ router.post('/create', (req, res) => {
         currentState: g.currentState,
       });
 
-      const gameState = takingSixState[gameModel.currentState]
+      const gameState = takingSixState[gameModel.currentState];
 
       gameModel.save()
         .then(assets => {
 
-          io.to(req.body.code).emit("game_created", { assets, gameState })
+          io.to(req.body.code).emit("game_created", { assets, gameState });
           Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
             new: true
           })
           .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-          .then(room => io.to(req.body.code).emit("game_started", room))
+          .then(room => io.to(req.body.code).emit("game_started", room));
             
-          res.json("success") 
+          res.json("success");
         })
         .catch(err => res.status(422).json(err));
     });
@@ -46,42 +46,53 @@ router.get('/:code', (req, res) => {
   TakingSixModel.findOne({ code: req.params.code })
     .then(assets => {
       
-      const gameState = takingSixState[assets.currentState]
+      const gameState = takingSixState[assets.currentState];
 
-      res.json({assets, gameState})
+      res.json({assets, gameState});
     })
     .catch(err => res.status(404).json(["Game Not Found"]));
-})
+});
 
 
-router.patch('/:code', passport.authenticate("jwt", { session: false }), (req, res) => {
+router.patch('/:code', passport.authenticate("jwt", { session: false }), async (req, res) => {
   let io = req.app.get("io");
 
-  TakingSixModel.findOne({ code: req.params.code })
-    .then(game => {
+  let game = await TakingSixModel.findOne({ code: req.params.code })
+  
+  if(!game){
+    return res.status(404).json(["No game found"]);
+  }
+  let count = 0
+  const g = new games.TakingSixGame(game);
+  const player = req.user;
 
-      const g = new games.TakingSixGame(game);
+  try {
+    g.handleEvent(req.body.action, { ...req.body, player } );
+    game.set(g);
+    let assets = await game.save()
+    const gameState = takingSixState[assets.currentState];
+    io.to(req.params.code).emit("game_updated", { assets, gameState });
+  } catch (err) {
+    console.error(err);
+  }
 
-      try {
-        const player = req.user
-        g.handleEvent(req.body.action, { ...req.body, player } );
-      } catch (err) {
-        console.error(err)
-      }
+
+  while(g.getState()['type'] === "automated" && count < 25){
+    console.log(count)
+    count += 1;
+    let action = g.getState().actions[0]
+    try {
+      g.handleEvent(action);
       game.set(g);
-      game.save()
-      .then(assets => {
-        const gameState = takingSixState[assets.currentState]
-        try {
-          io.to(req.params.code).emit("game_updated", { assets, gameState })
-          console.log("working")
-        } catch (e) {
-          console.log(`error ${e}`)
-        }
-        res.json("success");
-      })
-    })
-    .catch(err => res.status(404).json(["Game Not Found"]));
+      let assets = await game.save()
+      const gameState = takingSixState[assets.currentState];
+      io.to(req.params.code).emit("game_updated", { assets, gameState });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  res.json("success")
 });
 
 module.exports = router;
