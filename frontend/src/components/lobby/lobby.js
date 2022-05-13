@@ -13,11 +13,15 @@ class Lobby extends React.Component {
     }
 
     handleChange(e){
-        this.setState({ roomName: e.target.value })
+        let newState = this.state;
+        newState.roomName = e.target.value;
+        this.setState({ newState })
     }
 
     updateSearch(e) {
-        this.setState({ search: e.target.value })
+        let newState = this.state;
+        newState.search = e.target.value;
+        this.setState({ newState })
     }
 
     handleSubmit(e){
@@ -61,7 +65,6 @@ class Lobby extends React.Component {
                     </form>
                 </div>
 
-                {/* 0, 1, 2 // 3, 4, 5 // 6, 7, 8 */}
                 <ul className='lobby-rooms'>
                     {rooms.slice().reverse().map((room, idx) => {
                         
@@ -79,14 +82,17 @@ class Lobby extends React.Component {
                             <div>
                                 <ul>
                                     {room.seatedUsers.map((user, i) => {
-                                        return (
-                                            <li key={i}>{user.handle + " " + user.eloRating}</li>
-                                        )
+                                        if (user.handle) {
+                                            return (
+                                                <li key={i}>{user.handle + " " + user.eloRating}</li>
+                                            )
+                                        }
+                                        
                                     })}
                                 </ul>
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
-                            <button onClick={() => deleteRoom(room.code)}>Delete Room</button>
+                            <button className='delete-btn' onClick={() => deleteRoom(room.code)}>Delete Room</button>
                         </motion.li>
                         }
                     })}

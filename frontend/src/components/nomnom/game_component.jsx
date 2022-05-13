@@ -9,7 +9,6 @@ import bull_brown from '../../assets/images/bull_brown.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
 import {AiFillStar} from 'react-icons/ai';
-// import star from '../../assets/images/star.svg';
 
 const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
@@ -17,15 +16,11 @@ const GameComponent = ({ roomCode, socket }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
   const { gameState, assets } = useSelector(state => state.game);
-  
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
   const users = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const dispatch = useDispatch();
-  // const bullBrown = <img src={bull_brown} height="70px" width="70px" />
-  // const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
-  // const star = <img className="star" src={star} height="16px" width="16px" />
 
   useEffect(() => {
     dispatch(fetchGame(roomCode));
@@ -91,7 +86,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {<CardSelection cards={assets.playedCards} users={users} />}
+                    {<CardSelection cards={assets.playedCards} users={users} setIsAnimating={setIsAnimating} />}
                   </div>
                 </div>
 

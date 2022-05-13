@@ -1,5 +1,5 @@
 import React from "react";
-// import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import bull_brown from '../../assets/images/bull_brown.png';
 import bull_light from '../../assets/images/bull_light_purp.png';
 import bull_purp from '../../assets/images/bull_purp.png';
@@ -16,7 +16,10 @@ export const Card = ({card, setChosenCard, index, type}) => {
   const cardType = type ? type.value : undefined;
   
   return ( 
-    <div className="card" > 
+    <motion.div 
+      animate={{ x: [-1240, 0] }}
+      transition={{ duration: 1 }}
+      className="card" > 
           <div className="card-number">{card.value}</div>
           <div className="top-card">
             <p>{card.value}</p>
@@ -38,6 +41,6 @@ export const Card = ({card, setChosenCard, index, type}) => {
               </div>
               <p>{card.value}</p>
           </div>
-        </div>
+        </motion.div>
   )
 }
