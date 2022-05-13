@@ -30,7 +30,7 @@ export const receiveErrors = errors => {
 
 
 export const signup = user => dispatch => {
-    return APIUtil.signup(user)
+    APIUtil.signup(user)
         .then((res) => {
             const { token } = res.data;
             localStorage.setItem('jwtToken', token);

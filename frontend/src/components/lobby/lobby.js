@@ -70,9 +70,7 @@ class Lobby extends React.Component {
                         
                         if (room.name.toLowerCase().startsWith(this.state.search.toLowerCase())) {
                             count += 1;
-                            // debugger
                             if (count === 4) {
-                                // debugger
                                 count = 0;
                                 sign = sign * -1;
                             }
