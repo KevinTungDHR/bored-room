@@ -3,6 +3,7 @@ import * as RoomUtil from '../util/rooms_util';
 export const RECEIVE_ROOMS = 'RECEIVE_ROOMS';
 export const RECEIVE_ROOM = 'RECEIVE_ROOM';
 export const RECEIVE_ROOM_ERRORS = 'RECEIVE_ROOM_ERRORS'
+export const REMOVE_ROOM = 'REMOVE_ROOM';
 
 const receiveRooms = (rooms) => {
   return {
@@ -24,6 +25,13 @@ const receiveRoomErrors = (errors) => {
     errors
   }
 };
+
+const removeRoom = (roomCode) => {
+  return {
+    type: REMOVE_ROOM,
+    roomCode
+  }
+}
 
 export const fetchAllRooms = () => dispatch => {
   return RoomUtil.fetchAllRooms()
@@ -52,5 +60,11 @@ export const joinRoom = (roomCode) => dispatch => {
 export const leaveRoom = (roomCode) => dispatch => {
   return RoomUtil.leaveRoom(roomCode)
       .then(res => dispatch(receiveRoom(res.data)))
+      .catch(errors => dispatch(receiveRoomErrors(errors)))
+}
+
+export const deleteRoom = (roomCode) => dispatch => {
+  return RoomUtil.deleteRoom(roomCode)
+      .then(() => dispatch(removeRoom(roomCode)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }

@@ -23,7 +23,6 @@ const GameComponent = ({ roomCode, socket }) => {
   useEffect(() => {
     dispatch(fetchGame(roomCode));
     socket.on('game_updated', (game) => dispatch(receiveGame(game)));
-
   },[]);
 
   const handleUpdate = (e) => {
