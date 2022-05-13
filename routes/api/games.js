@@ -73,9 +73,8 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     const gameState = takingSixState[assets.currentState];
     io.to(req.params.code).emit("game_updated", { assets, gameState });
   } catch (err) {
-    console.error(err);
+    return res.status(402).json(err);
   }
-
 
   while(g.getState()['type'] === "automated" && count < 25){
     console.log(count)
@@ -88,7 +87,7 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       const gameState = takingSixState[assets.currentState];
       io.to(req.params.code).emit("game_updated", { assets, gameState });
     } catch (err) {
-      console.error(err);
+      return res.status(402).json(err);
     }
   }
 
