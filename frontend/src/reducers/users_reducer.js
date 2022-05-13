@@ -10,7 +10,6 @@ const usersReducer = (state = {}, action) => {
         case UPDATE_AVATAR:
             return Object.assign({}, state, {[state.session.user.avatar]: action.avatar});
         case UPDATE_USER:
-            debugger
             nextState[action.user.data._id] = action.user.data
             return nextState;
         default:

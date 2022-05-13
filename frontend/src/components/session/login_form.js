@@ -35,13 +35,16 @@ class LoginForm extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        let user = {
-            email: this.state.email,
-            password: this.state.password
-        };
+        // let user = {
+        //     email: this.state.email,
+        //     password: this.state.password
+        // };
+        const user = Object.assign({}, this.state)
+
         
-        this.props.login(user).then(() => 
-            (errors) => this.props.receiveErrors(errors));
+        this.props.login(user)
+            // .then(() => 
+            // (errors) => this.props.receiveErrors(errors));
     }
 
     // Render the session errors if there are any
@@ -50,7 +53,7 @@ class LoginForm extends React.Component {
             <ul>
                 {Object.keys(this.state.errors).map((error, i) => (
                     <li className='session-error' key={`error-${i}`}>
-                        {/* {this.state.errors[error]} */}
+                        {this.state.errors[error]}
                     </li>
                 ))}
             </ul>

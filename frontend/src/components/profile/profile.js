@@ -11,7 +11,7 @@ class Profile extends React.Component {
         super(props);
 
         this.state = {
-            user: this.props.user,
+            user: {},
             btn: 'Edit',
             background: null
             // currImg: 1
@@ -26,22 +26,30 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
-        this.props.fetchUser().then(() => {
-            this.setState({user: this.props.user})
-        });
+        this.props.fetchUser()
+        //     .then(() => {
+        //     this.setState({user: this.props.user})
+        // });
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.user !== this.props.user) {
+            this.setState({user: this.props.user})            
+        }
     }
 
     handleChangeBio(e) {
         let newState = this.state;
         newState.user.bio = e.target.value;
         this.setState(newState);
-        debugger;
+        // this.setState({user: {bio: e.target.value}})
     }
 
     handleChangeHandle(e) {
         let newState = this.state;
         newState.user.handle = e.target.value;
         this.setState(newState);
+        // this.setState({user: {handle: e.target.value}})
     }
 
     handleChangeEmail(e) {
@@ -67,9 +75,7 @@ class Profile extends React.Component {
         let button = document.getElementById('profile-btn');
         button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit";
         button.className = (prevBtn === 'Edit') ? 'profile-save-btn' : 'profile-edit-btn';
-        debugger
         if (prevBtn === 'Save') {
-            debugger;
             this.props.updateUser(this.state.user);
             this.setState({ newState })
         }
