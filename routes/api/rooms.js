@@ -1,4 +1,5 @@
 const express = require("express");
+const req = require("express/lib/request");
 const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -92,7 +93,6 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
     })
 })
 
-
 router.get('/:code', (req, res) => {
   // populate will join the associated ref for their name.
   Room.findOne({ code: req.params.code })
@@ -100,6 +100,12 @@ router.get('/:code', (req, res) => {
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
     );
+});
+
+router.delete('/:code', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Room.findOneAndDelete({ code: req.params.code })
+    .then(room => res.json(room))
+    .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" }));
 });
 
 module.exports = router;
