@@ -177,6 +177,9 @@ class TakingSixGame {
 
   // State Actions
   playCard(data) {
+    if(!data.card || data.card === -1){
+      throw "Please select a card"
+    }
     this.chooseCard(data.player, data.card);
     if (this.playersHaveChosenCards()) {
       this.players.forEach(player => {
@@ -206,6 +209,9 @@ class TakingSixGame {
   }
 
   takeRow(data) {
+    if (data.row == null){
+      throw "Please choose a row";
+    }
     const [playerId, card] = this.playedCards.shift();
     let player = this.players.find(p => p._id.equals(playerId));
     this.takeAllRowCards(player, data.row);

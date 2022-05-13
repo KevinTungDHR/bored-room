@@ -74,7 +74,6 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), (req, r
         const gameState = takingSixState[assets.currentState];
         try {
           io.to(req.params.code).emit("game_updated", { assets, gameState });
-          console.log("working");
         } catch (e) {
           console.log(`error ${e}`);
         }

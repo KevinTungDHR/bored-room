@@ -55,7 +55,10 @@ const GameComponent = ({ roomCode, socket }) => {
                   {bullLogo}
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
-                      return <Card card={c} setChosenCard={setChosenCard} type={{value: 'hand'}} key={idx}/>;
+                      return (
+                      <div onClick={() => setChosenCard(c)}> 
+                        <Card card={c} type={{value: 'hand'}} key={idx}/>
+                      </div>)
                     })}
                   </div>
                 </div>
@@ -87,6 +90,9 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>actions: {gameState.actions}</li>
                 <li>type: {gameState.type}</li>
                 <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
+                <li>Chosen Card: {chosenCard?.value}</li>
+                <li>Chosen Row: {chosenRow}</li>
+                <li>Your points: {player?.score}</li>
               </ul> 
               <button onClick={handleUpdate}>Update Game</button>
 
