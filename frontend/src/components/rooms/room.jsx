@@ -76,7 +76,7 @@ const Room = () => {
   )
 
   return(
-    <div>
+    <div className='room-page-container'>
       {renderSeatButtons()}
       In Room {roomCode}
       <input type="text" onChange={(e) => setMessage(e.target.value)}/>

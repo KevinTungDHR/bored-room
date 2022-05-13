@@ -41,7 +41,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
     if (gameState) {
       return (
-        <div className='page-container'>
+        <div className='game-flex-container'>
           <div>
             <h1 className='game-state-description'>{gameState.description + '...'}</h1>
           </div>
@@ -54,20 +54,24 @@ const GameComponent = ({ roomCode, socket }) => {
                   
                   {bullLogo}
                   <div className="card-container">
-                    {player?.hand.map(c => {
-                      return <Card card={c} setChosenCard={setChosenCard}/>;
+                    {player?.hand.map((c, idx) => {
+                      return <Card card={c} setChosenCard={setChosenCard} type={{value: 'hand'}} key={idx}/>;
                     })}
                   </div>
                 </div>
-
-                <div className='grid-container'>
-                  <div className='game-grid'>
-                    {assets.rows.map((row, idx) => <GridRow idx={idx} setChosenRow={setChosenRow} row={row}/>)}
+                <div className='grid-selected-container'>
+                  <div className='grid-container'>
+                    <div className='game-grid'>
+                      {assets.rows.map((row, idx) => <GridRow idx={idx} setChosenRow={setChosenRow} row={row} key={idx} />)}
+                    </div>
+                    <div></div>
                   </div>
-                  <div></div>
-                </div>
 
-                {/* insert player selections */}
+                  {/* insert player selections */}
+                  <div className='selected-cards-wrapper'>
+                    {assets.playedCards && <CardSelection players={assets.players} />}
+                  </div>
+                </div>
 
               </div>
 
@@ -75,7 +79,7 @@ const GameComponent = ({ roomCode, socket }) => {
                     
               </div>
 
-              {/* <ul>
+              <ul>
                 
                 <li>possible_actions: {gameState.possibleActions}</li>
                 <li>description: {gameState.description}</li>
@@ -84,7 +88,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>type: {gameState.type}</li>
                 <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
               </ul> 
-              <button onClick={handleUpdate}>Update Game</button> */}
+              <button onClick={handleUpdate}>Update Game</button>
 
             </div>
           </div>

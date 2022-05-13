@@ -7,7 +7,7 @@ const GridRow = ({ setChosenRow, row, idx }) => {
   return (
     <div onClick={() => setChosenRow(idx)} className='row-container'>
       {[0, 1, 2, 3, 4, 5].map((i) => {
-          return <Card card={row[i]} index={i} />
+          return <Card card={row[i]} type={{value: 'row'}} index={i} key={i} />
       })}
     </div>
   )

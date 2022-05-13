@@ -1,8 +1,7 @@
 @import '../colors.scss';
 @import '../fonts.scss';
 
-.page-container {
-  background-image: url('../../assets/images/game_table.jpg');
+.game-flex-container {
   display: flex;
   flex-direction: column;
 }
@@ -16,6 +15,10 @@
 .game-container {
   display: flex;
   justify-content: space-between;
+}
+
+.grid-selected-container {
+  display: flex;
 }
 
 .game-state-description {
