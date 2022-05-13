@@ -4,4 +4,64 @@
 .room-page-container {
     background-image: url('../../assets/images/game_table.jpg');
     background-repeat: repeat-y;
+    height: 100vh;
+
+    // h1 {
+    //     font-size: 52px;
+    //     font-family: 'Om-Botak';
+    // }
+}
+
+.join-btn {
+    position: absolute;
+    top: 78%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 26px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.seat-btn-1 {
+    transform: translate(-50%, 0);
+    background-color: $seaweed;
+    height: 26px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.seat-btn-2 {
+    transform: translate(-50%, 0);
+    background-color: $coral;
+    height: 26px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.seat-btn-1 {
+    transform: translate(-50%, 0);
+    background-color: $champ;
+    height: 26px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
 }

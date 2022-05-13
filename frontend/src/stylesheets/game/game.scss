@@ -10,6 +10,7 @@
   height: 100vh;
   background-image: url('../../assets/images/game_table.jpg');
   position: relative;
+  width: 100%;
 }
 
 .game-container {
@@ -19,6 +20,10 @@
 
 .grid-selected-container {
   display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+  position: relative  ;
 }
 
 .game-state-description {
@@ -33,13 +38,16 @@
   display: flex;
   flex-direction: column;
   margin-left: 0px 10px;
+  max-width: 1240px;
+  width: 85%;
 }
 
 .hand-container {
   background-color: $champ;
   margin: 0px 10px;
   opacity: 0.8;
-  width: 100%;
+  margin-bottom: 10px;
+  // width: 1240px;
 }
 
 .bull-logo {
@@ -52,4 +60,8 @@
 
 .card-container {
   display: block;
+}
+
+.ai-star-icon {
+  color: #ff9933;
 }

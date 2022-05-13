@@ -14,6 +14,3 @@ const GridRow = ({ setChosenRow, row, idx }) => {
 }
 
 export default GridRow;
-
-// assets.rows[0][0] = card
-// assets.rows[0].length = card

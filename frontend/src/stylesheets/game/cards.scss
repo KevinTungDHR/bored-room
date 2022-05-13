@@ -71,3 +71,14 @@
   width: 100px;
   margin-top: 10px;
 }
+
+.player-stats {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 28px;
+}
+
+.player-container {
+  margin-left: 10px;
+}

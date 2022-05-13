@@ -2,9 +2,16 @@
 @import '../fonts.scss';
 
 .scoreboard-container {
-  width: 300px;
-  height: 700px;
+  width: 15%;
+  height: 500px;
+  margin-right: 10px;
+  margin-top: 10px;
   background-color: $champ;
-}
+  font-family: 'Really-Free';
+  font-size: 32px;
 
+  h1 {
+    text-align: center;
+  }
+}
 

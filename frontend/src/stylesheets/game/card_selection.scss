@@ -3,11 +3,11 @@
 
 .selected-cards-container {
     display: flex;
-    
+    flex-wrap: wrap;
 }
 
 .selected-cards-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 28%;
+    left: 85%;
+    position: absolute;
 }
