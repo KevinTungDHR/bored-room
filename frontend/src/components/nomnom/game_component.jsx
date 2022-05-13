@@ -13,7 +13,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
   const [chosenRow, setChosenRow] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [stateQueue, setStateQueue] = useState();
+  const [stateQueue, setStateQueue] = useState([]);
   const { gameState, assets } = useSelector(state => state.game);
   
   const sessionId = useSelector(state => state.session.user.id);
@@ -37,7 +37,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
   useEffect(() => {
     if(!isAnimating && stateQueue.length > 0){
-      nextUpdate = stateQueue[0];
+      let nextUpdate = stateQueue[0];
       setStateQueue(oldState => oldState.slice(1));
       dispatch(receiveGame(nextUpdate))
     }
