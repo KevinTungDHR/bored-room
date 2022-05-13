@@ -10,6 +10,7 @@
   height: 100vh;
   background-image: url('../../assets/images/game_table.jpg');
   position: relative;
+  width: 100%;
 }
 
 .game-container {
@@ -19,6 +20,7 @@
 
 .grid-selected-container {
   display: flex;
+  justify-content: flex-start;
 }
 
 .game-state-description {
@@ -33,6 +35,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 0px 10px;
+  max-width: 1240px;
 }
 
 .hand-container {

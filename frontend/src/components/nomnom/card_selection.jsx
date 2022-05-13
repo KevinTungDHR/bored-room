@@ -7,7 +7,14 @@ import { Card } from './card';
 const CardSelection = ({players}) => {
     return (
         <div className='selected-cards-container'>
-            {players.map((player, i) => <Card card={player.chosenCard} type={{value: 'selected'}} key={i} />)}
+            {/* {players.map((player, i) => <Card card={player.chosenCard} type={{value: 'selected'}} key={i} />)} */}
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
         </div>
     )
 }

@@ -4,7 +4,7 @@ import bull_brown from '../../assets/images/bull_brown.png';
 import bull_light from '../../assets/images/bull_light_purp.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
-import { GiBull } from 'react-icons/gi'
+import { GiBull } from 'react-icons/gi';
 
 export const Card = ({card, setChosenCard, index, type}) => {
   if (!card && index === 5) return <div className='blank-square'><GiBull className="gi-bull-icon" /></div>
