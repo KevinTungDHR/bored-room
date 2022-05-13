@@ -8,6 +8,7 @@ import CardSelection from './card_selection';
 import bull_brown from '../../assets/images/bull_brown.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
+// import star from '../../assets/images/star.svg';
 
 const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
@@ -20,10 +21,11 @@ const GameComponent = ({ roomCode, socket }) => {
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
   const users = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const dispatch = useDispatch();
-debugger
+// debugger
   // const bullBrown = <img src={bull_brown} height="70px" width="70px" />
   // const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
+  // const star = <img className="star" src={star} height="16px" width="16px" />
 
   useEffect(() => {
     dispatch(fetchGame(roomCode));
@@ -97,7 +99,23 @@ debugger
 
               <div className='scoreboard-container'>
                     {users.map((player) => {
-                      return <div>{player}</div>;
+                      return (
+                        <div>
+                          <div>
+                            {/* {player avater} */}
+                          </div>
+                          <div> 
+                            <div>
+                              {player}
+                            </div>
+                            <div>
+                              {player.score}
+                              {/* {star} */}
+                            </div>
+
+                          </div>
+                        </div>
+                      )
                     })}
               </div>
 
@@ -113,7 +131,7 @@ debugger
                 <li>Chosen Row: {chosenRow}</li>
                 <li>Your points: {player?.score}</li>
               </ul>  */}
-              <button onClick={handleUpdate}>Update Game</button>
+              {/* <button onClick={handleUpdate}>Update Game</button> */}
 
             </div>
           </div>
