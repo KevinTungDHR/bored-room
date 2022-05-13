@@ -12,6 +12,8 @@ import bull_logo from '../../assets/images/bull_logo.png';
 const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
   const [chosenRow, setChosenRow] = useState();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [stateQueue, setStateQueue] = useState([]);
   const { gameState, assets } = useSelector(state => state.game);
   
   const sessionId = useSelector(state => state.session.user.id);
@@ -24,8 +26,22 @@ const GameComponent = ({ roomCode, socket }) => {
 
   useEffect(() => {
     dispatch(fetchGame(roomCode));
-    socket.on('game_updated', (game) => dispatch(receiveGame(game)));
+    socket.on('game_updated', (game) => {
+      if(stateQueue.length !== 0 || isAnimating){
+        setStateQueue(oldState => [...oldState, game])
+      } else {
+        dispatch(receiveGame(game))
+      }
+    });  
   },[]);
+
+  useEffect(() => {
+    if(!isAnimating && stateQueue.length > 0){
+      let nextUpdate = stateQueue[0];
+      setStateQueue(oldState => oldState.slice(1));
+      dispatch(receiveGame(nextUpdate))
+    }
+  }, [isAnimating])
 
   const handleUpdate = (e) => {
     e.preventDefault();
