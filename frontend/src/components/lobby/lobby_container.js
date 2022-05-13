@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { createRoom, fetchAllRooms } from '../../actions/room_actions';
+import { createRoom, deleteRoom, fetchAllRooms } from '../../actions/room_actions';
 import Lobby from './lobby';
 
 const mapState = state => ({
@@ -9,7 +9,8 @@ const mapState = state => ({
 const mapDispatch = (dispatch) => {
     return {
         fetchAllRooms: () => dispatch(fetchAllRooms()),
-        createRoom: (roomName) => dispatch(createRoom(roomName))
+        createRoom: (roomName) => dispatch(createRoom(roomName)),
+        deleteRoom: (roomCode) => dispatch(deleteRoom(roomCode))
     }
 }
 

@@ -16,7 +16,7 @@ export const Card = ({card, setChosenCard, index, type}) => {
   const cardType = type ? type.value : undefined;
   
   return ( 
-    <div className="card" onClick={type === 'hand' ? () => setChosenCard(card) : undefined}> 
+    <div className="card" > 
           <div className="card-number">{card.value}</div>
           <div className="top-card">
             <p>{card.value}</p>

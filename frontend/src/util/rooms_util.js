@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 export const fetchAllRooms = () => {
   return axios.get('/api/rooms/')
 }
@@ -21,3 +20,6 @@ export const leaveRoom = (roomCode) => {
   return axios.patch(`/api/rooms/${roomCode}/leave`)
 }
 
+export const deleteRoom = (roomCode) => {
+  return axios.delete(`/api/rooms/${roomCode}`)
+}

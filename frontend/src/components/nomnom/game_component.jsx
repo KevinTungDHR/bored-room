@@ -17,6 +17,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
   const dispatch = useDispatch();
+
   // const bullBrown = <img src={bull_brown} height="70px" width="70px" />
   // const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
@@ -24,7 +25,6 @@ const GameComponent = ({ roomCode, socket }) => {
   useEffect(() => {
     dispatch(fetchGame(roomCode));
     socket.on('game_updated', (game) => dispatch(receiveGame(game)));
-
   },[]);
 
   const handleUpdate = (e) => {
@@ -55,7 +55,10 @@ const GameComponent = ({ roomCode, socket }) => {
                   {bullLogo}
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
-                      return <Card card={c} setChosenCard={setChosenCard} type={{value: 'hand'}} key={idx}/>;
+                      return (
+                      <div onClick={() => setChosenCard(c)}> 
+                        <Card card={c} type={{value: 'hand'}} key={idx}/>
+                      </div>)
                     })}
                   </div>
                 </div>
@@ -87,6 +90,9 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>actions: {gameState.actions}</li>
                 <li>type: {gameState.type}</li>
                 <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
+                <li>Chosen Card: {chosenCard?.value}</li>
+                <li>Chosen Row: {chosenRow}</li>
+                <li>Your points: {player?.score}</li>
               </ul> 
               <button onClick={handleUpdate}>Update Game</button>
 

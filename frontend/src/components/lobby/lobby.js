@@ -34,7 +34,7 @@ class Lobby extends React.Component {
     }
 
     render() {
-        const { rooms } = this.props;
+        const { rooms, deleteRoom } = this.props;
         let count = 0;
         let sign = 2000;
         return (
@@ -86,6 +86,7 @@ class Lobby extends React.Component {
                                 </ul>
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
+                            <button onClick={() => deleteRoom(room.code)}>Delete Room</button>
                         </motion.li>
                         }
                     })}
