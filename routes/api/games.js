@@ -61,24 +61,24 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), (req, r
     .then(game => {
 
       const g = new games.TakingSixGame(game);
+      const player = req.user;
 
       try {
-        const player = req.user;
         g.handleEvent(req.body.action, { ...req.body, player } );
       } catch (err) {
         console.error(err);
       }
       game.set(g);
       game.save()
-      .then(assets => {
-        const gameState = takingSixState[assets.currentState];
-        try {
-          io.to(req.params.code).emit("game_updated", { assets, gameState });
-        } catch (e) {
-          console.log(`error ${e}`);
-        }
-        res.json("success");
-      });
+          .then(assets => {
+            const gameState = takingSixState[assets.currentState];
+            try {
+              io.to(req.params.code).emit("game_updated", { assets, gameState });
+            } catch (e) {
+              console.log(`error ${e}`);
+            }
+            res.json("success");
+          });
     })
     .catch(err => res.status(404).json(["Game Not Found"]));
 });
