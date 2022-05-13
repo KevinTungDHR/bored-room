@@ -69,16 +69,16 @@ const Room = () => {
     </div> 
     : 
     <div>
-      <button onClick={joinSeat}>Sit</button>
-      <button onClick={leaveSeat}>Get Up</button>
-      <button onClick={handleCreate}>Start Game</button>
+      <button className='seat-btn-1' onClick={joinSeat}>Sit</button>
+      <button className='seat-btn-2' onClick={leaveSeat}>Get Up</button>
+      <button className='seat-btn-3' onClick={handleCreate}>Start Game</button>
     </div>
   )
 
   return(
     <div className='room-page-container'>
+      <h1>In Room {roomCode}</h1>
       {renderSeatButtons()}
-      In Room {roomCode}
       <input type="text" onChange={(e) => setMessage(e.target.value)}/>
       <button onClick={sendMessage} >Send</button>
       <ul>
