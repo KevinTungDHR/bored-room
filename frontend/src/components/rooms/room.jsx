@@ -65,7 +65,7 @@ const Room = () => {
   const renderSeatButtons = () => (
     rooms[roomCode]?.gameStarted ? 
     <div>
-      <GameComponent socket={socket} roomCode={roomCode}/>
+      <GameComponent socket={socket} roomCode={roomCode} />
     </div> 
     : 
     <div>

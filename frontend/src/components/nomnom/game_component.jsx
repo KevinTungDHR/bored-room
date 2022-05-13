@@ -16,8 +16,9 @@ const GameComponent = ({ roomCode, socket }) => {
   
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
+  const users = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const dispatch = useDispatch();
-
+debugger
   // const bullBrown = <img src={bull_brown} height="70px" width="70px" />
   // const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
@@ -72,17 +73,19 @@ const GameComponent = ({ roomCode, socket }) => {
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {assets.playedCards && <CardSelection players={assets.players} />}
+                    {<CardSelection cards={assets.playedCards} users={users} />}
                   </div>
                 </div>
 
               </div>
 
               <div className='scoreboard-container'>
-                    
+                    {users.map((player) => {
+                      return <div>{player}</div>;
+                    })}
               </div>
 
-              <ul>
+              {/* <ul>
                 
                 <li>possible_actions: {gameState.possibleActions}</li>
                 <li>description: {gameState.description}</li>
@@ -93,7 +96,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>Chosen Card: {chosenCard?.value}</li>
                 <li>Chosen Row: {chosenRow}</li>
                 <li>Your points: {player?.score}</li>
-              </ul> 
+              </ul>  */}
               <button onClick={handleUpdate}>Update Game</button>
 
             </div>

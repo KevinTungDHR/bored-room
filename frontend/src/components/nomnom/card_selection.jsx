@@ -4,17 +4,16 @@ import { Card } from './card';
 // assets.players.each.chosenCard = {value: , bulls: } (i.e. card)
 // entities.users
 
-const CardSelection = ({players}) => {
+const CardSelection = ({cards}) => {
     return (
         <div className='selected-cards-container'>
-            {/* {players.map((player, i) => <Card card={player.chosenCard} type={{value: 'selected'}} key={i} />)} */}
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
+            {cards.map((card, i) => {
+                if (i % 2 !== 0) {
+                    return <Card card = {card[1]} key = { i } />
+                } else {
+                    
+                }
+            })}
         </div>
     )
 }
