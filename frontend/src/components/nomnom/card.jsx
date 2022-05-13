@@ -4,14 +4,19 @@ import bull_brown from '../../assets/images/bull_brown.png';
 import bull_light from '../../assets/images/bull_light_purp.png';
 import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
+import { GiBull } from 'react-icons/gi'
 
-export const Card = ({card, clicked}) => {
+export const Card = ({card, setChosenCard, index, type}) => {
+  if (!card && index === 5) return <div className='blank-square'><GiBull className="gi-bull-icon" /></div>
+  if (!card && type.value === 'selected') return <div></div>
+  if (!card) return <div className='blank-square'></div>
   const bullLight = <img src={bull_light} height="70px" width="70px" />
   const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
-
+  const cardType = type ? type.value : undefined;
+  
   return ( 
-        <div className="card" onClick={() => clicked(card)}>
+    <div className="card" onClick={type === 'hand' ? () => setChosenCard(card) : undefined}> 
           <div className="card-number">{card.value}</div>
           <div className="top-card">
             <p>{card.value}</p>

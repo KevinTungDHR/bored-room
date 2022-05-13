@@ -1,42 +1,11 @@
 // test.js - construct a card
-.board-background {
-  height: 100vh;
-  background-image: url('../../assets/images/game_table.jpg');
-  position: relative;
-}
-
-.game-state-description {
-  font-size: 16px;
-  font-family: 'Marker';
-  height: 28px;
-  text-align: center;
-}
-
-.hand-container {
-  height: 160px;
-  max-width: fit-content;
-  background-color: $champ;
-  opacity: 0.8;
-}
-
-.bull-logo {
-  top: 18%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  position: absolute;
-  opacity: 0.2;
-}
-
-.card-container {
-  display: block;
-  margin-left: 10px;
-}
+@import '../colors.scss';
+@import '../fonts.scss';
 
 .card {
   float: left;
   margin-right: 10px;
   margin-top: 10px;
-  padding: 0px 2px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -49,6 +18,14 @@
   font-family: 'Marker';
   font-size: 16px;
   cursor: pointer;
+}
+
+.blank-square {
+  height: 140px;
+  width: 100px;;
+  background-color: $champ;
+  margin-right: 10px;
+  margin-top: 10px;
 }
 
 .card-number {
@@ -86,4 +63,11 @@
   padding-left: 10px;
   padding-right: 10px;
   transform: rotate(180deg) scaleX(-1);
+}
+
+.gi-bull-icon {
+  color: red;
+  height: 100px;
+  width: 100px;
+  margin-top: 10px;
 }
