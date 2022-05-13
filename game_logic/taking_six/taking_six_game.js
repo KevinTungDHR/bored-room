@@ -39,7 +39,7 @@ class TakingSixGame {
         activePlayer: false,
         score: 66,
         pile: [],
-        hand: this.deck.splice(0, 11),
+        hand: this.deck.splice(0, 10),
         chosenCard: { value: -1, bulls: 0 }
       });
     });
@@ -267,9 +267,17 @@ class TakingSixGame {
       player.pile = [];
       player.chosenCard = { value: -1, bulls: 0 }
     });
+    
+    this.rows.forEach((row) => {
+      this.deck = this.deck.concat(row)
+    })
 
-    this.shuffleCards();
-    this.players.forEach(player => player.hand = this.deck.splice(0, 11));
+    this.rows = [];
+    for (let i = 0; i < 4; i++) {
+      this.rows.push([this.deck.pop()]);
+    }
+
+    this.players.forEach(player => player.hand = this.deck.splice(0, 10));
 
     const nextState = this.getState().transitions.PLAYER_CHOOSE_CARD;
     this.setState(nextState);
