@@ -26,8 +26,8 @@ const state = {
     description: function (activeTeam) {
       return (`${activeTeam} must discuss and turn dial`);
     },
-    possibleActions: ["setDial"],
-    actions: ['setDial'],
+    possibleActions: ["makeGuess"],
+    actions: ['makeGuess'],
     transitions: {
       LEFT_RIGHT_PHASE: 4
     }
@@ -35,8 +35,8 @@ const state = {
   4: {
     name: "LEFT_RIGHT_PHASE",
     type: "multipleActivePlayer",
-    possibleActions: ["makeGuess"],
-    actions: ["makeGuess"],
+    possibleActions: ["chooseLeftRight"],
+    actions: ["chooseLeftRight"],
     description: function (activeTeam) {
       return (`${activeTeam} must guess left or right`);
     },
