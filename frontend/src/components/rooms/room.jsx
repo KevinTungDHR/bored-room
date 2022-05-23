@@ -68,28 +68,43 @@ const Room = () => {
       <GameComponent socket={socket} roomCode={roomCode} />
     </div> 
     : 
-    <div>
-      <button className='seat-btn-1' onClick={joinSeat}>Sit</button>
-      <button className='seat-btn-2' onClick={leaveSeat}>Get Up</button>
-      <button className='seat-btn-3' onClick={handleCreate}>Start Game</button>
+    <div className='room-page-container'>
+      <h1 className='room-title'>In Room {roomCode}</h1>
+      <div className='seat-btns'>
+        <div className='sit-get-btns'>
+          <button className='seat-btn-1' onClick={joinSeat}>Sit</button>
+          <button className='seat-btn-2' onClick={leaveSeat}>Get Up</button>
+        </div>
+        <button className='start-game-btn' onClick={handleCreate}>Start Game</button>
+      </div>
+
+      <div className='chat-wrapper'>
+        <div className='chat-users'>
+          <div className='users-header'>Seated Users</div>
+          <ul className='users-box'>
+            {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+          </ul>
+        </div>
+
+        <div className='chat-items'>
+          <div className='chat-box'>
+            <span>Type a message here: </span>
+            <input type="text" onChange={(e) => setMessage(e.target.value)}/>
+            <button onClick={sendMessage} >Send</button>
+          </div>
+
+          <ul className='chat-area'>
+            {list.map((item, idx) => <li key={idx}>{item}</li>)}
+          </ul>
+        </div>
+
+      </div>
     </div>
   )
 
   return(
-    <div className='room-page-container'>
-      <h1>In Room {roomCode}</h1>
+    <div>
       {renderSeatButtons()}
-      <input type="text" onChange={(e) => setMessage(e.target.value)}/>
-      <button onClick={sendMessage} >Send</button>
-      <ul>
-        {list.map((item, idx) => <li key={idx}>{item}</li>)}
-      </ul>
-
-      <div>Seated Users</div>
-      <ul>
-        {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
-      </ul>
-        
     </div>
   );
 }

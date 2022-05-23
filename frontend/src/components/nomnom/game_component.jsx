@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGame, receiveGame } from '../../actions/game_actions';
 import { updateGame } from '../../util/game_util';
 import { Card } from './card';
 import GridRow from './grid_row';
 import CardSelection from './card_selection';
-import bull_brown from '../../assets/images/bull_brown.png';
-import bull_purp from '../../assets/images/bull_purp.png';
 import bull_logo from '../../assets/images/bull_logo.png';
 import {AiFillStar} from 'react-icons/ai';
 
@@ -30,8 +28,39 @@ const GameComponent = ({ roomCode, socket }) => {
       } else {
         dispatch(receiveGame(game))
       }
-    });  
+    });
   },[]);
+
+  const setChoiceAndUpdate = (c) => {
+    setChosenCard(c);
+  }
+
+  const setRowAndUpdate = (idx) => {
+    if (chosenRow === idx) {
+      handleUpdate()
+    } else {
+      setChosenRow(idx);
+    }
+  }
+
+  const firstUpdate = useRef(true)
+  const firstUpdateRow = useRef(true)
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false
+      return
+    }
+    handleUpdate();
+  }, [chosenCard])
+
+  useEffect(() => {
+    if (firstUpdateRow.current) {
+      firstUpdateRow.current = false
+      return
+    }
+    handleUpdate();
+  }, [chosenRow])
 
   useEffect(() => {
     if(!isAnimating && stateQueue.length > 0){
@@ -42,7 +71,7 @@ const GameComponent = ({ roomCode, socket }) => {
   }, [isAnimating])
 
   const handleUpdate = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const payload = {
       action: gameState.actions[0],
       card: chosenCard,
@@ -70,7 +99,7 @@ const GameComponent = ({ roomCode, socket }) => {
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
                       return (
-                      <div onClick={() => setChosenCard(c)}> 
+                        <div onClick={(e) => setChoiceAndUpdate(c, e)} > 
                         <Card card={c} type={{value: 'hand'}} key={idx}/>
                       </div>)
                     })}
@@ -79,8 +108,19 @@ const GameComponent = ({ roomCode, socket }) => {
                 <div className='grid-selected-container'>
                   <div className='grid-container'>
                     <div className='game-grid'>
-                      {assets.rows.map((row, idx) => <GridRow idx={idx} setChosenRow={setChosenRow} row={row} key={idx} />)}
+                      {assets.rows.map((row, idx) => {
+                        return (
+                          <div onClick={() => setRowAndUpdate(idx)} className='row-container'>
+                            {[0, 1, 2, 3, 4, 5].map((i) => {
+                              return <Card card={row[i]} type={{ value: 'row' }} index={i} key={i} />
+                            })}
+                          </div>
+                        )
+                      })}
                     </div>
+
+                    {/* // <GridRow chosenRow={chosenRow} idx={idx} handleUpdate={handleUpdate} setChosenRow={setChosenRow} row={row} key={idx} />) */}
+
                     <div></div>
                   </div>
 
