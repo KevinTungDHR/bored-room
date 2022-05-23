@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from './card';
 
-const GridRow = ({ setChosenRow, row, idx }) => {
-  
+const GridRow = ({ setChosenRow, chosenRow, handleUpdate, row, idx }) => {
+  // useEffect(() => {
+  //   if (typeof chosenRow === 'undefined') {
+  //     debugger
+  //     return
+  //   }
+  //   debugger
+  //   handleUpdate()
+  // }, [chosenRow])
 
   return (
     <div onClick={() => setChosenRow(idx)} className='row-container'>

@@ -7,8 +7,8 @@
 }
 
 .game-background {
-  height: 100vh;
   background-image: url('../../assets/images/game_table.jpg');
+  background-repeat: repeat-y;
   position: relative;
   width: 100%;
 }
