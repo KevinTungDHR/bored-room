@@ -44,7 +44,6 @@ class TakingSixGame {
       });
     });
 
-
     this.currentState = 2;
     // Create 4 rows
     for (let i = 0; i < 4; i++) {

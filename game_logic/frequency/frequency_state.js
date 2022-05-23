@@ -49,7 +49,7 @@ const state = {
     type: "automated",
     actions: ["scorePoints"],
     transitions: {
-      ROUND_SETUP: 10,
+      PSYCHIC_PHASE: 2,
       GAME_END: 99
     }
   },
