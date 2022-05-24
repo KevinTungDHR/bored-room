@@ -9,8 +9,8 @@ import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
 import * as TakingSixUtil from '../../util/game_util';
 import * as FrequencyUtil from '../../util/frequency_util';
-import GameComponent from '../nomnom/game_component';
 import FrequencyGame from '../games/frequency/frequency_game';
+import GameComponent from '../taking_six/game_component';
 
 const socket = io();
 

@@ -6,6 +6,7 @@
   height: 500px;
   margin-right: 10px;
   margin-top: 10px;
+  margin-left: 10px;
   background-color: $champ;
   font-family: 'Really-Free';
   font-size: 32px;
@@ -15,3 +16,15 @@
   }
 }
 
+.player-container {
+  display: flex;
+  justify-content: space-around;
+  margin-left: 10px;
+}
+
+.player-stats {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 28px;
+}

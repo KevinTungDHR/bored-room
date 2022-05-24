@@ -4,10 +4,9 @@
 .selected-cards-container {
     display: flex;
     flex-wrap: wrap;
+    background-color: $champ;
 }
 
 .selected-cards-wrapper {
-    width: 28%;
-    left: 85%;
-    position: absolute;
+    min-width: 320px;
 }

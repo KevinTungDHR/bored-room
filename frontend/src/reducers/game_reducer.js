@@ -1,5 +1,5 @@
-import { 
-  RECEIVE_GAME, 
+import {
+  RECEIVE_GAME,
 } from "../actions/game_actions";
 
 const gameReducer = (state = {}, action) => {
