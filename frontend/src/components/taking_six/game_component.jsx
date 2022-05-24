@@ -32,18 +32,16 @@ const GameComponent = ({ roomCode, socket }) => {
   },[]);
 
   const setChoiceAndUpdate = (c, e) => {
-    const chosenEles = document.getElementsByClassName('chosen').length;
-    debugger
+    const chosenEles = document.getElementsByClassName('card chosen').length;
     if (gameState.possibleActions[0] === 'playCard' && chosenEles === 0) {
       if (e.target.className !== 'card') {
         e.target.parentElement.className += " chosen";
+        setChosenCard(c);
       } else {
         e.target.className += ' chosen';
+        setChosenCard(c);
       }
     }
-    
-    setChosenCard(c);
-    debugger
   }
 
   const setRowAndUpdate = (idx) => {
@@ -62,6 +60,10 @@ const GameComponent = ({ roomCode, socket }) => {
       firstUpdate.current = false
       return
     }
+
+    const card = document.getElementsByClassName('chosen')[0];
+    debugger
+    card.classList.remove('chosen');
     handleUpdate();
   }, [chosenCard])
 
@@ -70,7 +72,9 @@ const GameComponent = ({ roomCode, socket }) => {
       firstUpdateRow.current = false
       return
     }
+    
     handleUpdate();
+
   }, [chosenRow])
 
 
@@ -92,8 +96,6 @@ const GameComponent = ({ roomCode, socket }) => {
     updateGame(roomCode, payload)
       .then(data => console.log(data))
       .catch(err => console.error(err))
-    debugger
-    document.getElementsByClassName('chosen-card').className = 'card';
   };
 
     if (gameState) {
