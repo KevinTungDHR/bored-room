@@ -19,7 +19,7 @@ export const Card = ({card, setChosenCard, index, type}) => {
     <motion.div 
       animate={{ x: [-1240, 0] }}
       transition={{ duration: 1 }}
-      className="card" > 
+      className="card"> 
           <div className="card-number">{card.value}</div>
           <div className="top-card">
             <p>{card.value}</p>

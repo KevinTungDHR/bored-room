@@ -7,7 +7,6 @@ class NavBar extends React.Component {
         super(props);
         this.logoutUser = this.logoutUser.bind(this);
         this.getLinks = this.getLinks.bind(this);
-        this.activateModal = this.activateModal.bind(this);
     }
 
     componentDidMount() {
@@ -36,10 +35,6 @@ class NavBar extends React.Component {
         }
     }
 
-    activateModal() {
-        this.props.openModal({ formType: 'TakeSixInstructions'})
-    }
-
     render() {
         const inRoom = this.props.history.location.pathname.includes('rooms');
         return (
@@ -49,7 +44,6 @@ class NavBar extends React.Component {
                     <Link to="/" className="nav-title"> Bored Room</Link>
                 </div>
                 <div className='nav-links'>
-                    {inRoom && <button onClick={this.activateModal} className="instructions-btn">How to Play</button>}
                     {this.getLinks()}
                 </div>
             </div>

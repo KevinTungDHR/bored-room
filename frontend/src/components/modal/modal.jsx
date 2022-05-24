@@ -15,9 +15,6 @@ function Modal ({ modal, user, closeModal, updateUser }) {
         case 'avatar':
             component = <Avatar user={user} updateUser={updateUser} closeModal={closeModal}/>
             break;
-        case 'TakeSixInstructions':
-            // component = 
-            break;
         default:
             break;
     }
