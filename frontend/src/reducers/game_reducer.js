@@ -4,9 +4,11 @@ import {
 
 const gameReducer = (state = {}, action) => {
   Object.freeze(state)
+  const nextState = Object.assign({}, state);
   switch(action.type){
     case RECEIVE_GAME:
-      return action.game;      
+      nextState[action.game.assets.code] = action.game;
+      return nextState;
     default:
       return state;
   }

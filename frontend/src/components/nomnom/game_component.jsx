@@ -13,9 +13,10 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
-  const { gameState, assets } = useSelector(state => state.game);
+  const gameState = useSelector(state => state.games[roomCode]?.gameState);
+  const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
-  const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
+  const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
   const users = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />

@@ -11,6 +11,7 @@ const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
 const games = require("./routes/api/games");
+const frequency = require("./routes/api/frequency");
 const proxySetup = require('./config/setupProxyFile');
 
 mongoose
@@ -23,7 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());  
 app.use("/api/users", users);
 app.use("/api/rooms", rooms);
-app.use("/api/games", games)
+app.use("/api/games", games);
+app.use("/api/frequency", frequency);
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
