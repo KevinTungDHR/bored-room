@@ -4,8 +4,7 @@
 
 .card {
   float: left;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 4px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -24,8 +23,7 @@
   height: 140px;
   width: 100px;;
   background-color: $champ;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 4px;
 }
 
 .card-number {

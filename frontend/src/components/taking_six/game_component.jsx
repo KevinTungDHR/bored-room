@@ -118,9 +118,7 @@ const GameComponent = ({ roomCode, socket }) => {
                         )
                       })}
                     </div>
-
-                    {/* // <GridRow chosenRow={chosenRow} idx={idx} handleUpdate={handleUpdate} setChosenRow={setChosenRow} row={row} key={idx} />) */}
-
+                    
                     <div></div>
                   </div>
 
@@ -146,7 +144,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
                       {assets.players.map((player) => {
                         return <div className='player-stats'>
-                            {player.score}
+                            <div>{player.score}</div>
                             <AiFillStar className="ai-star-icon" />
                           </div>
                       })}
@@ -154,7 +152,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 </div>
               </div>
 
-              <ul>
+              <ul className='helper-detail'>
                 
                 <li>possible_actions: {gameState.possibleActions}</li>
                 <li>description: {gameState.description}</li>
@@ -166,7 +164,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>Chosen Row: {chosenRow}</li>
                 <li>Your points: {player?.score}</li>
               </ul> 
-              <button onClick={handleUpdate}>Update Game</button>
+              {/* <button onClick={handleUpdate}>Update Game</button> */}
 
             </div>
           </div>
