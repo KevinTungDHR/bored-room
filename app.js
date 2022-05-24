@@ -50,17 +50,13 @@ io.on("connection", socket => {
   socket.broadcast.emit('message', "User has connected");
 
   socket.on("join_room", (data)=>{
-    console.log(`joining ${data}`);
     socket.join(data);
-    console.log(socket.adapter.rooms)
-
   });
 
   socket.on("leave_room", (data)=>{
     console.log(`leaving ${data}`);
     try{
       socket.leave(data);
-      console.log(socket.adapter.rooms)
     } catch (e){
       console.log(e)
     }
@@ -71,6 +67,10 @@ io.on("connection", socket => {
     io.in(data.roomCode).emit("receive_message", data);
   });
 
+  socket.on('update_guess', (data) => {
+    // socket.broadcast.emit("receive_message", data);
+    io.in(data.roomCode).emit("guess_updated", data);
+  });
   socket.on("disconnect", (reason) => {
     io.emit("message", "user has left");
     console.log(`User Disconnected: ${reason}`);

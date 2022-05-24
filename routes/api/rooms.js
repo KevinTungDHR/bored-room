@@ -117,9 +117,11 @@ router.patch('/:code/joinTeam', passport.authenticate('jwt', {session: false}), 
       } else {
         room.redTeam.pull(req.user._id);
       }
-
-      io.to(req.params.code).emit("user_sits", room)
-      res.json("success");
+      room.save()
+        .then(room => {
+          io.to(req.params.code).emit("user_sits", room)
+          res.json("success");
+        })
     })
     .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
 })
