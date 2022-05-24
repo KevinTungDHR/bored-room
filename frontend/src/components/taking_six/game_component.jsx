@@ -5,8 +5,8 @@ import { updateGame } from '../../util/game_util';
 import { Card } from './card';
 import CardSelection from './card_selection';
 import bull_logo from '../../assets/images/bull_logo.png';
-import {AiFillStar} from 'react-icons/ai';
-import { openModal } from '../../actions/modal_actions';
+import { AiFillStar } from 'react-icons/ai';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 import GameEnd from './game_end';
 import { motion } from 'framer-motion';
 
@@ -20,7 +20,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
   const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
-  const usersHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
+  const userHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
@@ -50,6 +50,7 @@ const GameComponent = ({ roomCode, socket }) => {
   }
 
   const setRowAndUpdate = (idx) => {
+    if (gameState.actions[0] === 'playCard') return;
     if (chosenRow === idx) {
       handleUpdate()
     } else {
@@ -66,7 +67,10 @@ const GameComponent = ({ roomCode, socket }) => {
       return
     }
     const card = document.getElementsByClassName('chosen')[0];
-    card.classList.remove('chosen');
+    if (card) {
+      card.classList.remove('chosen');
+    }
+
     handleUpdate();
   }, [chosenCard])
 
@@ -77,7 +81,6 @@ const GameComponent = ({ roomCode, socket }) => {
     }
     
     handleUpdate();
-
   }, [chosenRow])
 
 
@@ -129,7 +132,7 @@ const GameComponent = ({ roomCode, socket }) => {
                     <div className='game-grid'>
                       {assets.rows.map((row, idx) => {
                         return (
-                          <div onClick={() => setRowAndUpdate(idx)} className='row-container'>
+                          <div onClick={() => setRowAndUpdate(idx)} className={gameState.actions[0] === 'playCard' ? 'row-container-disabled' : 'row-container'} >
                             {[0, 1, 2, 3, 4, 5].map((i) => {
                               return <Card card={row[i]} type={{ value: 'row' }} index={i} key={i} />
                             })}
@@ -143,37 +146,67 @@ const GameComponent = ({ roomCode, socket }) => {
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {<CardSelection cards={assets.playedCards} allUsers={usersHandles} setIsAnimating={setIsAnimating} />}
+                    {<CardSelection cards={assets.playedCards} setIsAnimating={setIsAnimating} />}
                   </div>
                 </div>
 
               </div>
 
-              <div className='scoreboard-container'>
-                <div>
-                  <h1>Players</h1>
-                  <div className='player-container'>
-                    <div className='player-handles'>
-                      {usersHandles.map((player) => {
-                        return (
-                          <div>
-                            {player}
-                          </div>
-                        )
-                      })}
-                    </div>
-                    <div className='player-scores'>
-                      {assets.players.map((player) => {
-                        return <div className='player-stats'>
-                            <div>{player.score}</div>
-                            <AiFillStar className="ai-star-icon" />
-                          </div>
-                      })}
+              <div className='right-container'>
+                <div className='scoreboard-container'>
+                  <div>
+                    <h1>Players</h1>
+                    <div className='player-container'>
+                      <div>
+                        {allUsers.map((user) => {
+                          let playedCard;
+                          {allPlayers.forEach((player) => {
+                              if (player._id === user._id) {
+                                playedCard = player.chosenCard.value !== -1;
+                              }
+                          })}
+                          return (
+                            <div className='player-handles'>
+                              {playedCard ? <AiOutlineCheckCircle className='chosen-indicator' /> : <span></span> }
+                              {user.handle}
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <div className='player-scores'>
+                        {assets.players.map((player) => {
+                          return <div className='player-stats'>
+                              <div>{player.score}</div>
+                              <AiFillStar className="ai-star-icon" />
+                            </div>
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
+                <div className='taking-six-instructions'>
+                  <div>
+                    <h1>Taking Six Rules:</h1>
+                    <span><h2>Setup:</h2> Every player starts with 66 points and a hand of 10 cards, ranging from 1 to 104. There are four rows starting with a single card in each row. Each row can take up to 5 cards.</span>
+                    <span><h2>Objective:</h2> Have the most points remaining at the end of the game.</span>
+                  </div>
+                  <div>
+                    <ol>
+                      <h2>Game Play:</h2>
+                      <li>Each turn players simultaneously choose a card. Each card, in ascending order, is then placed in one of the four rows.</li>
+                      <li>The card added to a row must be higher than the last card in that row.</li>
+                      <li>The card added must always be added to a row with the smallest possible difference between the last card and the current one. For example, if the rows are: 10, 12, 15, 30, then the card numbered 16 must go in the third row after 15.</li>
+                      <li>The player who places the sixth card in a row takes all five cards and their card becomes the first card in the row</li>
+                      <li>The player who takes a row loses points based off the number of bull symbols on each card</li>
+                      <li>If a player plays a card that is so low that it cannot be placed in a row, that player must take all cards in a row of their choice.</li>
+                    </ol>
+                    <span><h2>Game End:</h2> A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</span>
+                  </div>
+                  
+                </div>
+              </div>
+{/* 
               <ul className='helper-detail'>
                 
                 <li>possible_actions: {gameState.possibleActions}</li>
@@ -185,7 +218,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>Chosen Card: {chosenCard?.value}</li>
                 <li>Chosen Row: {chosenRow}</li>
                 <li>Your points: {player?.score}</li>
-              </ul> 
+              </ul>  */}
               
                 {gameState.actions[0] === 'gameEnd' && 
                   <motion.div 
