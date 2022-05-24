@@ -41,6 +41,6 @@ export const Card = ({card, setChosenCard, index, type}) => {
               </div>
               <p>{card.value}</p>
           </div>
-        </motion.div>
+      </motion.div>
   )
 }

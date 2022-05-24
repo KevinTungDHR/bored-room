@@ -7,7 +7,7 @@ import { joinRoom, leaveRoom } from '../../util/rooms_util';
 import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
 import { createGame } from '../../util/game_util';
-import GameComponent from '../nomnom/game_component';
+import GameComponent from '../taking_six/game_component';
 
 const socket = io();
 

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchGame, receiveGame } from '../../actions/game_actions';
 import { updateGame } from '../../util/game_util';
 import { Card } from './card';
-import GridRow from './grid_row';
 import CardSelection from './card_selection';
 import bull_logo from '../../assets/images/bull_logo.png';
 import {AiFillStar} from 'react-icons/ai';
+import { openModal } from '../../actions/modal_actions';
+import GameEnd from './game_end';
+import { motion } from 'framer-motion';
 
 const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
@@ -16,7 +18,9 @@ const GameComponent = ({ roomCode, socket }) => {
   const { gameState, assets } = useSelector(state => state.game);
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
-  const users = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
+  const allPlayers = useSelector(state => state.game?.assets?.players)
+  const usersHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
+  const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
 
@@ -31,8 +35,17 @@ const GameComponent = ({ roomCode, socket }) => {
     });
   },[]);
 
-  const setChoiceAndUpdate = (c) => {
-    setChosenCard(c);
+  const setChoiceAndUpdate = (c, e) => {
+    const chosenEles = document.getElementsByClassName('card chosen').length;
+    if (gameState.possibleActions[0] === 'playCard' && chosenEles === 0) {
+      if (e.target.className !== 'card') {
+        e.target.parentElement.className += " chosen";
+        setChosenCard(c);
+      } else {
+        e.target.className += ' chosen';
+        setChosenCard(c);
+      }
+    }
   }
 
   const setRowAndUpdate = (idx) => {
@@ -51,6 +64,8 @@ const GameComponent = ({ roomCode, socket }) => {
       firstUpdate.current = false
       return
     }
+    const card = document.getElementsByClassName('chosen')[0];
+    card.classList.remove('chosen');
     handleUpdate();
   }, [chosenCard])
 
@@ -59,8 +74,11 @@ const GameComponent = ({ roomCode, socket }) => {
       firstUpdateRow.current = false
       return
     }
+    
     handleUpdate();
+
   }, [chosenRow])
+
 
   useEffect(() => {
     if(!isAnimating && stateQueue.length > 0){
@@ -99,8 +117,8 @@ const GameComponent = ({ roomCode, socket }) => {
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
                       return (
-                        <div onClick={(e) => setChoiceAndUpdate(c, e)} > 
-                        <Card card={c} type={{value: 'hand'}} key={idx}/>
+                      <div className='card-overlay' onClick={(e) => setChoiceAndUpdate(c, e)} >
+                        <Card card={c} type={{value: 'hand'}} key={idx} />
                       </div>)
                     })}
                   </div>
@@ -118,15 +136,13 @@ const GameComponent = ({ roomCode, socket }) => {
                         )
                       })}
                     </div>
-
-                    {/* // <GridRow chosenRow={chosenRow} idx={idx} handleUpdate={handleUpdate} setChosenRow={setChosenRow} row={row} key={idx} />) */}
-
+                    
                     <div></div>
                   </div>
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {<CardSelection cards={assets.playedCards} users={users} setIsAnimating={setIsAnimating} />}
+                    {<CardSelection cards={assets.playedCards} allUsers={usersHandles} setIsAnimating={setIsAnimating} />}
                   </div>
                 </div>
 
@@ -136,25 +152,28 @@ const GameComponent = ({ roomCode, socket }) => {
                 <div>
                   <h1>Players</h1>
                   <div className='player-container'>
-                      {users.map((player) => {
+                    <div className='player-handles'>
+                      {usersHandles.map((player) => {
                         return (
                           <div>
                             {player}
                           </div>
                         )
                       })}
-
+                    </div>
+                    <div className='player-scores'>
                       {assets.players.map((player) => {
                         return <div className='player-stats'>
-                            {player.score}
+                            <div>{player.score}</div>
                             <AiFillStar className="ai-star-icon" />
                           </div>
                       })}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <ul>
+              <ul className='helper-detail'>
                 
                 <li>possible_actions: {gameState.possibleActions}</li>
                 <li>description: {gameState.description}</li>
@@ -166,7 +185,15 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>Chosen Row: {chosenRow}</li>
                 <li>Your points: {player?.score}</li>
               </ul> 
-              <button onClick={handleUpdate}>Update Game</button>
+              
+                {gameState.actions[0] === 'gameEnd' && 
+                  <motion.div 
+                    className='end-game-backdrop'
+                    animate={{ scale: [0, 1] }}
+                    transition={{ duration: 0.5 }}>
+                    <GameEnd allUsers={allUsers} allPlayers={allPlayers} />
+                  </motion.div>
+                }
 
             </div>
           </div>
@@ -176,8 +203,3 @@ const GameComponent = ({ roomCode, socket }) => {
 }
 
 export default GameComponent;
-
-{/* <h2>Game State</h2>
-  <div>Chosen Card: {chosenCard?.value}</div>
-  <div>Chosen Row: {chosenRow}</div>
-  <div>Your points: {player?.score}</div> */}

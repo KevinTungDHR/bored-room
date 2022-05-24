@@ -4,8 +4,7 @@
 
 .card {
   float: left;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 4px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -20,12 +19,15 @@
   cursor: pointer;
 }
 
+.chosen {
+  outline: 4px solid $coral;
+}
+
 .blank-square {
   height: 140px;
   width: 100px;;
   background-color: $champ;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 4px;
 }
 
 .card-number {
@@ -72,13 +74,4 @@
   margin-top: 10px;
 }
 
-.player-stats {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 28px;
-}
 
-.player-container {
-  margin-left: 10px;
-}
