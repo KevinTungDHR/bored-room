@@ -16,7 +16,7 @@
 .game-background {
   background-image: url('../../assets/images/game_table.jpg');
   background-repeat: repeat-y;
-  height: 100%;
+  min-height: 100vh;
   position: relative;
   width: 100%;
 }
