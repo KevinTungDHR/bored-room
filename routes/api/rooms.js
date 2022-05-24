@@ -27,9 +27,14 @@ router.post('/', passport.authenticate("jwt", { session: false }),
 
     const newRoom = new Room({
       name: req.body.name,
+      game: req.body.game,
       seatedUsers: [{
         _id: req.user._id
       }],
+      redTeam: [{
+        _id: req.user.id
+      }],
+      blueTeam: [],
       code: roomCode
     });
 
@@ -42,6 +47,8 @@ router.get('/', (req, res) => {
 
   Room.find()
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+    .populate("redTeam")
+    .populate("blueTeam")
     .then(rooms => {
 
       const objRooms = rooms.reduce((acc, curr) => (acc[curr.code] = curr, acc), {});
@@ -49,6 +56,8 @@ router.get('/', (req, res) => {
     })
     .catch(err => res.status(404).json({ noRoomsFound: "No Rooms Found"}));
 });
+
+
 
 router.patch('/:code/join', passport.authenticate('jwt', {session: false}), (req, res) => {
   let io = req.app.get("io");
@@ -93,10 +102,58 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
     })
 })
 
+router.patch('/:code/joinTeam', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let io = req.app.get("io");
+
+  Room.findOneAndUpdate({ code: req.params.code },
+    { $addToSet: { [req.body.team]: { _id: req.user._id }}},
+    { new: true })
+    .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+    .populate("redTeam")
+    .populate("blueTeam")
+    .then(room => {
+      if (req.body.team === 'redTeam'){
+        room.blueTeam.pull(req.user._id);
+      } else {
+        room.redTeam.pull(req.user._id);
+      }
+
+      io.to(req.params.code).emit("user_sits", room)
+      res.json("success");
+    })
+    .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
+})
+
+router.patch('/:code/leaveTeam', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let io = req.app.get("io");
+
+  Room.findOne({ code: req.params.code })
+    .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+    .populate("redTeam")
+    .populate("blueTeam")
+    .then(room => {
+      if(!room) {
+        return res.status(404).json("No room");
+      }
+
+      room[req.body.team].pull(req.user._id)
+
+      room.save()
+        .then(room => {
+          io.to(req.params.code).emit("user_leaves", room);
+          res.json("success");
+        })
+      .catch(errs => res.json(errs))
+    })
+})
+
+
 router.get('/:code', (req, res) => {
   // populate will join the associated ref for their name.
   Room.findOne({ code: req.params.code })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+    .populate("redTeam")
+    .populate("blueTeam")
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
     );

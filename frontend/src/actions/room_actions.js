@@ -39,8 +39,8 @@ export const fetchAllRooms = () => dispatch => {
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }
 
-export const createRoom = (roomName) => dispatch => {
-  return RoomUtil.createRoom(roomName)
+export const createRoom = (roomName, gameName) => dispatch => {
+  return RoomUtil.createRoom(roomName, gameName)
       .then(res => dispatch(receiveRoom(res.data)))
       .catch(errors => dispatch(receiveRoomErrors(errors)))
 }

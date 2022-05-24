@@ -4,10 +4,13 @@ import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { fetchRoom  } from '../../actions/room_actions';
 import { joinRoom, leaveRoom } from '../../util/rooms_util';
+import * as RoomUtil from '../../util/rooms_util';
 import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
-import { createGame } from '../../util/game_util';
+import * as TakingSixUtil from '../../util/game_util';
+import * as FrequencyUtil from '../../util/frequency_util';
 import GameComponent from '../nomnom/game_component';
+import FrequencyGame from '../games/frequency/frequency_game';
 
 const socket = io();
 
@@ -41,9 +44,16 @@ const Room = () => {
   },[]);
 
   const handleCreate = (e) =>{
-    console.log("CLICKED")
+    switch(rooms[roomCode].game){
+      case 'Taking Six':
+        TakingSixUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers)
+      case 'Frequency':
+        const { redTeam, blueTeam } = rooms[roomCode]
+        FrequencyUtil.createGame(roomCode, { redTeam, blueTeam })
+      default:
+        return null;
+    }
     // if (rooms[roomCode]?.seatedUsers.length > 1){
-      createGame(roomCode, rooms[roomCode]?.seatedUsers)
     // }
   }
 
@@ -62,10 +72,55 @@ const Room = () => {
     leaveRoom(roomCode)
   };
 
+  const joinTeam = (team) => {
+    RoomUtil.joinTeam(team)
+  }
+
+  const leaveTeam = (team) => {
+    RoomUtil.leaveTeam(team)
+  }
+
+  const renderGameComponent = () =>{
+    switch(rooms[roomCode].game){
+      case 'Taking Six':
+        return <GameComponent socket={socket} roomCode={roomCode} />
+      case 'Frequency':
+        return <FrequencyGame socket={socket} roomCode={roomCode} />
+      default:
+        return null;
+    }
+  }
+
+  const renderSeatedUsers = () => (
+    <div className='chat-users'>
+      <div className='users-header'>Seated Users</div>
+      <ul className='users-box'>
+        {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+      </ul>
+    </div>
+  )
+
+  const renderTeams = () => (
+    <div>
+      <div>Red Team</div>
+      <button className='seat-btn-1' onClick={() => joinTeam('redTeam')}>Join Red</button>
+      <button className='seat-btn-2' onClick={() => leaveTeam('redTeam')}>Leave Team</button>
+      <ul>
+        {rooms[roomCode]?.redTeam.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+      </ul>
+      <div>Blue Team</div>
+      <button className='seat-btn-1' onClick={() => joinTeam('blueTeam')}>Join Blue</button>
+      <button className='seat-btn-2' onClick={() => leaveTeam('blueTeam')}>Leave Team</button>
+      <ul>
+        {rooms[roomCode]?.blueTeam.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+      </ul>
+    </div>
+  )
+
   const renderSeatButtons = () => (
     rooms[roomCode]?.gameStarted ? 
     <div>
-      <GameComponent socket={socket} roomCode={roomCode} />
+      {renderGameComponent()}
     </div> 
     : 
     <div className='room-page-container'>
@@ -79,12 +134,7 @@ const Room = () => {
       </div>
 
       <div className='chat-wrapper'>
-        <div className='chat-users'>
-          <div className='users-header'>Seated Users</div>
-          <ul className='users-box'>
-            {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
-          </ul>
-        </div>
+        {rooms[roomCode]?.game === "Frequency" ? renderTeams() : renderSeatedUsers()}
 
         <div className='chat-items'>
           <div className='chat-box'>
