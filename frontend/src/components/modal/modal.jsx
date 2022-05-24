@@ -15,6 +15,9 @@ function Modal ({ modal, user, closeModal, updateUser }) {
         case 'avatar':
             component = <Avatar user={user} updateUser={updateUser} closeModal={closeModal}/>
             break;
+        case 'TakeSixInstructions':
+            // component = 
+            break;
         default:
             break;
     }
@@ -34,7 +37,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeModal: () => dispatch(closeModal()),
     updateUser: (user) => dispatch(updateUser(user))
-})
+})  
 
 export default connect(
     mapStateToProps,

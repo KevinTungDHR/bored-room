@@ -19,5 +19,12 @@
 .player-container {
   display: flex;
   justify-content: space-around;
+  margin-left: 10px;
 }
 
+.player-stats {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 28px;
+}

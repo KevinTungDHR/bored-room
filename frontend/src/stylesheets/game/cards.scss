@@ -20,7 +20,7 @@
 }
 
 .chosen {
-  border: 3px solid $coral;
+  outline: 4px solid $coral;
 }
 
 .blank-square {
@@ -74,13 +74,4 @@
   margin-top: 10px;
 }
 
-.player-stats {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 28px;
-}
 
-.player-container {
-  margin-left: 10px;
-}
