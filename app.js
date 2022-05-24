@@ -11,6 +11,7 @@ const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
 const games = require("./routes/api/games");
+const frequency = require("./routes/api/frequency");
 const proxySetup = require('./config/setupProxyFile');
 
 mongoose
@@ -23,7 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());  
 app.use("/api/users", users);
 app.use("/api/rooms", rooms);
-app.use("/api/games", games)
+app.use("/api/games", games);
+app.use("/api/frequency", frequency);
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
@@ -48,17 +50,13 @@ io.on("connection", socket => {
   socket.broadcast.emit('message', "User has connected");
 
   socket.on("join_room", (data)=>{
-    console.log(`joining ${data}`);
     socket.join(data);
-    console.log(socket.adapter.rooms)
-
   });
 
   socket.on("leave_room", (data)=>{
     console.log(`leaving ${data}`);
     try{
       socket.leave(data);
-      console.log(socket.adapter.rooms)
     } catch (e){
       console.log(e)
     }
@@ -66,9 +64,13 @@ io.on("connection", socket => {
 
   socket.on('send_message', (data) => {
     // socket.broadcast.emit("receive_message", data);
-    socket.to(data.roomCode).emit("receive_message", data);
+    io.in(data.roomCode).emit("receive_message", data);
   });
 
+  socket.on('update_guess', (data) => {
+    // socket.broadcast.emit("receive_message", data);
+    io.in(data.roomCode).emit("guess_updated", data);
+  });
   socket.on("disconnect", (reason) => {
     io.emit("message", "user has left");
     console.log(`User Disconnected: ${reason}`);

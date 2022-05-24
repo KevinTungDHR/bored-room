@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from './card';
 
-const GridRow = ({ setChosenRow, row, idx }) => {
+const GridRow = ({ setChosenRow, chosenRow, handleUpdate, row, idx }) => {
   
-
   return (
     <div onClick={() => setChosenRow(idx)} className='row-container'>
       {[0, 1, 2, 3, 4, 5].map((i) => {

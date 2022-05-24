@@ -36,14 +36,16 @@ class NavBar extends React.Component {
     }
 
     render() {
+        const inRoom = this.props.history.location.pathname.includes('rooms');
         return (
             <div className="nav-container">
                 <div className="left-nav-container">
                     <div className='logo'></div>
                     <Link to="/" className="nav-title"> Bored Room</Link>
                 </div>
-                
-                {this.getLinks()}
+                <div className='nav-links'>
+                    {this.getLinks()}
+                </div>
             </div>
         );
     }

@@ -34,7 +34,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeModal: () => dispatch(closeModal()),
     updateUser: (user) => dispatch(updateUser(user))
-})
+})  
 
 export default connect(
     mapStateToProps,

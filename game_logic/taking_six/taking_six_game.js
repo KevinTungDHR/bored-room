@@ -46,7 +46,7 @@ class TakingSixGame {
       });
     });
 
-
+    this.orderPlayerHands();
     this.currentState = 2;
     // Create 4 rows
     for (let i = 0; i < 4; i++) {
@@ -124,6 +124,12 @@ class TakingSixGame {
 
   orderPlayedCards() {
     this.playedCards.sort((a, b) => (a[1].value < b[1].value) ? -1 : 1);
+  }
+
+  orderPlayerHands(){
+    this.players.forEach(player => 
+      player.hand.sort((a, b) => (a.value < b.value) ? -1 : 1)
+      );
   }
 
   playersHaveChosenCards() {

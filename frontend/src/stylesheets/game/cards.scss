@@ -4,8 +4,7 @@
 
 .card {
   float: left;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 4px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -13,19 +12,22 @@
   align-items: center;
   background-color: #fff;
   color: $title;
-  height: 140px;
-  width: 100px;
+  height: 110px;
+  width: 70px;
   font-family: 'Marker';
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
 }
 
+.chosen {
+  outline: 4px solid $coral;
+}
+
 .blank-square {
-  height: 140px;
-  width: 100px;;
+  height: 110px;
+  width: 70px;;
   background-color: $champ;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 4px;
 }
 
 .card-number {
@@ -33,7 +35,7 @@
   top: 35%;
   left: 50%;
   transform: translate(-50%, 0);
-  font-size: 56px;
+  font-size: 36px;
   z-index: 1;
 }
 
@@ -67,18 +69,9 @@
 
 .gi-bull-icon {
   color: red;
-  height: 100px;
-  width: 100px;
-  margin-top: 10px;
+  height: 70px;
+  width: 70px;
+  margin-top: 20px;
 }
 
-.player-stats {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 28px;
-}
 
-.player-container {
-  margin-left: 10px;
-}

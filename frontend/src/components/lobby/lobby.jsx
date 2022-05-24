@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 class Lobby extends React.Component {
     constructor(props){
         super(props)
-        this.state = { roomName: "", search: "" };
+        this.state = { roomName: "", search: "", game: "Taking Six" };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleGameChange = this.handleGameChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
     }
@@ -15,26 +16,30 @@ class Lobby extends React.Component {
     handleChange(e){
         let newState = this.state;
         newState.roomName = e.target.value;
-        this.setState({ newState })
+        this.setState({ ...newState })
     }
 
     updateSearch(e) {
         let newState = this.state;
         newState.search = e.target.value;
-        this.setState({ newState })
+        this.setState({ ...newState })
     }
 
     handleSubmit(e){
         e.preventDefault();
-        if(this.state.roomName !== ""){
-            this.props.createRoom(this.state.roomName)
+        if(this.state.roomName !== "" && this.state.game !== ""){
+            this.props.createRoom(this.state.roomName, this.state.game)
         }
 
-        this.setState({ roomName: "" });
+        this.setState({ roomName: "", game: "" });
     }
 
     componentDidMount(){
         this.props.fetchAllRooms()
+    }
+
+    handleGameChange(e){
+        this.setState({ game: e.target.value})       
     }
 
     render() {
@@ -52,6 +57,10 @@ class Lobby extends React.Component {
                                 <input className='create-btn' type="submit" value="Create" />
                             </div>
                         </div>
+                        <select value={this.state.game} onChange={this.handleGameChange}>
+                            <option value="Taking Six">Taking Six</option>
+                            <option value="Frequency">Frequency</option>
+                        </select>
                     </form>
 
                     <form className='search-rooms'>

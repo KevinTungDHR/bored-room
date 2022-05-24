@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.fetchGame = fetchGame;
     window.createGame = createGame;
     window.updateGame = updateGame;
+
     // Testing end
     const root = document.getElementById('root');
 

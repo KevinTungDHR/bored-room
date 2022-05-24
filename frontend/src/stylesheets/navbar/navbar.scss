@@ -7,7 +7,7 @@
     align-items: center;
     background-color: $tan;
     width: 100%;
-    height: 70px;
+    height: 60px;
 
     a {
         text-decoration: none;
@@ -22,15 +22,15 @@
 
 .logo {
     background-image: url('../../assets/images/logo.png');
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background-size: contain;
     background-repeat: no-repeat;
 }
 
 .nav-title {
     font-family: 'Om-Botak';
-    font-size: 34px;
+    font-size: 30px;
     color: $coral;
     margin-left: 12px;
 }
@@ -66,4 +66,21 @@
     justify-content: space-evenly;
 }
 
+.instructions-btn {
+    font-size: 32px;
+    font-family: 'Really-Free';
+    background: none;
+    border: none;
+    margin-right: 14px;
+    color: $text;
 
+    &:hover {
+        color: $seaweed;
+        cursor: pointer;
+    }
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+}

@@ -4,8 +4,8 @@ export const fetchAllRooms = () => {
   return axios.get('/api/rooms/')
 }
 
-export const createRoom = (name) => {
-  return axios.post('/api/rooms/', { name })
+export const createRoom = (name, game) => {
+  return axios.post('/api/rooms/', { name, game })
 }
 
 export const fetchRoom = (roomCode) => {
@@ -18,6 +18,15 @@ export const joinRoom = (roomCode) => {
 
 export const leaveRoom = (roomCode) => {
   return axios.patch(`/api/rooms/${roomCode}/leave`)
+}
+
+export const joinTeam = (roomCode, team) => {
+  console.log(team)
+  return axios.patch(`/api/rooms/${roomCode}/joinTeam`, {team})
+}
+
+export const leaveTeam = (roomCode, team) => {
+  return axios.patch(`/api/rooms/${roomCode}/leaveTeam`, {team})
 }
 
 export const deleteRoom = (roomCode) => {

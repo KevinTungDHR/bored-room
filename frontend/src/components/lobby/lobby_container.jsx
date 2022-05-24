@@ -9,7 +9,7 @@ const mapState = state => ({
 const mapDispatch = (dispatch) => {
     return {
         fetchAllRooms: () => dispatch(fetchAllRooms()),
-        createRoom: (roomName) => dispatch(createRoom(roomName)),
+        createRoom: (roomName, gameName) => dispatch(createRoom(roomName, gameName)),
         deleteRoom: (roomCode) => dispatch(deleteRoom(roomCode))
     }
 }
