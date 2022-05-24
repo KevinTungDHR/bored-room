@@ -26,10 +26,9 @@
 
 .grid-selected-container {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  position: relative  ;
+  position: relative;
 }
 
 .game-state-description {
@@ -44,8 +43,8 @@
   display: flex;
   flex-direction: column;
   margin-left: 0px 10px;
-  max-width: 1240px;
-  width: 85%;
+  max-width: 1040px;
+  width: 55%;
 }
 
 .hand-container {
@@ -53,11 +52,10 @@
   margin-left: 10px;
   opacity: 0.8;
   margin-bottom: 10px;
-  // width: 1240px;
 }
 
 .bull-logo {
-  top: 18%;
+  top: 4%;
   left: 50%;
   transform: translate(-50%, 0);
   position: absolute;

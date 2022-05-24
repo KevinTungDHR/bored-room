@@ -12,10 +12,10 @@
   align-items: center;
   background-color: #fff;
   color: $title;
-  height: 140px;
-  width: 100px;
+  height: 110px;
+  width: 70px;
   font-family: 'Marker';
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -24,8 +24,8 @@
 }
 
 .blank-square {
-  height: 140px;
-  width: 100px;;
+  height: 110px;
+  width: 70px;;
   background-color: $champ;
   margin: 4px;
 }
@@ -35,7 +35,7 @@
   top: 35%;
   left: 50%;
   transform: translate(-50%, 0);
-  font-size: 56px;
+  font-size: 36px;
   z-index: 1;
 }
 
@@ -69,9 +69,9 @@
 
 .gi-bull-icon {
   color: red;
-  height: 100px;
-  width: 100px;
-  margin-top: 10px;
+  height: 70px;
+  width: 70px;
+  margin-top: 20px;
 }
 
 

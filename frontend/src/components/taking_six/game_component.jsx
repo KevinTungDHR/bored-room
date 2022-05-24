@@ -149,6 +149,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 </div>
 
               </div>
+              
               <div className='right-container'>
                 <div className='scoreboard-container'>
                   <div>

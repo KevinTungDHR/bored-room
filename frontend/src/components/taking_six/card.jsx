@@ -25,7 +25,7 @@ export const Card = ({card, setChosenCard, index, type}) => {
             <p>{card.value}</p>
             <div className="small-bulls-container">
               {[...Array(card.bulls)].map((i) => {
-                return <img key={i} className="small-bull" src={bull_purp} height="14px" width="14px" />
+                return <img key={i} className="small-bull" src={bull_purp} height="10px" width="10px" />
               })}
             </div>
             <p>{card.value}</p>
@@ -36,7 +36,7 @@ export const Card = ({card, setChosenCard, index, type}) => {
               <p>{card.value}</p>
               <div className="small-bulls-container">
                 {[...Array(card.bulls)].map((i) => {
-                  return <img key={i} className="small-bull" src={bull_purp} height="14px" width="14px" />
+                  return <img key={i} className="small-bull" src={bull_purp} height="10px" width="10px" />
                 })}
               </div>
               <p>{card.value}</p>
