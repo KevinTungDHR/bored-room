@@ -21,6 +21,7 @@ const Room = () => {
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
   const rooms = useSelector(state => state.entities.rooms);
+  const currentUserHandle = useSelector(state => state.session.user.handle);
   
   useEffect(() => {
     socket.emit("join_room", roomCode);
@@ -34,7 +35,8 @@ const Room = () => {
   useEffect(()=> {
       socket.on("message", (data) => console.log(data));
       socket.on("receive_message", (data) => {
-        setList(list => [...list, data.message]);
+        let message = `${data.user}: ${data.message}`
+        setList(list => [...list, message]);
       });
       socket.on("user_sits", (room) => dispatch(receiveRoom(room)));
       socket.on("user_leaves", (room) => dispatch(receiveRoom(room)));
@@ -46,10 +48,12 @@ const Room = () => {
   const handleCreate = (e) =>{
     switch(rooms[roomCode].game){
       case 'Taking Six':
-        TakingSixUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers)
+        TakingSixUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers);
+        break;
       case 'Frequency':
         const { redTeam, blueTeam } = rooms[roomCode]
         FrequencyUtil.createGame(roomCode, { redTeam, blueTeam })
+        break;
       default:
         return null;
     }
@@ -59,7 +63,8 @@ const Room = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.emit('send_message', { message: message, roomCode: roomCode });
+    socket.emit('send_message', { user: currentUserHandle, message: message, roomCode: roomCode });
+    setMessage("");
   };
   
   const joinSeat = (e) => {
@@ -73,11 +78,11 @@ const Room = () => {
   };
 
   const joinTeam = (team) => {
-    RoomUtil.joinTeam(team)
+    RoomUtil.joinTeam(roomCode, team)
   }
 
   const leaveTeam = (team) => {
-    RoomUtil.leaveTeam(team)
+    RoomUtil.leaveTeam(roomCode, team)
   }
 
   const renderGameComponent = () =>{
@@ -137,11 +142,11 @@ const Room = () => {
         {rooms[roomCode]?.game === "Frequency" ? renderTeams() : renderSeatedUsers()}
 
         <div className='chat-items'>
-          <div className='chat-box'>
+          <form onSubmit={sendMessage} className='chat-box'>
             <span>Type a message here: </span>
-            <input type="text" onChange={(e) => setMessage(e.target.value)}/>
-            <button onClick={sendMessage} >Send</button>
-          </div>
+            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}/>
+            <input type="submit" value="Send"/>
+          </form>
 
           <ul className='chat-area'>
             {list.map((item, idx) => <li key={idx}>{item}</li>)}

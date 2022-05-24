@@ -14,7 +14,10 @@ const FrequencyGameSchema = new Schema({
     left: String,
     right: String
   }],
-  currentCard: String,
+  currentCard: {
+    left: String,
+    right: String
+  },
   discard: [{left: String, right: String}],
   activeTeam: String,
   redTeam: [{

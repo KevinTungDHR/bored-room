@@ -83,7 +83,7 @@ const GameComponent = ({ roomCode, socket }) => {
       .catch(err => console.error(err))
   };
 
-    if (gameState) {
+    if (gameState && assets) {
       return (
         <div className='game-flex-container'>
           <div>

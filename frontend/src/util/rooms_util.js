@@ -21,11 +21,12 @@ export const leaveRoom = (roomCode) => {
 }
 
 export const joinTeam = (roomCode, team) => {
-  return axios.patch(`/api/rooms/${roomCode}/joinTeam`, team)
+  console.log(team)
+  return axios.patch(`/api/rooms/${roomCode}/joinTeam`, {team})
 }
 
 export const leaveTeam = (roomCode, team) => {
-  return axios.patch(`/api/rooms/${roomCode}/leaveTeam`, team)
+  return axios.patch(`/api/rooms/${roomCode}/leaveTeam`, {team})
 }
 
 export const deleteRoom = (roomCode) => {

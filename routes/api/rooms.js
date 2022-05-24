@@ -104,7 +104,7 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
 
 router.patch('/:code/joinTeam', passport.authenticate('jwt', {session: false}), (req, res) => {
   let io = req.app.get("io");
-
+  console.log(req.body.team)
   Room.findOneAndUpdate({ code: req.params.code },
     { $addToSet: { [req.body.team]: { _id: req.user._id }}},
     { new: true })

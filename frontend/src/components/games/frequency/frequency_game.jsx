@@ -4,15 +4,13 @@ import { updateGame } from '../../../util/frequency_util';
 import { fetchGame, receiveGame } from '../../../actions/frequency_actions';
 
 const FrequencyGame = ({ roomCode, socket }) => {
-  const [chosenCard, setChosenCard] = useState();
-  const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
-  const users = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
+  const redTeam = useSelector(state => state.entities.rooms[roomCode].redTeam?.map(user => user.handle))
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,8 +36,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
     // e.preventDefault();
     const payload = {
       action: gameState.actions[0],
-      card: chosenCard,
-      row: chosenRow
     };
     updateGame(roomCode, payload)
       .then(data => console.log(data))
@@ -48,7 +44,26 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
     if (gameState) {
       return (
-        <div>Test</div>
+        <div>
+          <div>Game Assets</div>
+          <ul>
+            <li>Active Team: {assets.activeTeam}</li>
+            <li>Blue Points: {assets.bluePoints}</li>
+            <li>Red Points: {assets.redPoints}</li>
+            <li>Current Card: Left: {assets.currentCard.left} | Right: {assets.currentCard.right} </li>
+            <li>clue: {assets.clue}</li>
+            <li>dial: {assets.dial}</li>
+            <li>guess: {assets.guess}</li>
+            <li>leftOrRight: {assets.leftOrRight}</li>
+          </ul>
+          <div>Game State</div>
+          <ul>
+            <li>{gameState.name}</li>
+            <li>{gameState.type}</li>
+            {gameState.possibleActions.map((action, idx) => <li key={idx}>action: {action}</li>)}
+            {Object.keys(gameState.transitions).map((transition, idx) => <li key={idx}>transition: {transition}</li>)}
+          </ul>
+        </div>
       );
   }
 }
