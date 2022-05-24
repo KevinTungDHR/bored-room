@@ -1,9 +1,5 @@
 import React from 'react';
 import { Card } from './card';
-import { motion } from 'framer-motion';
-
-// assets.players.each.chosenCard = {value: , bulls: } (i.e. card)
-// entities.users
 
 const CardSelection = ({cards, setIsAnimating}) => {
 

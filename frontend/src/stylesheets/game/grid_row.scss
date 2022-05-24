@@ -10,12 +10,17 @@
 .game-grid {
   display: grid;
   grid-template-rows: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 2px;
+  margin-bottom: 4px;
 }
 
 .row-container {
   display: flex;
   justify-content: flex-start;
   cursor: pointer;
+}
+
+.row-container-disabled {
+  display: flex;
+  justify-content: flex-start;
 }
