@@ -1,6 +1,7 @@
 const takingSixState = require('./taking_six_state');
 const Card = require('./models/card');
 const mongoose = require('mongoose');
+const User = require('../../models/User');
 const db = require('../../config/keys').mongoURI;
 
 mongoose
@@ -37,10 +38,11 @@ class TakingSixGame {
       this.players.push({
         _id: player._id,
         activePlayer: false,
-        score: 66,
+        score: 1,
         pile: [],
-        hand: this.deck.splice(0, 10),
-        chosenCard: { value: -1, bulls: 0 }
+        hand: this.deck.splice(0, 3),
+        chosenCard: { value: -1, bulls: 0 },
+        endingElo: 0
       });
     });
 
@@ -246,10 +248,54 @@ class TakingSixGame {
       this.setState(nextState);
     }
   }
+  
+  checkWinner() {
+    let tiedWinners = []
+    let winner = this.players[0];
+    this.players.forEach((player) => {
+      if (winner.score < player.score){
+        winner = player;
+        tiedWinners = []
+        tiedWinners.push(player);
+      } else if (winner.score === player.score){
+        tiedWinners.push(player)
+      }
+    });
+    return tiedWinners;
+  }
+
+  changeElo() {
+    let winners = this.checkWinner();
+    let eloWon = eloForWinner / winners.length;
+    const eloForWinner = numPlayers * 5;
+    const numPlayers = this.players.length;
+    this.players.forEach((player) => {
+      User.findById(player._id)
+      .then(user => {
+        let originalElo = user.eloRating;
+        const deductedElo = {eloRating: (originalElo - 5)};
+        player.endingElo = originalElo - 5;
+        user.set(deductedElo)
+        user.save()
+      })
+    });
+    winners.forEach((winner) => {
+      User.findById(winner._id)
+        .then(user => {
+          let originalElo = user.eloRating;
+          const increasedElo = {eloRating: (originalElo + eloWon)};
+          winner.endingElo = originalElo + eloWon;
+          user.set(increasedElo)
+          user.save()
+        })
+    })
+    
+  }
 
   checkTurnEnd() {
     if (this.isRoundOver() && this.isGameOver()) {
       const nextState = this.getState().transitions.GAME_END;
+      this.changeElo();
       this.setState(nextState);
     } else if (this.isRoundOver()) {
       const nextState = this.getState().transitions.ROUND_SETUP;

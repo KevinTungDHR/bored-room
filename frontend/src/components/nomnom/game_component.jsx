@@ -121,7 +121,7 @@ const GameComponent = ({ roomCode, socket }) => {
                 <li>name: {gameState.name}</li>
                 <li>actions: {gameState.actions}</li>
                 <li>type: {gameState.type}</li>
-                <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li>
+                {/* <li>transitions: {Object.keys(gameState.transitions).map(t => <div>{t}</div>)} </li> */}
                 <li>Chosen Card: {chosenCard?.value}</li>
                 <li>Chosen Row: {chosenRow}</li>
                 <li>Your points: {player?.score}</li>
