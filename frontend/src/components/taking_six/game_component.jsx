@@ -31,8 +31,19 @@ const GameComponent = ({ roomCode, socket }) => {
     });
   },[]);
 
-  const setChoiceAndUpdate = (c) => {
+  const setChoiceAndUpdate = (c, e) => {
+    const chosenEles = document.getElementsByClassName('chosen').length;
+    debugger
+    if (gameState.possibleActions[0] === 'playCard' && chosenEles === 0) {
+      if (e.target.className !== 'card') {
+        e.target.parentElement.className += " chosen";
+      } else {
+        e.target.className += ' chosen';
+      }
+    }
+    
     setChosenCard(c);
+    debugger
   }
 
   const setRowAndUpdate = (idx) => {
@@ -62,6 +73,7 @@ const GameComponent = ({ roomCode, socket }) => {
     handleUpdate();
   }, [chosenRow])
 
+
   useEffect(() => {
     if(!isAnimating && stateQueue.length > 0){
       let nextUpdate = stateQueue[0];
@@ -80,6 +92,8 @@ const GameComponent = ({ roomCode, socket }) => {
     updateGame(roomCode, payload)
       .then(data => console.log(data))
       .catch(err => console.error(err))
+    debugger
+    document.getElementsByClassName('chosen-card').className = 'card';
   };
 
     if (gameState) {
@@ -99,8 +113,8 @@ const GameComponent = ({ roomCode, socket }) => {
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
                       return (
-                        <div onClick={(e) => setChoiceAndUpdate(c, e)} > 
-                        <Card card={c} type={{value: 'hand'}} key={idx}/>
+                      <div className='card-overlay' onClick={(e) => setChoiceAndUpdate(c, e)} >
+                        <Card card={c} type={{value: 'hand'}} key={idx} />
                       </div>)
                     })}
                   </div>
