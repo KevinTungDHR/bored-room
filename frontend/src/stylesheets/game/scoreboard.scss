@@ -12,7 +12,6 @@
   width: 100%;
   min-height: 50px;
   max-height: 400px;
-  height: 200px;
   margin-bottom: 10px;
   opacity: 0.8;
   background-color: $champ;
@@ -30,6 +29,15 @@
   display: flex;
   justify-content: space-evenly;
   margin-left: 10px;
+}
+
+.player-handles {
+  display: flex;
+  align-items: center;
+}
+
+.chosen-indicator {
+  margin-right: 8px;
 }
 
 .player-stats {
@@ -50,11 +58,11 @@
   color: $text;
 
   div:first-child {
-    margin-right: 12px;
+    margin-right: 10px;
   }
 
   h1 {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 500;
     color: $bronze;
     background-color: #fff;

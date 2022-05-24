@@ -5,8 +5,8 @@ import { updateGame } from '../../util/game_util';
 import { Card } from './card';
 import CardSelection from './card_selection';
 import bull_logo from '../../assets/images/bull_logo.png';
-import {AiFillStar} from 'react-icons/ai';
-import { openModal } from '../../actions/modal_actions';
+import { AiFillStar } from 'react-icons/ai';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 import GameEnd from './game_end';
 import { motion } from 'framer-motion';
 
@@ -20,7 +20,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
   const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
-  const usersHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
+  const userHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
@@ -67,7 +67,10 @@ const GameComponent = ({ roomCode, socket }) => {
       return
     }
     const card = document.getElementsByClassName('chosen')[0];
-    card.classList.remove('chosen');
+    if (card) {
+      card.classList.remove('chosen');
+    }
+
     handleUpdate();
   }, [chosenCard])
 
@@ -78,7 +81,6 @@ const GameComponent = ({ roomCode, socket }) => {
     }
     
     handleUpdate();
-
   }, [chosenRow])
 
 
@@ -144,22 +146,29 @@ const GameComponent = ({ roomCode, socket }) => {
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {<CardSelection cards={assets.playedCards} allUsers={usersHandles} setIsAnimating={setIsAnimating} />}
+                    {<CardSelection cards={assets.playedCards} setIsAnimating={setIsAnimating} />}
                   </div>
                 </div>
 
               </div>
-              
+
               <div className='right-container'>
                 <div className='scoreboard-container'>
                   <div>
                     <h1>Players</h1>
                     <div className='player-container'>
-                      <div className='player-handles'>
-                        {usersHandles.map((player) => {
+                      <div>
+                        {allUsers.map((user) => {
+                          let playedCard;
+                          {allPlayers.forEach((player) => {
+                              if (player._id === user._id) {
+                                playedCard = player.chosenCard.value !== -1;
+                              }
+                          })}
                           return (
-                            <div>
-                              {player}
+                            <div className='player-handles'>
+                              {playedCard ? <AiOutlineCheckCircle className='chosen-indicator' /> : <span></span> }
+                              {user.handle}
                             </div>
                           )
                         })}
