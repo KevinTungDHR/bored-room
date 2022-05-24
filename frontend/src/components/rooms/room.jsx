@@ -4,9 +4,12 @@ import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { fetchRoom  } from '../../actions/room_actions';
 import { joinRoom, leaveRoom } from '../../util/rooms_util';
+import * as RoomUtil from '../../util/rooms_util';
 import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
-import { createGame } from '../../util/game_util';
+import * as TakingSixUtil from '../../util/game_util';
+import * as FrequencyUtil from '../../util/frequency_util';
+import FrequencyGame from '../games/frequency/frequency_game';
 import GameComponent from '../taking_six/game_component';
 
 const socket = io();
@@ -18,6 +21,7 @@ const Room = () => {
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
   const rooms = useSelector(state => state.entities.rooms);
+  const currentUserHandle = useSelector(state => state.session.user.handle);
   
   useEffect(() => {
     socket.emit("join_room", roomCode);
@@ -31,7 +35,8 @@ const Room = () => {
   useEffect(()=> {
       socket.on("message", (data) => console.log(data));
       socket.on("receive_message", (data) => {
-        setList(list => [...list, data.message]);
+        let message = `${data.user}: ${data.message}`
+        setList(list => [...list, message]);
       });
       socket.on("user_sits", (room) => dispatch(receiveRoom(room)));
       socket.on("user_leaves", (room) => dispatch(receiveRoom(room)));
@@ -41,15 +46,25 @@ const Room = () => {
   },[]);
 
   const handleCreate = (e) =>{
-    console.log("CLICKED")
+    switch(rooms[roomCode].game){
+      case 'Taking Six':
+        TakingSixUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers);
+        break;
+      case 'Frequency':
+        const { redTeam, blueTeam } = rooms[roomCode]
+        FrequencyUtil.createGame(roomCode, { redTeam, blueTeam })
+        break;
+      default:
+        return null;
+    }
     // if (rooms[roomCode]?.seatedUsers.length > 1){
-      createGame(roomCode, rooms[roomCode]?.seatedUsers)
     // }
   }
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.emit('send_message', { message: message, roomCode: roomCode });
+    socket.emit('send_message', { user: currentUserHandle, message: message, roomCode: roomCode });
+    setMessage("");
   };
   
   const joinSeat = (e) => {
@@ -62,10 +77,55 @@ const Room = () => {
     leaveRoom(roomCode)
   };
 
+  const joinTeam = (team) => {
+    RoomUtil.joinTeam(roomCode, team)
+  }
+
+  const leaveTeam = (team) => {
+    RoomUtil.leaveTeam(roomCode, team)
+  }
+
+  const renderGameComponent = () =>{
+    switch(rooms[roomCode].game){
+      case 'Taking Six':
+        return <GameComponent socket={socket} roomCode={roomCode} />
+      case 'Frequency':
+        return <FrequencyGame socket={socket} roomCode={roomCode} />
+      default:
+        return null;
+    }
+  }
+
+  const renderSeatedUsers = () => (
+    <div className='chat-users'>
+      <div className='users-header'>Seated Users</div>
+      <ul className='users-box'>
+        {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+      </ul>
+    </div>
+  )
+
+  const renderTeams = () => (
+    <div>
+      <div>Red Team</div>
+      <button className='seat-btn-1' onClick={() => joinTeam('redTeam')}>Join Red</button>
+      <button className='seat-btn-2' onClick={() => leaveTeam('redTeam')}>Leave Team</button>
+      <ul>
+        {rooms[roomCode]?.redTeam.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+      </ul>
+      <div>Blue Team</div>
+      <button className='seat-btn-1' onClick={() => joinTeam('blueTeam')}>Join Blue</button>
+      <button className='seat-btn-2' onClick={() => leaveTeam('blueTeam')}>Leave Team</button>
+      <ul>
+        {rooms[roomCode]?.blueTeam.map((user, idx) => <li key={idx}>{user.handle}</li>)}
+      </ul>
+    </div>
+  )
+
   const renderSeatButtons = () => (
     rooms[roomCode]?.gameStarted ? 
     <div>
-      <GameComponent socket={socket} roomCode={roomCode} />
+      {renderGameComponent()}
     </div> 
     : 
     <div className='room-page-container'>
@@ -79,19 +139,14 @@ const Room = () => {
       </div>
 
       <div className='chat-wrapper'>
-        <div className='chat-users'>
-          <div className='users-header'>Seated Users</div>
-          <ul className='users-box'>
-            {rooms[roomCode]?.seatedUsers.map((user, idx) => <li key={idx}>{user.handle}</li>)}
-          </ul>
-        </div>
+        {rooms[roomCode]?.game === "Frequency" ? renderTeams() : renderSeatedUsers()}
 
         <div className='chat-items'>
-          <div className='chat-box'>
+          <form onSubmit={sendMessage} className='chat-box'>
             <span>Type a message here: </span>
-            <input type="text" onChange={(e) => setMessage(e.target.value)}/>
-            <button onClick={sendMessage} >Send</button>
-          </div>
+            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}/>
+            <input type="submit" value="Send"/>
+          </form>
 
           <ul className='chat-area'>
             {list.map((item, idx) => <li key={idx}>{item}</li>)}

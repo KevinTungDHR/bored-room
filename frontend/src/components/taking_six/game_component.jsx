@@ -15,10 +15,11 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
-  const { gameState, assets } = useSelector(state => state.game);
+  const gameState = useSelector(state => state.games[roomCode]?.gameState);
+  const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
-  const player = useSelector(state => state.game?.assets?.players?.filter(p => p._id === sessionId)[0])
-  const allPlayers = useSelector(state => state.game?.assets?.players)
+  const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
+  const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
   const usersHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
@@ -100,7 +101,7 @@ const GameComponent = ({ roomCode, socket }) => {
       .catch(err => console.error(err))
   };
 
-    if (gameState) {
+    if (gameState && assets) {
       return (
         <div className='game-flex-container'>
           <div>

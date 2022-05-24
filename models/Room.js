@@ -10,7 +10,19 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
+  game: {
+    type: String,
+    required: true
+  },
   seatedUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  redTeam: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  blueTeam: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
