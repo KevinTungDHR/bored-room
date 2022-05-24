@@ -53,6 +53,7 @@ class TakingSixGame {
 
     this.gameOver = false;
   }
+  
 
   shuffleCards() {
     // Fisher-Yates shuffle. Make sure to skip the first element for more even randomness.

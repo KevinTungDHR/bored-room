@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
+import { io } from 'socket.io-client';
+import * as RoomAPIUtil from '../../util/rooms_util';
 
+
+const socket = io();
 class Lobby extends React.Component {
     constructor(props){
         super(props)
@@ -28,14 +32,27 @@ class Lobby extends React.Component {
     handleSubmit(e){
         e.preventDefault();
         if(this.state.roomName !== "" && this.state.game !== ""){
-            this.props.createRoom(this.state.roomName, this.state.game)
+            RoomAPIUtil.createRoom(this.state.roomName, this.state.game)
         }
 
-        this.setState({ roomName: "", game: "" });
+        this.setState({ roomName: ""});
+    }
+
+    handleRoomDelete(roomCode) {
+        RoomAPIUtil.deleteRoom(roomCode)
     }
 
     componentDidMount(){
+        socket.emit("join_lobby");
+        socket.on("room_created", (room) => this.props.receiveRoom(room));
+        socket.on("room_deleted", (roomCode) => this.props.removeRoom(roomCode));
+        socket.on("room_updated", (room) => this.props.receiveRoom(room));
         this.props.fetchAllRooms()
+    }
+
+    componentWillUnmount(){
+        socket.emit("leave_lobby");
+        socket.removeAllListeners();
     }
 
     handleGameChange(e){
@@ -99,7 +116,7 @@ class Lobby extends React.Component {
                                 </ul>
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
-                            <button className='delete-btn' onClick={() => deleteRoom(room.code)}>Delete Room</button>
+                            <button className='delete-btn' onClick={() => this.handleRoomDelete(room.code)}>Delete Room</button>
                         </motion.li>
                         }
                     })}
