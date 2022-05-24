@@ -50,6 +50,7 @@ const GameComponent = ({ roomCode, socket }) => {
   }
 
   const setRowAndUpdate = (idx) => {
+    if (gameState.actions[0] === 'playCard') return;
     if (chosenRow === idx) {
       handleUpdate()
     } else {
