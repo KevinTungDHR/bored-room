@@ -38,9 +38,9 @@ class TakingSixGame {
       this.players.push({
         _id: player._id,
         activePlayer: false,
-        score: 1,
+        score: 66,
         pile: [],
-        hand: this.deck.splice(0, 3),
+        hand: this.deck.splice(0, 10),
         chosenCard: { value: -1, bulls: 0 },
         endingElo: 0
       });
