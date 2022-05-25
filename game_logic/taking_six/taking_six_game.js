@@ -1,6 +1,7 @@
 const takingSixState = require('./taking_six_state');
 const Card = require('./models/card');
 const mongoose = require('mongoose');
+const User = require('../../models/User');
 const db = require('../../config/keys').mongoURI;
 
 mongoose
@@ -40,7 +41,55 @@ class TakingSixGame {
         score: 66,
         pile: [],
         hand: this.deck.splice(0, 10),
-        chosenCard: { value: -1, bulls: 0 }
+        chosenCard: { value: -1, bulls: 0 },
+        endingElo: 0
+      });
+    });
+
+    this.orderPlayerHands();
+    this.currentState = 2;
+    // Create 4 rows
+    for (let i = 0; i < 4; i++) {
+      this.rows.push([this.deck.pop()]);
+    }
+
+    this.gameOver = false;
+  }
+  
+  async setupDemoGame(players, bots){
+    this.name = "Taking Six";
+    this.playedCards = [];
+    this.rows = [];
+    this.players = [];
+
+    await Card.find()
+      .then(data => this.deck = (data))
+      .catch(reason => console.error(reason));
+
+    this.shuffleCards();
+    players.forEach((player) => {
+      this.players.push({
+        _id: player._id,
+        bot: false,
+        activePlayer: false,
+        score: 66,
+        pile: [],
+        hand: this.deck.splice(0, 10),
+        chosenCard: { value: -1, bulls: 0 },
+        endingElo: 0
+      });
+    });
+
+    bots.forEach((bot) => {
+      this.players.push({
+        _id: bot._id,
+        bot: true,
+        activePlayer: false,
+        score: 66,
+        pile: [],
+        hand: this.deck.splice(0, 10),
+        chosenCard: { value: -1, bulls: 0 },
+        endingElo: 0
       });
     });
 
@@ -97,6 +146,7 @@ class TakingSixGame {
     }
   }
 
+
   // Automated Actions
 
   turnCleanUp() {
@@ -134,6 +184,45 @@ class TakingSixGame {
     return this.players.every(player => player.chosenCard.value !== -1);
   }
 
+  botsHaveChosenCards() {
+    return this.players
+      .filter(player => player.bot === true)
+      .every(player => player.chosenCard.value !== -1);
+  }
+
+  botsChooseRandomCards(){
+    this.players.forEach(player =>{
+      if(player.bot === true){
+        let randInt = Math.floor(Math.random() * player.hand.length);
+        this.playCard({ player: player, card: player.hand[randInt] });
+      }
+    })
+  }
+
+  botTakesRow(){
+    let smallestRow = 0;
+
+    let leastPoints = this.rows[0].reduce((prev, curr) => {
+      return prev.value + curr.value
+    })
+    for(let i = 1; i < this.rows.length; i++){
+      let points = this.rows[i].reduce((prev, curr) => {
+        return prev.value + curr.value
+      })
+
+      if(points < leastPoints){
+        leastPoints = points;
+        smallestRow = i;
+      }
+    }
+
+    this.takeRow({row: smallestRow})
+  }
+
+  currentPlayerIsBot(){
+    let currentPlayer = this.players.find(player => player._id.equals(this.playedCards[0][0]));
+    return currentPlayer.bot
+  }
   // Game Rules checks
   cardSmallerThanAllRows(card) {
     return this.rows.every(row => row.slice(-1)[0].value > card.value);
@@ -252,10 +341,53 @@ class TakingSixGame {
       this.setState(nextState);
     }
   }
+  
+  checkWinner() {
+    let tiedWinners = []
+    let winner = this.players[0];
+    this.players.forEach((player) => {
+      if (winner.score < player.score){
+        winner = player;
+        tiedWinners = []
+        tiedWinners.push(player);
+      } else if (winner.score === player.score){
+        tiedWinners.push(player)
+      }
+    });
+
+    return tiedWinners;
+  }
+
+  changeElo() {
+    let winners = this.checkWinner();
+    const numPlayers = this.players.length - 1;
+    const eloForWinner = numPlayers * 5;
+    let eloWon = eloForWinner / winners.length;
+
+    this.players.forEach((player) => {
+      User.findById(player._id)
+      .then((user) => {
+        let originalElo = user.eloRating;
+
+        if(winners.some(winner => winner._id.equals(user._id))){
+          const increasedElo = {eloRating: (originalElo + eloWon)};
+          player.endingElo = originalElo + eloWon;
+          user.set(increasedElo)
+        } else {
+          const deductedElo = {eloRating: (originalElo - 5)};
+          player.endingElo = originalElo - 5;
+          user.set(deductedElo)
+        }
+        user.save()
+      })
+    });
+
+  }
 
   checkTurnEnd() {
     if (this.isRoundOver() && this.isGameOver()) {
       const nextState = this.getState().transitions.GAME_END;
+      this.changeElo();
       this.setState(nextState);
     } else if (this.isRoundOver()) {
       const nextState = this.getState().transitions.ROUND_SETUP;
@@ -284,7 +416,7 @@ class TakingSixGame {
     }
 
     this.players.forEach(player => player.hand = this.deck.splice(0, 10));
-
+    this.orderPlayerHands();
     const nextState = this.getState().transitions.PLAYER_CHOOSE_CARD;
     this.setState(nextState);
   }

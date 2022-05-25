@@ -17,6 +17,7 @@ const generateRoomCode = (length = 6) => {
 
 router.post('/', passport.authenticate("jwt", { session: false }), 
   async (req, res) => {
+    let io = req.app.get("io");
     
     let codeExists = true;
     let roomCode;
@@ -38,9 +39,11 @@ router.post('/', passport.authenticate("jwt", { session: false }),
       code: roomCode
     });
 
-    newRoom.save()
-      .then(room => res.json(room))
-      .catch(errs => res.json(errs))
+    const room = await newRoom.save()
+    await room.populate("seatedUsers", ["handle", "eloRating", "avatar"])
+    await room.populate("redTeam")
+    await room.populate("blueTeam")
+    io.to('lobby').emit("room_created", room)
 });
 
 router.get('/', (req, res) => {
@@ -70,6 +73,7 @@ router.patch('/:code/join', passport.authenticate('jwt', {session: false}), (req
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
     .then(room => {
       io.to(req.params.code).emit("user_sits", room)
+      io.to('lobby').emit("room_updated", room)
       res.json("success");
     })
     .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
@@ -95,6 +99,7 @@ router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (re
         room.save()
           .then(room => {
             io.to(req.params.code).emit("user_leaves", room);
+            io.to('lobby').emit("room_updated", room);
             res.json("success");
           })
         .catch(errs => res.json(errs))
@@ -120,6 +125,7 @@ router.patch('/:code/joinTeam', passport.authenticate('jwt', {session: false}), 
       room.save()
         .then(room => {
           io.to(req.params.code).emit("user_sits", room)
+          io.to('lobby').emit("room_updated", room)
           res.json("success");
         })
     })
@@ -143,6 +149,7 @@ router.patch('/:code/leaveTeam', passport.authenticate('jwt', {session: false}),
       room.save()
         .then(room => {
           io.to(req.params.code).emit("user_leaves", room);
+          io.to('lobby').emit("room_updated", room)
           res.json("success");
         })
       .catch(errs => res.json(errs))
@@ -162,8 +169,10 @@ router.get('/:code', (req, res) => {
 });
 
 router.delete('/:code', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let io = req.app.get("io");
+
   Room.findOneAndDelete({ code: req.params.code })
-    .then(room => res.json(room))
+    .then(room => io.to('lobby').emit("room_deleted", req.params.code))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" }));
 });
 

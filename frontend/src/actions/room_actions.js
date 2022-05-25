@@ -26,7 +26,7 @@ const receiveRoomErrors = (errors) => {
   }
 };
 
-const removeRoom = (roomCode) => {
+export const removeRoom = (roomCode) => {
   return {
     type: REMOVE_ROOM,
     roomCode

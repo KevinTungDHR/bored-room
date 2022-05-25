@@ -19,6 +19,10 @@ const TakingSixGameSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'users',
     },
+    bot: {
+      type: Boolean,
+      required: true
+    },
     activePlayer: {
       type: Boolean,
       required: true

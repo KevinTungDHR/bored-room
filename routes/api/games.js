@@ -6,6 +6,48 @@ const passport = require('passport');
 const TakingSixModel = require('../../game_logic/taking_six/models/game');
 const takingSixState = require('../../game_logic/taking_six/taking_six_state');
 const games = require('../../game_logic/all_games');
+const User = require("../../models/User");
+
+
+router.post('/createDemo', async (req, res) => {
+  let io = req.app.get("io");
+
+  const g = new games.TakingSixGame();
+
+  const bots = await User.find({handle: /DemoBot/ });
+  await Room.findOneAndUpdate({ code: req.body.code }, 
+    { $push: { seatedUsers: { $each: bots }}})
+
+  g.setupDemoGame(req.body.users, bots)
+    .then(() => {
+      const gameModel = TakingSixModel({
+        code: req.body.code,
+        name: g.name,
+        deck: g.deck,
+        players: g.players,
+        playedCards: g.playedCards,
+        rows: g.rows,
+        currentState: g.currentState,
+      });
+
+      const gameState = takingSixState[gameModel.currentState];
+
+      gameModel.save()
+        .then(assets => {
+
+          io.to(req.body.code).emit("game_created", { assets, gameState });
+          Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
+            new: true
+          })
+          .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+          .then(room => io.to(req.body.code).emit("game_started", room));
+            
+          res.json("success");
+        })
+        .catch(err => res.status(422).json(err));
+    });
+});
+
 
 router.post('/create', (req, res) => {
   let io = req.app.get("io");
@@ -76,21 +118,38 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     return res.status(402).json(err);
   }
 
-  while(g.getState()['type'] === "automated" && count < 25){
-    console.log(count)
+  if(g.getState()['name'] === 'PLAYER_CHOOSE_CARD' && !g.botsHaveChosenCards()){
+    g.botsChooseRandomCards();
+    game.set(g);
+    let assets = await game.save()
+    const gameState = takingSixState[assets.currentState];
+    io.to(req.params.code).emit("game_updated", { assets, gameState });
+  }
+
+  while((g.getState()['type'] === "automated" && count < 25) || 
+      (g.getState()['name'] === 'TAKE_ROW' && g.currentPlayerIsBot())){
     count += 1;
-    let action = g.getState().actions[0]
-    try {
-      g.handleEvent(action);
+
+    if (g.getState()['type'] === "automated"){
+      let action = g.getState().actions[0]
+      try {
+        g.handleEvent(action);
+        game.set(g);
+        let assets = await game.save()
+        const gameState = takingSixState[assets.currentState];
+        io.to(req.params.code).emit("game_updated", { assets, gameState });
+      } catch (err) {
+        return res.status(402).json(err);
+      }
+    } else {
+      g.botTakesRow();
       game.set(g);
       let assets = await game.save()
       const gameState = takingSixState[assets.currentState];
       io.to(req.params.code).emit("game_updated", { assets, gameState });
-    } catch (err) {
-      return res.status(402).json(err);
     }
   }
-
+  
   res.json("success")
 });
 
