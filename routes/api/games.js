@@ -77,7 +77,6 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
   }
 
   while(g.getState()['type'] === "automated" && count < 25){
-    console.log(count)
     count += 1;
     let action = g.getState().actions[0]
     try {
