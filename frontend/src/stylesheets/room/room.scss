@@ -4,7 +4,7 @@
 .room-page-container {
     background-image: url('../../assets/images/game_table.jpg');
     background-repeat: repeat-y;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -67,10 +67,10 @@
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     border: none;
     font-family: "Really-Free";
-    font-size: 32px;
+    font-size: 40px;
     cursor: pointer;
     margin-bottom: 12px;
-    color: $text;
+    color: $seaweed;
 
     &:hover {
         transform: scale(1.05);
@@ -127,11 +127,13 @@
 }
 
 .chat-area {
-    width: 700px;
-    height: 536px;
+    width: 600px;
+    height: 400px;
     background-color: #fff;
     opacity: 0.9;
     border: 2px solid $coral;
+    font-size: 22px;
+    overflow: scroll;
 }
 
 .chat-box {
@@ -165,4 +167,85 @@
         cursor: pointer;
         color: $text;
     }
+}
+
+.team-header {
+    font-size: 44px;
+}
+
+.red {
+    color: red;
+} 
+
+.blue {
+    color: blue;
+}
+
+.teams-wrapper {
+    display: flex;
+
+    > div:first-child {
+        margin-right: 20px;
+        border-right: 1px solid $bronze;
+        padding-right: 20px;
+    }
+
+    div:nth-child(2) {
+        margin-right: 20px;
+    }
+}
+
+.team-container {
+    margin-bottom: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.team-player {
+    font-size: 28px;
+    margin-top: 8px;
+    margin-left: 12px;
+}
+
+.leave-btn {
+    background-color: $tan;
+    height: 30px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border: 2px solid $coral;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+    color: $text;
+    margin: 4px 4px;
+}
+
+.join-red-btn {
+    background-color: rgb(234, 114, 95);
+    height: 30px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border: 2px solid $coral;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+    color: $text;
+    margin: 4px 4px;
+}
+
+.join-blue-btn {
+    background-color: rgb(138, 172, 241);
+    height: 30px;
+    width: 140px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border: 2px solid $coral;
+    font-family: "Really-Free";
+    font-size: 32px;
+    cursor: pointer;
+    color: $text;
+    margin: 4px 4px;
 }

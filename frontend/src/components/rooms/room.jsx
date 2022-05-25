@@ -106,19 +106,35 @@ const Room = () => {
   )
 
   const renderTeams = () => (
-    <div>
-      <div>Red Team</div>
-      <button className='seat-btn-1' onClick={() => joinTeam('redTeam')}>Join Red</button>
-      <button className='seat-btn-2' onClick={() => leaveTeam('redTeam')}>Leave Team</button>
-      <ul>
-        {rooms[roomCode]?.redTeam.map((user, idx) => <li key={idx}>{user.handle}</li>)}
-      </ul>
-      <div>Blue Team</div>
-      <button className='seat-btn-1' onClick={() => joinTeam('blueTeam')}>Join Blue</button>
-      <button className='seat-btn-2' onClick={() => leaveTeam('blueTeam')}>Leave Team</button>
-      <ul>
-        {rooms[roomCode]?.blueTeam.map((user, idx) => <li key={idx}>{user.handle}</li>)}
-      </ul>
+    <div className='teams-wrapper'>
+      <div className='team-container'>
+        <div>
+          <h1 className='team-header red'>Red Team</h1>
+          <ul>
+            {rooms[roomCode]?.redTeam.map((user, idx) => <li className='team-player' key={idx}>{user.handle}</li>)}
+          </ul>
+        </div>
+        <div>
+          <button className='join-red-btn' onClick={() => joinTeam('redTeam')}>Join Red</button>
+          <button className='leave-btn' onClick={() => leaveTeam('redTeam')}>Leave Team</button>
+        </div>
+        
+      </div>
+
+      <div className='team-container'>
+        <div>
+          <h1 className='team-header blue'>Blue Team</h1>
+          <ul>
+            {rooms[roomCode]?.blueTeam.map((user, idx) => <li className='team-player' key={idx}>{user.handle}</li>)}
+          </ul>
+        </div>
+
+        <div>
+          <button className='join-blue-btn' onClick={() => joinTeam('blueTeam')}>Join Blue</button>
+          <button className='leave-btn' onClick={() => leaveTeam('blueTeam')}>Leave Team</button>
+        </div>
+        
+      </div>
     </div>
   )
 
@@ -132,8 +148,12 @@ const Room = () => {
       <h1 className='room-title'>In Room {roomCode}</h1>
       <div className='seat-btns'>
         <div className='sit-get-btns'>
-          <button className='seat-btn-1' onClick={joinSeat}>Sit</button>
-          <button className='seat-btn-2' onClick={leaveSeat}>Get Up</button>
+          {rooms[roomCode]?.game === "Taking Six" ? 
+          <div>
+            <button className='seat-btn-1' onClick={joinSeat}>Sit</button>
+            <button className='seat-btn-2' onClick={leaveSeat}>Get Up</button>
+          </div> : <div></div>
+          }
         </div>
         <button className='start-game-btn' onClick={handleCreate}>Start Game</button>
       </div>
