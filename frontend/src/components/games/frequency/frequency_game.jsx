@@ -106,14 +106,14 @@ const FrequencyGame = ({ roomCode, socket }) => {
     // if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
       if(leftOrRight === ""){
         return(
-          <div>
+          <div className='lt-rt-btns'>
             <button className='left-right-btn' onClick={chooseLeft}>Left</button>
             <button className='left-right-btn' onClick={chooseRight}>Right</button>
           </div>
         )
       } else {
         return (
-          <div>
+          <div className='lt-rt-btns'>
             <button className='left-right-btn' onClick={handleUpdate}>Confirm</button>
             <button className='cancel-btn' onClick={()=> setLeftOrRight("")}>Cancel</button>
           </div>
@@ -128,10 +128,10 @@ const FrequencyGame = ({ roomCode, socket }) => {
   }
 
   const renderScoreboard = () => {
-    debugger
     return (
       <div>
         <div className='freq-scoreboard-container'>
+          <div className='scoreboard-background'><h1>Scoreboard</h1></div>
           <div className='team-scores-container'>
             {assets.activeTeam === 'blue' ? <motion.div className='arrow-icon' animate={{y: [-5, 5]}} transition={{yoyo: Infinity}}>
               <AiOutlineArrowDown 
@@ -167,6 +167,42 @@ const FrequencyGame = ({ roomCode, socket }) => {
       </div>
     )
   }
+ 
+  const renderInstructions = () => {
+    return (
+      <div className='frequency-instructions'>
+        <h1>Frequency Rules: </h1>
+        <div>
+          <h2>Overview: </h2>
+          <p>Frequency is a team-based social guessing game that tests how well you understand your teammates --- and how well they understand you.</p>
+        </div>
+
+        <div>
+          <h2>Objective: </h2>
+          <p>When it’s your teams turn, correctly guess where the hidden target zone is based off your Psychic’s clue. When it’s not your teams turn, collectively determine if you think the target zone is to the left or to the right of the opposing teams guess.</p>
+        </div>
+
+        <div>
+          <h2>Game Play:</h2>
+          <ol type="1">
+            <li>Each turn a member of a team will take the role of Psychic. </li>
+            <li>The active team draws a card and places it in front of the dial.The card will have two opposing ideas, one that represents the leftmost part of the dial and one that represents the rightmost part (such as smells good vs smells bad).</li>
+            <li>A target zone on the dial will get randomly chosen and is only visible to the Psychic. </li>
+            <li>The Psychic will give a clue such as, “Freshly cut grass”. The clue should be based upon where the target zone lies within the spectrum of the drawn card.</li>
+            <li>The active team must then agree upon where they believe the target zone is. For example, where the target is on the spectrum of smells-good to smells bad based on the clue “Freshly cut grass”.</li>
+            <li>After the active team has locked in their guess, the opposing team determines if they think the target zone is to the left or to the right of the active team's guess</li>
+            <li>Reveal/Score: The target zone is then revealed and the active team will score 2, 3 or 4 points depending on where in the target zone they landed or 0 points if they missed the mark completely. The opposing team gets 1 point if they guessed left or right correctly.</li>
+            <li>The opposing team now selects a Psychic and takes their turn. Continue until one team has 10 points.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h2>Bonus Rule: </h2>
+          <p>If the active team guesses perfectly (4 points), and they still have fewer points than the opposing team, they get to take another turn, drawing a new card and selecting a new Psychic.</p>
+        </div>
+      </div>
+    )
+  }
   
   const handleUpdate = (e) => {
     // e.preventDefault();
@@ -186,7 +222,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
       let psychic = teams.find(player => player.isPsychic === true);
       return (
           <div className='frequency-outer-div'>
-            {assets && blueUsers && renderScoreboard()}
 
             {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
             <div className='dial-container'>
@@ -199,6 +234,11 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderClueForm()} 
               {renderSliderAndConfirm()}
             </div>
+
+          <div className='frequency-header'>
+            {renderInstructions()}
+            {assets && blueUsers && renderScoreboard()}
+          </div>
 
             <div className='temporary'>
               <div>Game Assets</div>
@@ -230,6 +270,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
                 <li>Blue Team</li>
                 {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
               </ul>
+
 
               {renderClueForm()}
               {renderSliderAndConfirm()}
