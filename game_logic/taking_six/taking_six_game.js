@@ -268,35 +268,34 @@ class TakingSixGame {
         tiedWinners.push(player)
       }
     });
+
     return tiedWinners;
   }
 
   changeElo() {
     let winners = this.checkWinner();
-    let eloWon = eloForWinner / winners.length;
+    const numPlayers = this.players.length - 1;
     const eloForWinner = numPlayers * 5;
-    const numPlayers = this.players.length;
+    let eloWon = eloForWinner / winners.length;
+
     this.players.forEach((player) => {
       User.findById(player._id)
-      .then(user => {
+      .then((user) => {
         let originalElo = user.eloRating;
-        const deductedElo = {eloRating: (originalElo - 5)};
-        player.endingElo = originalElo - 5;
-        user.set(deductedElo)
+
+        if(winners.some(winner => winner._id.equals(user._id))){
+          const increasedElo = {eloRating: (originalElo + eloWon)};
+          player.endingElo = originalElo + eloWon;
+          user.set(increasedElo)
+        } else {
+          const deductedElo = {eloRating: (originalElo - 5)};
+          player.endingElo = originalElo - 5;
+          user.set(deductedElo)
+        }
         user.save()
       })
     });
-    winners.forEach((winner) => {
-      User.findById(winner._id)
-        .then(user => {
-          let originalElo = user.eloRating;
-          const increasedElo = {eloRating: (originalElo + eloWon)};
-          winner.endingElo = originalElo + eloWon;
-          user.set(increasedElo)
-          user.save()
-        })
-    })
-    
+
   }
 
   checkTurnEnd() {
@@ -331,7 +330,7 @@ class TakingSixGame {
     }
 
     this.players.forEach(player => player.hand = this.deck.splice(0, 10));
-
+    this.orderPlayerHands();
     const nextState = this.getState().transitions.PLAYER_CHOOSE_CARD;
     this.setState(nextState);
   }
