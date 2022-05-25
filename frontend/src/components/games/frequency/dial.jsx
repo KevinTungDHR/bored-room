@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 function getCoordinates(event, referenceElement) {
     
     const position = {
-        x: event.pageX * -1,
+        x: event.pageX,
         y: event.pageY
     }
 
@@ -74,7 +74,7 @@ const Dial = () => {
             <motion.div
                 style={css.dial}
                 animate={{ 
-                    rotate: -mousePosition.x,
+                    rotate: mousePosition.x,
                     // rotate: mousePosition.y
                  }}
             />
