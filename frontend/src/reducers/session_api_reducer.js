@@ -1,4 +1,4 @@
-import { UPDATE_USER } from '../actions/user_actions';
+import { UPDATE_USER, UPDATE_AVATAR } from '../actions/user_actions';
 import {
     RECEIVE_CURRENT_USER,
     RECEIVE_USER_LOGOUT,
@@ -28,6 +28,10 @@ const sessionApiReducer = (state = initialState, action) => {
                 ...state,
                 isSignedIn: true
             }
+        case UPDATE_AVATAR:
+            let newState = Object.assign({}, state);
+            newState.user.avatar = action.data.avatar;
+            return newState;
         default:
             return state;
     }

@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { closeModal } from '../../actions/modal_actions';
 import Avatar from '../profile/avatar';
-import { updateUser } from '../../actions/user_actions';
+import { updateAvatar } from '../../actions/user_actions';
 
-function Modal ({ modal, user, closeModal, updateUser }) {
+function Modal ({ modal, user, closeModal, updateAvatar }) {
     if (!modal) {
         return null;
     }
@@ -13,7 +13,7 @@ function Modal ({ modal, user, closeModal, updateUser }) {
 
     switch(modal.formType) {
         case 'avatar':
-            component = <Avatar user={user} updateUser={updateUser} closeModal={closeModal}/>
+            component = <Avatar user={user} updateAvatar={updateAvatar} closeModal={closeModal}/>
             break;
         default:
             break;
@@ -33,7 +33,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closeModal: () => dispatch(closeModal()),
-    updateUser: (user) => dispatch(updateUser(user))
+    updateAvatar: (avatar) => dispatch(updateAvatar(avatar))
 })  
 
 export default connect(

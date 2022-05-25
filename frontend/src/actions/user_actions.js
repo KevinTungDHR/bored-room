@@ -20,9 +20,10 @@ const receiveUser = (user) => {
 }
 
 const receiveAvatar = (avatar) => {
+    // debugger
     return {
         type: UPDATE_AVATAR,
-        avatar
+        data: avatar.data
     }
 }
 

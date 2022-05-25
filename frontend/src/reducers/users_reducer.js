@@ -8,7 +8,7 @@ const usersReducer = (state = {}, action) => {
             nextState[action.user.data.id] = action.user.data
             return nextState;
         case UPDATE_AVATAR:
-            return Object.assign({}, state, {[state.session.user.avatar]: action.avatar});
+            return Object.assign({}, state, {[action.data._id]: action.data});
         case UPDATE_USER:
             nextState[action.user.data._id] = action.user.data
             return nextState;

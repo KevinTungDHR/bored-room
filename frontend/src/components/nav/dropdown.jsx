@@ -11,16 +11,16 @@ class Dropdown extends React.Component {
     }
 
     render() {
-        const avatars = {
-            'noimage': user_prof,
-            'yoda': yoda,
-            'monkey': monkey,
-            'socrates': socrates
-        }
+        // const avatars = {
+        //     'noimage': user_prof,
+        //     'yoda': yoda,
+        //     'monkey': monkey,
+        //     'socrates': socrates
+        // }
 
         const { avatar, handle } = this.props.user;
         return (
-            <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
+            // <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
                 <div className="dropdown-content">
                     <ul>
                         <Link to="/profile">Profile</Link>
@@ -28,7 +28,7 @@ class Dropdown extends React.Component {
                         <li>{handle}</li>
                     </ul>
                 </div>
-            </div>
+            // </div>
            
         )
     }
