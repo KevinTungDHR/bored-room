@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGame } from '../../../util/frequency_util';
 import { fetchGame, receiveGame } from '../../../actions/frequency_actions';
+import DialCanvas from './dial_canvas';
 
 const FrequencyGame = ({ roomCode, socket }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [leftOrRight, setLeftOrRight] = useState("");
   const [stateQueue, setStateQueue] = useState([]);
   const [clue, setClue] = useState("");
-  const [guess, setGuess] = useState(0);
+  const [guess, setGuess] = useState(90);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
@@ -45,7 +46,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     }
     if(gameState.name === 'PSYCHIC_PHASE'){
       setClue("");
-      setGuess(0);
+      setGuess(90);
       setLeftOrRight("");
     }
   }, [gameState])
@@ -73,32 +74,32 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
     let psychic = teams.find(player => player.isPsychic === true);
-    if(sessionId === psychic._id && psychic.activePlayer){
+    // if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue}>
           <input type="text" onChange={(e) => setClue(e.target.value)}/>
         </form>
       )
-    }
+    // }
   }
 
   const renderSliderAndConfirm = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
+    // if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
         <div>
-          <input type="range" min="-90" max="90" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
+          <input type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
           <button onClick={handleUpdate}>Confirm Guess</button>
         </div>
       )
-    }
+    // }
   }
 
   const renderLeftOrRight = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
+    // if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
       if(leftOrRight === ""){
         return(
           <div>
@@ -115,8 +116,28 @@ const FrequencyGame = ({ roomCode, socket }) => {
         )
       }
       
-    }
+    // }
   }
+
+  const drawDial = (ctx) => {
+    ctx.restore()
+    let length = 300;
+    let theta = guess;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.fillStyle = '#70b5b0'
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.save()
+    ctx.translate(300, 350)
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0 - length * Math.cos(Math.PI * theta/180), 0 - length * Math.sin(Math.PI * theta/180))
+    ctx.lineWidth = 5;
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    ctx.strokeStyle = '#550000';
+    ctx.stroke();
+  }
+
 
   const changeSlider = (e) => {
     setGuess(e.target.value);
@@ -171,6 +192,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
           {renderClueForm()}  
           {renderSliderAndConfirm()}   
           {renderLeftOrRight()}
+          <DialCanvas draw={drawDial} width={600} height={350} setGuess={setGuess}/>
         </div>
       );
   }
