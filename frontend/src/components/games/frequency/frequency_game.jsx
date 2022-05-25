@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGame } from '../../../util/frequency_util';
 import { fetchGame, receiveGame } from '../../../actions/frequency_actions';
+import { motion } from 'framer-motion';
+import Dial from './dial';
 
 const FrequencyGame = ({ roomCode, socket }) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -13,6 +15,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
   const room = useSelector(state => state.entities.rooms[roomCode])
+  const blueUsers = useSelector(state => state.entities.rooms[roomCode].blueTeam)
+  const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
   const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam)
   const dispatch = useDispatch();
@@ -73,32 +77,32 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
     let psychic = teams.find(player => player.isPsychic === true);
-    if(sessionId === psychic._id && psychic.activePlayer){
+    // if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue}>
           <input type="text" onChange={(e) => setClue(e.target.value)}/>
         </form>
       )
-    }
+    // }
   }
 
   const renderSliderAndConfirm = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
+    // if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
         <div>
           <input type="range" min="-90" max="90" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
           <button onClick={handleUpdate}>Confirm Guess</button>
         </div>
       )
-    }
+    // }
   }
 
   const renderLeftOrRight = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
+    // if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
       if(leftOrRight === ""){
         return(
           <div>
@@ -115,11 +119,20 @@ const FrequencyGame = ({ roomCode, socket }) => {
         )
       }
       
-    }
+    // }
   }
 
   const changeSlider = (e) => {
     setGuess(e.target.value);
+  }
+
+  const retrievePlayers = (team) => {
+    const handles = [];
+    team.map((player) => {
+      handles.push(player.handle)
+    });
+
+    return handles;
   }
   
   const handleUpdate = (e) => {
@@ -137,41 +150,60 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
     if (gameState) {
       return (
-        <div>
-          <div>Game Assets</div>
-          <ul>
-            <li>Active Team: {assets.activeTeam}</li>
-            <li>Blue Points: {assets.bluePoints}</li>
-            <li>Red Points: {assets.redPoints}</li>
-            <li>Current Card: Left: {assets.currentCard.left} | Right: {assets.currentCard.right} </li>
-            <li>clue: {assets.clue}</li>
-            <li>dial: {assets.dial}</li>
-            <li>local guess: {guess}</li>
-            <li>db guess: {assets.guess}</li>
-            <li>leftOrRight: {assets.leftOrRight}</li>
-          </ul>
-          <div>Game State</div>
-          <ul>
-            <li>{gameState.name}</li>
-            <li>{gameState.type}</li>
-            {gameState.actions.map((action, idx) => <li key={idx}>action: {action}</li>)}
-            {Object.keys(gameState.transitions).map((transition, idx) => <li key={idx}>transition: {transition}</li>)}
-          </ul>
+          <div>
+            <div className='scoreboard-container'>
+              <div className='team-scores-container'>
+                <h1 className='blue'>Blue Team</h1>
+                <span>{assets.bluePoints}</span>
+                <ul>
+                {retrievePlayers(blueUsers).map(player => <li>{player}</li>)}
+                </ul>
+              </div>
+              <div className='team-scores-container'>
+                <h1 className='red'>Red Team</h1>
+                <span>{assets.redPoints}</span>
+                <ul>
+                {retrievePlayers(redUsers).map(player => <li>{player}</li>)}
+                </ul>
+              </div>
+              <div></div>
+            </div>
 
-          <ul>
-            <li>Red Team</li>
-            {room && room.redTeam.map(player => <li>{player.handle}</li>)}
-          </ul>
+            <div>Game Assets</div>
+            <ul>
+              <li>Active Team: {assets.activeTeam}</li>
+              <li>Blue Points: {assets.bluePoints}</li>
+              <li>Red Points: {assets.redPoints}</li>
+              <li>Current Card: Left: {assets.currentCard.left} | Right: {assets.currentCard.right} </li>
+              <li>clue: {assets.clue}</li>
+              <li>dial: {assets.dial}</li>
+              <li>local guess: {guess}</li>
+              <li>db guess: {assets.guess}</li>
+              <li>leftOrRight: {assets.leftOrRight}</li>
+            </ul>
+            <div>Game State</div>
+            <ul>
+              <li>{gameState.name}</li>
+              <li>{gameState.type}</li>
+              {gameState.actions.map((action, idx) => <li key={idx}>action: {action}</li>)}
+              {Object.keys(gameState.transitions).map((transition, idx) => <li key={idx}>transition: {transition}</li>)}
+            </ul>
 
-          <ul>
-            <li>Blue Team</li>
-            {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
-          </ul>
+            <ul>
+              <li>Red Team</li>
+              {room && room.redTeam.map(player => <li>{player.handle}</li>)}
+            </ul>
 
-          {renderClueForm()}  
-          {renderSliderAndConfirm()}   
-          {renderLeftOrRight()}
-        </div>
+            <ul>
+              <li>Blue Team</li>
+              {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
+            </ul>
+
+            {renderClueForm()}  
+            {renderSliderAndConfirm()}   
+            {renderLeftOrRight()}
+          </div>
+
       );
   }
 }
