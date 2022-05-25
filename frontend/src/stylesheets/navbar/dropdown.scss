@@ -11,6 +11,25 @@
     top: 50px;
     right: 6px;
     z-index: 10;
+
+    li:nth-child(2) {
+      border-bottom: 1px solid $bronze;
+      margin: 0px 8px;
+    }
+     
+    li:last-child {
+        font-family: 'Really-Free';
+        color: $coral;
+        font-size: 32px;
+        margin: 12px 0px;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        margin: 0px 8px;
+        border-bottom: 1px solid $bronze;
+        cursor: default;
+        border: none;
+    }
 }
 
 .profile-icon:hover .dropdown-content {
@@ -46,8 +65,7 @@ a:hover {
 
 .logout-btn {
     background-color: inherit;
-    border: 2px solid $champ;
-    border-radius: 8px;
+    border: none;
     cursor: pointer;
     color: $coral;
     height: 40px;

@@ -18,7 +18,6 @@ function getCoordinates(event, referenceElement) {
     let reference = referenceElement.offsetParent;
 
     while (reference) {
-        debugger
         offset.left += reference.offsetLeft;
         offset.top += reference.offsetTop;
         reference = reference.offsetParent;

@@ -131,7 +131,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     return (
       <div>
         <div className='freq-scoreboard-container'>
-          <div className='scoreboard-background'><h1>Scoreboard</h1></div>
+          <div className='scoreboard-background'></div>
           <div className='team-scores-container'>
             {assets.activeTeam === 'blue' ? <motion.div className='arrow-icon' animate={{y: [-5, 5]}} transition={{yoyo: Infinity}}>
               <AiOutlineArrowDown 
@@ -184,15 +184,15 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
         <div>
           <h2>Game Play:</h2>
-          <ol type="1">
-            <li>Each turn a member of a team will take the role of Psychic. </li>
-            <li>The active team draws a card and places it in front of the dial.The card will have two opposing ideas, one that represents the leftmost part of the dial and one that represents the rightmost part (such as smells good vs smells bad).</li>
-            <li>A target zone on the dial will get randomly chosen and is only visible to the Psychic. </li>
-            <li>The Psychic will give a clue such as, “Freshly cut grass”. The clue should be based upon where the target zone lies within the spectrum of the drawn card.</li>
-            <li>The active team must then agree upon where they believe the target zone is. For example, where the target is on the spectrum of smells-good to smells bad based on the clue “Freshly cut grass”.</li>
-            <li>After the active team has locked in their guess, the opposing team determines if they think the target zone is to the left or to the right of the active team's guess</li>
-            <li>Reveal/Score: The target zone is then revealed and the active team will score 2, 3 or 4 points depending on where in the target zone they landed or 0 points if they missed the mark completely. The opposing team gets 1 point if they guessed left or right correctly.</li>
-            <li>The opposing team now selects a Psychic and takes their turn. Continue until one team has 10 points.</li>
+          <ol>
+            <li type="1">Each turn a member of a team will take the role of Psychic. </li>
+            <li type="1">The active team draws a card and places it in front of the dial.The card will have two opposing ideas, one that represents the leftmost part of the dial and one that represents the rightmost part (such as smells good vs smells bad).</li>
+            <li type="1">A target zone on the dial will get randomly chosen and is only visible to the Psychic. </li>
+            <li type="1">The Psychic will give a clue such as, “Freshly cut grass”. The clue should be based upon where the target zone lies within the spectrum of the drawn card.</li>
+            <li type="1">The active team must then agree upon where they believe the target zone is. For example, where the target is on the spectrum of smells-good to smells bad based on the clue “Freshly cut grass”.</li>
+            <li type="1">After the active team has locked in their guess, the opposing team determines if they think the target zone is to the left or to the right of the active team's guess</li>
+            <li type="1">Reveal/Score: The target zone is then revealed and the active team will score 2, 3 or 4 points depending on where in the target zone they landed or 0 points if they missed the mark completely. The opposing team gets 1 point if they guessed left or right correctly.</li>
+            <li type="1">The opposing team now selects a Psychic and takes their turn. Continue until one team has 10 points.</li>
           </ol>
         </div>
 
