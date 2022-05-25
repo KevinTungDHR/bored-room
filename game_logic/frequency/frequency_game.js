@@ -175,25 +175,27 @@ class FrequencyGame {
   }
 
   switchTurn(){
-    if(this.activeTeam.color === 'red'){
+    if(this.activeTeam === 'red'){
       this.setActiveTeamFalse(this.redTeam);
       this.bluePsychic += 1;
       let currentPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
       currentPsychic.isPsychic = true;
       currentPsychic.activePlayer = true;
+      this.activeTeam = 'blue';
     } else {
       this.setActiveTeamFalse(this.blueTeam);
       this.redPsychic += 1;
       let currentPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
       currentPsychic.isPsychic = true;
       currentPsychic.activePlayer = true;
+      this.activeTeam = 'red';
     }
 
     this.newTurnSetup()
   }
 
   activeTeamGoesAgain(){
-    if(this.activeTeam.color === 'red'){
+    if(this.activeTeam === 'red'){
       this.setActiveTeamFalse(this.redTeam);
       this.redPsychic += 1;
       let currentPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
@@ -267,7 +269,7 @@ class FrequencyGame {
       this.bluePoints += this.checkLeftOrRight();
     } else {
       this.bluePoints += points;
-      this.bluePoints += this.checkLeftOrRight();
+      this.redPoints += this.checkLeftOrRight();
     }
 
     let [currentTeamPts, opposingTeamPts] = this.activeTeam === 'red' ? [this.redPoints, this.bluePoints] : [this.bluePoints, this.redPoints]
