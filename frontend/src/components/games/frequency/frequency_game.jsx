@@ -121,22 +121,56 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
   const drawDial = (ctx) => {
     ctx.restore()
-    let length = 300;
-    let theta = guess;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.fillStyle = '#70b5b0'
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.save()
     ctx.translate(300, 350)
+
+    drawTarget(ctx);
+    let length = 300;
+    let theta = guess;
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(0 - length * Math.cos(Math.PI * theta/180), 0 - length * Math.sin(Math.PI * theta/180))
+    ctx.closePath()
     ctx.lineWidth = 5;
     ctx.fillStyle = 'red';
     ctx.fill();
     ctx.strokeStyle = '#550000';
     ctx.stroke();
   }
+
+  const drawTarget = (ctx) => {
+    const outerArc = { start: Math.PI/180 * (assets.dial - 12 + 180), end: Math.PI/180 * (assets.dial + 12 + 180)}
+    const innerArc = { start: Math.PI/180 * (assets.dial - 7 + 180), end: Math.PI/180 * (assets.dial + 7 + 180)}
+    const targetArc = { start: Math.PI/180 * (assets.dial - 2 + 180), end: Math.PI/180 * (assets.dial + 2 + 180)}
+    ctx.beginPath()
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, outerArc.start, outerArc.end)
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = 'green';
+    ctx.fill();
+
+    ctx.beginPath()
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, innerArc.start, innerArc.end)
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = 'brown';
+    ctx.fill();
+
+    ctx.beginPath()
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, targetArc.start, targetArc.end)
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = 'orange';
+    ctx.fill();
+  }
+
+
 
 
   const changeSlider = (e) => {
