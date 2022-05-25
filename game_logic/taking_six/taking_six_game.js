@@ -56,6 +56,52 @@ class TakingSixGame {
     this.gameOver = false;
   }
   
+  async setupDemoGame(players, bots){
+    this.name = "Taking Six";
+    this.playedCards = [];
+    this.rows = [];
+    this.players = [];
+
+    await Card.find()
+      .then(data => this.deck = (data))
+      .catch(reason => console.error(reason));
+
+    this.shuffleCards();
+    players.forEach((player) => {
+      this.players.push({
+        _id: player._id,
+        bot: false,
+        activePlayer: false,
+        score: 66,
+        pile: [],
+        hand: this.deck.splice(0, 10),
+        chosenCard: { value: -1, bulls: 0 },
+        endingElo: 0
+      });
+    });
+
+    bots.forEach((bot) => {
+      this.players.push({
+        _id: bot._id,
+        bot: true,
+        activePlayer: false,
+        score: 66,
+        pile: [],
+        hand: this.deck.splice(0, 10),
+        chosenCard: { value: -1, bulls: 0 },
+        endingElo: 0
+      });
+    });
+
+    this.orderPlayerHands();
+    this.currentState = 2;
+    // Create 4 rows
+    for (let i = 0; i < 4; i++) {
+      this.rows.push([this.deck.pop()]);
+    }
+
+    this.gameOver = false;
+  }
 
   shuffleCards() {
     // Fisher-Yates shuffle. Make sure to skip the first element for more even randomness.
@@ -100,6 +146,7 @@ class TakingSixGame {
     }
   }
 
+
   // Automated Actions
 
   turnCleanUp() {
@@ -137,6 +184,45 @@ class TakingSixGame {
     return this.players.every(player => player.chosenCard.value !== -1);
   }
 
+  botsHaveChosenCards() {
+    return this.players
+      .filter(player => player.bot === true)
+      .every(player => player.chosenCard.value !== -1);
+  }
+
+  botsChooseRandomCards(){
+    this.players.forEach(player =>{
+      if(player.bot === true){
+        let randInt = Math.floor(Math.random() * player.hand.length);
+        this.playCard({ player: player, card: player.hand[randInt] });
+      }
+    })
+  }
+
+  botTakesRow(){
+    let smallestRow = 0;
+
+    let leastPoints = this.rows[0].reduce((prev, curr) => {
+      return prev.value + curr.value
+    })
+    for(let i = 1; i < this.rows.length; i++){
+      let points = this.rows[i].reduce((prev, curr) => {
+        return prev.value + curr.value
+      })
+
+      if(points < leastPoints){
+        leastPoints = points;
+        smallestRow = i;
+      }
+    }
+
+    this.takeRow({row: smallestRow})
+  }
+
+  currentPlayerIsBot(){
+    let currentPlayer = this.players.find(player => player._id.equals(this.playedCards[0][0]));
+    return currentPlayer.bot
+  }
   // Game Rules checks
   cardSmallerThanAllRows(card) {
     return this.rows.every(row => row.slice(-1)[0].value > card.value);
