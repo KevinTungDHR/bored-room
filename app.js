@@ -62,6 +62,18 @@ io.on("connection", socket => {
     }
   });
 
+  socket.on("join_lobby", ()=>{
+    socket.join("lobby");
+  });
+
+  socket.on("leave_lobby", ()=>{
+    try{
+      socket.leave("lobby");
+    } catch (e){
+      console.log(e)
+    }
+  });
+
   socket.on('send_message', (data) => {
     // socket.broadcast.emit("receive_message", data);
     io.in(data.roomCode).emit("receive_message", data);

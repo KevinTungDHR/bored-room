@@ -61,6 +61,18 @@ const Room = () => {
     // }
   }
 
+  const handleCreateDemo = (e) => {
+    switch(rooms[roomCode].game){
+      case 'Taking Six':
+        TakingSixUtil.createDemo(roomCode, rooms[roomCode]?.seatedUsers);
+        break;
+      case 'Frequency':
+        return
+      default:
+        return null;
+    }
+  }
+
   const sendMessage = (e) => {
     e.preventDefault();
     socket.emit('send_message', { user: currentUserHandle, message: message, roomCode: roomCode });
@@ -156,6 +168,7 @@ const Room = () => {
           }
         </div>
         <button className='start-game-btn' onClick={handleCreate}>Start Game</button>
+        <button className='start-game-btn' onClick={handleCreateDemo}>Start Demo</button>
       </div>
 
       <div className='chat-wrapper'>
