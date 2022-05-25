@@ -107,15 +107,15 @@ const FrequencyGame = ({ roomCode, socket }) => {
       if(leftOrRight === ""){
         return(
           <div>
-            <button onClick={chooseLeft}>Left</button>
-            <button onClick={chooseRight}>Right</button>
+            <button className='left-right-btn' onClick={chooseLeft}>Left</button>
+            <button className='left-right-btn' onClick={chooseRight}>Right</button>
           </div>
         )
       } else {
         return (
           <div>
-            <button onClick={handleUpdate}>Confirm</button>
-            <button onClick={()=> setLeftOrRight("")}>Cancel</button>
+            <button className='left-right-btn' onClick={handleUpdate}>Confirm</button>
+            <button className='cancel-btn' onClick={()=> setLeftOrRight("")}>Cancel</button>
           </div>
         )
       }
@@ -127,33 +127,40 @@ const FrequencyGame = ({ roomCode, socket }) => {
     setGuess(e.target.value);
   }
 
-  const retrievePlayers = (team) => {
-    const handles = [];
-    team.map((player) => {
-      handles.push(player.handle)
-    });
-
-    return handles;
-  }
-
   const renderScoreboard = () => {
+    debugger
     return (
       <div>
         <div className='freq-scoreboard-container'>
           <div className='team-scores-container'>
-            {assets.activeTeam === 'blue' ? <AiOutlineArrowDown height="22px" width="22px" className='active-player-arrow' /> : <div></div>}
-            <h1 className='blue'>Blue Team</h1>
-            <span>{assets.bluePoints}</span>
-            <ul>
-              {retrievePlayers(blueUsers).map(player => <li>{player}</li>)}
-            </ul>
+            {assets.activeTeam === 'blue' ? <motion.div className='arrow-icon' animate={{y: [-5, 5]}} transition={{yoyo: Infinity}}>
+              <AiOutlineArrowDown 
+                height="22px" 
+                width="22px" 
+                className='active-player-arrow'
+              /></motion.div> : <div></div>}
+            <div className='team-container'>
+              <h1 className='blue'>Blue Team</h1>
+              <span>{assets.bluePoints}</span>
+              <ul>
+                {blueUsers.map(player => <li>{player.handle}</li>)}
+              </ul>
+            </div>
           </div>
           <div className='team-scores-container'>
-            <h1 className='red'>Red Team</h1>
-            <span>{assets.redPoints}</span>
-            <ul>
-              {retrievePlayers(redUsers).map(player => <li>{player}</li>)}
-            </ul>
+            {assets.activeTeam === 'red' ? <motion.div className='arrow-icon' animate={{ y: [-5, 5] }} transition={{ yoyo: Infinity }}>
+              <AiOutlineArrowDown
+                height="22px"
+                width="22px"
+                className='active-player-arrow'
+              /></motion.div> : <div></div>}
+            <div className='team-container'>
+              <h1 className='red'>Red Team</h1>
+              <span>{assets.redPoints}</span>
+              <ul>
+                {redUsers.map(player => <li>{player.handle}</li>)}
+              </ul>
+            </div>
           </div>
           <div></div>
         </div>
@@ -175,10 +182,13 @@ const FrequencyGame = ({ roomCode, socket }) => {
   };
 
     if (gameState) {
+      let teams = redTeam.concat(blueTeam);
+      let psychic = teams.find(player => player.isPsychic === true);
       return (
           <div className='frequency-outer-div'>
-            {assets && renderScoreboard()}
+            {assets && blueUsers && renderScoreboard()}
 
+            {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
               <div className='semi-circle'></div>
@@ -221,8 +231,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
                 {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
               </ul>
 
-              {renderClueForm()}  
-              {renderSliderAndConfirm()}   
+              {renderClueForm()}
+              {renderSliderAndConfirm()}
               {renderLeftOrRight()}
             </div>
           </div>
