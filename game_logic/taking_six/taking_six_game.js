@@ -368,14 +368,14 @@ class TakingSixGame {
     this.players.forEach((player) => {
       User.findById(player._id)
       .then((user) => {
-        let originalElo = user.eloRating;
+        let originalElo = user.eloRating.takingSix;
 
         if(winners.some(winner => winner._id.equals(user._id))){
-          const increasedElo = {eloRating: (originalElo + eloWon)};
+          const increasedElo = {eloRating: { takingSix: (originalElo + eloWon) }};
           player.endingElo = originalElo + eloWon;
           user.set(increasedElo)
         } else {
-          const deductedElo = {eloRating: (originalElo - 5)};
+          const deductedElo = {eloRating: { takingSix: (originalElo - 5) }};
           player.endingElo = originalElo - 5;
           user.set(deductedElo)
         }

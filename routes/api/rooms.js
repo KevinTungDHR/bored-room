@@ -29,6 +29,7 @@ router.post('/', passport.authenticate("jwt", { session: false }),
     const newRoom = new Room({
       name: req.body.name,
       game: req.body.game,
+      gameId: req.body.gameId,
       seatedUsers: [{
         _id: req.user._id
       }],
