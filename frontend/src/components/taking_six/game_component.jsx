@@ -15,6 +15,8 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
+  const [timers, setTimers] = useState([]);
+  const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
@@ -24,12 +26,16 @@ const GameComponent = ({ roomCode, socket }) => {
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
-
+  
   useEffect(() => {
     dispatch(fetchGame(roomCode));
     socket.on('game_updated', (game) => {
       setStateQueue(oldState =>  [...oldState, game])
     });
+
+    return () => {
+      timerRef.current.forEach(timer => clearTimeout(timerRef));
+    }
   },[]);
 
   useEffect(() => {
@@ -39,10 +45,14 @@ const GameComponent = ({ roomCode, socket }) => {
         setIsAnimating(true)
         setStateQueue(oldState => oldState.slice(1));
         dispatch(receiveGame(nextUpdate))
-        const timer = setTimeout(() => setIsAnimating(false), 1000);
 
+        const timer = setTimeout(() => {
+          setIsAnimating(false)
+          setTimers(oldState => oldState.slice(1));
+        }, 1000);
+
+        setTimers(oldState => [...oldState, timer]);
         // Need to clearTimeout but it's being called on every rerender
-        
       } else {
         setStateQueue(oldState => oldState.slice(1));
         dispatch(receiveGame(nextUpdate))
