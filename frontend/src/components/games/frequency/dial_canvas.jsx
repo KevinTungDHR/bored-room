@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 const DialCanvas = props => {
   const canvasRef = useRef(null);
 
-  let { draw, setGuess, ...rest } = props;
+  let { draw, setGuess, updateGuess, ...rest } = props;
   let [isDragging, setIsDragging] = useState(false)
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,6 +18,7 @@ const DialCanvas = props => {
 
   const endDrag = (e) => {
     setIsDragging(false)
+    updateGuess();
   }
 
   const handleMouseMove = (e) => {
