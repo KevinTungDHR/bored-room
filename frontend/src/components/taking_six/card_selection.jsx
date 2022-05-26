@@ -18,10 +18,8 @@ const CardSelection = ({cards, setIsAnimating}) => {
             onAnimationStart={onStart}
             onAnimationEnd={onEnd}
             className='selected-cards-container'>
-            {cards[0].map((card, i) => {
-                if (i % 2 !== 0) {
-                    return <Card card={card} key={ i } />
-                }
+            {cards.map((card, i) => {
+                return <Card card={card[1]} key={ i } />
             })}
         </div>
     )

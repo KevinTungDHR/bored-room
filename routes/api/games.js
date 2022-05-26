@@ -86,7 +86,6 @@ router.post('/create', (req, res) => {
 
 router.get('/:code', async (req, res) => {
   const assets = await TakingSixModel.findOne({ code: req.params.code })
-
   const gameState = takingSixState[assets.currentState];
 
   if(gameState.description instanceof Function){
@@ -137,7 +136,7 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       const user = await User.findById(g.getActivePlayer()._id)
       gameState.description = gameState.description(user.handle);
     }
-
+    
     io.to(req.params.code).emit("game_updated", { assets, gameState });
   }
 
@@ -152,6 +151,11 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
         game.set(g);
         let assets = await game.save()
         const gameState = takingSixState[assets.currentState];
+        if(gameState.description instanceof Function){
+          const user = await User.findById(g.getActivePlayer()._id)
+          gameState.description = gameState.description(user.handle);
+        }
+        
         io.to(req.params.code).emit("game_updated", { assets, gameState });
       } catch (err) {
         return res.status(402).json(err);

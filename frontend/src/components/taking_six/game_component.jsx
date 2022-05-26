@@ -14,6 +14,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
   const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isDelayed, setIsDelayed] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
   const [timers, setTimers] = useState([]);
   const timerRef = useRef(timers);
@@ -39,15 +40,15 @@ const GameComponent = ({ roomCode, socket }) => {
   },[]);
 
   useEffect(() => {
-    if(!isAnimating && stateQueue.length > 0){
+    if(!isDelayed && stateQueue.length > 0){
       let nextUpdate = stateQueue[0];
       if(nextUpdate.gameState.type === 'automated') {
-        setIsAnimating(true)
+        setIsDelayed(true)
         setStateQueue(oldState => oldState.slice(1));
         dispatch(receiveGame(nextUpdate))
 
         const timer = setTimeout(() => {
-          setIsAnimating(false)
+          setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
         }, 1000);
 
@@ -58,7 +59,7 @@ const GameComponent = ({ roomCode, socket }) => {
         dispatch(receiveGame(nextUpdate))
       }
     } 
-  }, [stateQueue, isAnimating])
+  }, [stateQueue, isDelayed])
 
   const setChoiceAndUpdate = (c, e) => {
     const chosenEles = document.getElementsByClassName('card chosen').length;
