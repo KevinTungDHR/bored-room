@@ -83,7 +83,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
       return(
         <form onSubmit={submitClue} className="clue-form">
           <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
-          <button className='submit-clue'>Submit Clue</button>
+          <button className='submit-clue' onClick={handleUpdate}>Submit</button>
         </form>
       )
     // }
@@ -95,8 +95,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
     // if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
         <div>
-          <input type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
-          <button onClick={handleUpdate}>Confirm Guess</button>
+          <input className='slider' type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
+          <button className='submit-guess' onClick={handleUpdate}>Confirm</button>
         </div>
       )
     // }
@@ -340,7 +340,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
             {assets && blueUsers && renderScoreboard()}
           </div>
 
-            <div className='temporary'>
+            {/* <div className='temporary'>
               <div>Game Assets</div>
               <ul>
                 <li>Active Team: {assets.activeTeam}</li>
@@ -370,7 +370,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
                 <li>Blue Team</li>
                 {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
               </ul>              
-            </div>
+            </div> */}
           </div>
       );
   }

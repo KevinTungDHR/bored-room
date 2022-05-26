@@ -38,10 +38,12 @@
     font-family: 'Really-Free';
     color: $text;
     margin: 18px 18px;
-    max-width: 40%;
+    max-width: 50%;
+    margin-top: -20px;
+    margin-left: 24px;
 
     h1 {
-        font-size: 26px;
+        font-size: 30px;
         color: $title;
     }
 
@@ -135,6 +137,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    div {
+        margin-top: 10px;
+    }
 }
 
 .clue-form {
@@ -173,6 +179,27 @@
         margin: 0px 4px;
         font-family: "Salt-Rock";
         border-radius: 8px;
+
+        &:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+        cursor: pointer;
+    }
+    }
+}
+
+.submit-guess {
+    background-color: $coral;
+    border: none;
+    height: 50px;
+    margin: 0px 4px;
+    font-family: "Salt-Rock";
+    border-radius: 8px;
+
+    &:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+        cursor: pointer;
     }
 }
 

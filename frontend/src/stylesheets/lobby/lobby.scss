@@ -38,14 +38,19 @@
 
 .six-title-tile {
   font-family: "Marker";
-  font-size: 38px;
+  font-size: 34px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-35deg);
   color: red;
-  width: 300px;
+  max-width: 100%;
   text-align: center;
+}
+
+.six-title-wrapper {
+  height: 50px;
+  max-width: 200px;
 }
 
 .flex {

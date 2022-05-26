@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import * as RoomAPIUtil from '../../util/rooms_util';
 import bull_logo from '../../assets/images/bull_logo.png';
 import { GiBull } from 'react-icons/gi';
+import { GiSundial } from 'react-icons/gi';
 
 const socket = io();
 class Lobby extends React.Component {
@@ -98,11 +99,12 @@ class Lobby extends React.Component {
                                 <h1>1. Choose a Game: </h1>
                                 <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
                                     <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
-                                    <h1 className='six-title-tile'>Taking Six</h1>
+                                    <div className='six-title-wrapper'><h1 className='six-title-tile'>Taking Six</h1></div>
                                 </div>
 
                                 <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
                                     <h1 className='freq-title-tile'>Frequency</h1>
+                                    <GiSundial height="160px" width="160px" />
                                 </div>
 
                             </div>
