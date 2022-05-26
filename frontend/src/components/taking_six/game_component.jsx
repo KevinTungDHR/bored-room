@@ -162,7 +162,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {<CardSelection cards={assets.playedCards} setIsAnimating={setIsAnimating} />}
+                    {<CardSelection cards={assets.playedCards} allUsers={allUsers} setIsAnimating={setIsAnimating} />}
                   </div>
                 </div>
 

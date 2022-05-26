@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from './card';
 
-const CardSelection = ({cards, setIsAnimating}) => {
+const CardSelection = ({cards, setIsAnimating, allUsers}) => {
 
     function onStart() {
         setIsAnimating(true)
@@ -19,7 +19,12 @@ const CardSelection = ({cards, setIsAnimating}) => {
             onAnimationEnd={onEnd}
             className='selected-cards-container'>
             {cards.map((card, i) => {
-                return <Card card={card[1]} key={ i } />
+                return (
+                    <div>
+                        <Card card={card[1]} key={ i } />
+                        <div>{allUsers.find(player => player._id === card[0]).handle}</div>
+                    </div>
+                )
             })}
         </div>
     )
