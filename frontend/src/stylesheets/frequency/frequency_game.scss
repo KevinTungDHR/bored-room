@@ -41,14 +41,14 @@
     max-width: 40%;
 
     h1 {
-        font-size: 22px;
+        font-size: 26px;
         color: $title;
     }
 
     h2 {
         text-decoration: underline;
         color: $bronze;
-        font-size: 18px;
+        font-size: 24px;
     }
 }
 
@@ -126,7 +126,6 @@
     height: 250px;
     background-color: $champ;
     width: 10px;
-    // transform: translate(0, -50%);
     border-top-left-radius: 99%;
     border-top-right-radius: 99%;
     transform: translate();
@@ -143,9 +142,10 @@
     align-items: center;
     justify-content: center;
     margin-top: 12px;
+    
 
     input {
-        height: 30px;
+        height: 50px;
         width: 400px;
         border: none;
         outline: none;
@@ -153,18 +153,36 @@
         background-color: $champ;
         border-radius: 10px;
         text-align: center;
-        // font-family: Arial, Helvetica, sans-serif;
+
+        &:focus {
+            font-family: "Really-Free";
+            font-size: 28px;
+        }
+        
+        &::placeholder {
+            font-family: "Really-Free";
+            letter-spacing: 1.3px;
+            font-size: 28px;
+        }
+    }
+
+    .submit-clue {
+        background-color: $coral;
+        border: none;
+        height: 50px;
+        margin: 0px 4px;
+        font-family: "Salt-Rock";
+        border-radius: 8px;
     }
 }
 
 .freq-confirm-btn, .left-right-btn, .cancel-btn {
-    // background-color: $coral;
-    // color: $title;
     font-family: "Salt-Rock";
     border: $tan;
     height: 50px;
     width: 100px;
     margin: 0px 4px;
+    border-radius: 8px;
 
     &:hover {
         transform: scale(1.02);
@@ -196,3 +214,8 @@
     top: -22px;
 }
 
+.room-code {
+    font-size: 18px;
+    margin-top: 10px;
+    margin-left: 10px;
+}

@@ -79,7 +79,7 @@ class Lobby extends React.Component {
 
         return (
             <div className='lobby-background'>
-                <div className='select-game-wrapper'>
+                {/* <div className='select-game-wrapper'>
                     <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
                         <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
                         <h1 className='six-title-tile'>Taking Six</h1>
@@ -89,14 +89,26 @@ class Lobby extends React.Component {
                         <h1 className='freq-title-tile'>Frequency</h1>
                     </div>
 
-                </div>
+                </div> */}
                 
                 <div className='search-container'>
                     <form className='create-room' onSubmit={this.handleSubmit}>
                         <div className='flex'>
-                            <div>Create a Room</div>
+                            <div className='select-game-wrapper'>
+                                <h1>1. Choose a Game: </h1>
+                                <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
+                                    <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
+                                    <h1 className='six-title-tile'>Taking Six</h1>
+                                </div>
+
+                                <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
+                                    <h1 className='freq-title-tile'>Frequency</h1>
+                                </div>
+
+                            </div>
+                            <h1>2. Create a Room</h1>
                             <div>
-                                <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} />
+                                <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} placeholder="Enter a room name" />
                                 <input className='create-btn' type="submit" value="Create" />
                             </div>
                         </div>
@@ -104,9 +116,9 @@ class Lobby extends React.Component {
 
                     <form className='search-rooms'>
                         <div className='flex'>
-                            <div>Search for a Room</div>
+                            <div className='search-title'>Search for a Room</div>
                             <div>
-                                <input className='create-room-input' value={this.state.search} onChange={this.updateSearch} />
+                                <input className='search-room-input' value={this.state.search} onChange={this.updateSearch} />
                                 {/* <input className='create-btn' type="submit" value="Search" /> */}
                             </div>
                         </div>

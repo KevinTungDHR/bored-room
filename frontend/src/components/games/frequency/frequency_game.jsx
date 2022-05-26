@@ -82,7 +82,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
     // if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue} className="clue-form">
-          <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter clue and click confirm..."/>
+          <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
+          <button className='submit-clue'>Submit Clue</button>
         </form>
       )
     // }
@@ -125,6 +126,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   }
 
   const drawDial = (ctx) => {
+    let allPlayers = blueUsers.concat(redUsers);
     ctx.restore()
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.save()
@@ -137,9 +139,18 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.fillStyle = '#eae6da'
     ctx.fill();
 
+    allPlayers.forEach((player) => {
+      if (player._id === sessionId && player.isPsychic) {
+        drawTarget(ctx)
+      } else {
+        drawShield(ctx)
+      }
+    })
     // Add conditional here
+    // if (psychic and active player) draw target else shield
+    // if ()
     // drawShield(ctx);
-    drawTarget(ctx);
+    // drawTarget(ctx);
     let length = 300;
     let theta = guess;
     ctx.beginPath();
@@ -301,9 +312,16 @@ const FrequencyGame = ({ roomCode, socket }) => {
     if (gameState) {
       let teams = redTeam.concat(blueTeam);
       let psychic = teams.find(player => player.isPsychic === true);
+      const actionDescriptions = {
+        "giveClue": "Give Clue",
+        "makeGuess": "Make Guess",
+        "chooseLeftRight": "Choose Left or Right",
+        "scorePoints": "Tally Points"
+      }
       return (
           <div className='frequency-outer-div'>
-          {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {action}</span></h1>)}
+            <div className='room-code'>In Room: {roomCode}</div>
+          {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {actionDescriptions[action]}</span></h1>)}
             {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
@@ -314,6 +332,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
             <div className='forms-container'>
               {renderClueForm()} 
               {renderSliderAndConfirm()}
+              {renderLeftOrRight()}
             </div>
 
           <div className='frequency-header'>
@@ -350,13 +369,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <ul>
                 <li>Blue Team</li>
                 {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
-              </ul>
-
-
-              {renderClueForm()}
-              {renderSliderAndConfirm()}
-              {renderLeftOrRight()}
-              
+              </ul>              
             </div>
           </div>
       );
