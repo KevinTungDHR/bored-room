@@ -49,7 +49,8 @@ router.post('/register', (req, res) => {
                   email: user.email,
                   avatar: user.avatar,
                   eloRating: user.eloRating,
-                  bio: user.bio
+                  bio: user.bio,
+                  friends: user.friends
                 }
 
                 jwt.sign(
@@ -96,7 +97,8 @@ router.post('/login', (req, res) => {
               email: user.email,
               avatar: user.avatar,
               eloRating: user.eloRating,
-              bio: user.bio
+              bio: user.bio,
+              friends: user.friends
             };
 
             jwt.sign(
@@ -132,25 +134,27 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
 router.post('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   const friendHandle = {handle: req.body.friendHandle}
 
-  // need to add condition to not add if already in friend list.
-  
-  User.findOne(friendHandle)
+  User.findOneAndUpdate(friendHandle)
     .then(friend => {
-      req.user.friends.push({
-        id: friend.id,
-        handle: friend.handle
-      })
+      const friendInfo = new Object();
+        friendInfo.handle = friend.handle 
+        friendInfo.eloRating = friend.eloRating
+        friendInfo.bio = friend.bio
+      req.user.friends[friend.id] = friendInfo
       req.user.save()
       res.json(req.user)
     })
 })
 
-// router.delete('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
-//   const friendHandle = {handle: req.body.friendHandle}
-//   const friendList = req.user.friends
-//   // friendList.deleteOne({handle: friendHandle})
-//   res.json(friendList)
-// })
+router.delete('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const friendHandle = {handle: req.body.friendHandle}
+  const friendList = req.user.friends
+  User.findOneAndUpdate(friendHandle)
+    .then(friend => {
+      friendList.deleteOne(friend.id)
+    })
+  res.json(req.user)
+})
 
 router.get('/friend', passport.authenticate('jwt', {session: false}), (req, res) => {
   const friendHandle = {handle: req.body.friendHandle}

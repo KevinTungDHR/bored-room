@@ -30,10 +30,15 @@ const UserSchema = new Schema({
     default: ""
   },
   friends: {
-    type: Array,
+    type: Object,
     required: false,
-    default: []
+    default: {}
   }
+  // friendList: {
+  //   type: Object,
+  //   required: false,
+  //   default: {}
+  // }
 }, {
   timestamps: true
 })
