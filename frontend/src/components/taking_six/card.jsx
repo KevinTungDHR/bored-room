@@ -10,9 +10,6 @@ export const Card = ({card, setChosenCard, index, type}) => {
   if (!card && type.value === 'selected') return <div></div>
   if (!card) return <div className='blank-square'></div>
   const bullLight = <img src={bull_light} height="70px" width="70px" />
-  const bullPurp = <img className="small-bull" src={bull_purp} height="16px" width="16px" />
-  const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
-  const cardType = type ? type.value : undefined;
   
   return ( 
     <motion.div

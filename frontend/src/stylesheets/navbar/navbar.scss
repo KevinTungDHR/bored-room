@@ -45,6 +45,10 @@
     height: 40px;
     width: 100px;
     margin-right: 14px;
+    text-decoration: none;
+    color: inherit;
+    font-family: 'Really-Free';
+    font-size: 32px;
 }
 
 .nav-btn:hover {
@@ -64,20 +68,6 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-}
-
-.instructions-btn {
-    font-size: 32px;
-    font-family: 'Really-Free';
-    background: none;
-    border: none;
-    margin-right: 14px;
-    color: $text;
-
-    &:hover {
-        color: $seaweed;
-        cursor: pointer;
-    }
 }
 
 .nav-links {
