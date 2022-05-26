@@ -129,6 +129,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     bio: req.user.bio,
     friends: req.user.friends
   });
+  
 })
 
 router.post('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
