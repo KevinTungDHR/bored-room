@@ -57,13 +57,16 @@ class Lobby extends React.Component {
     }
 
     handleGameChange(e){
-        debugger
+        const prevSelection = document.getElementsByClassName("selected")
+        if (prevSelection.length > 0) {
+            prevSelection[0].classList.remove("selected");
+        }
+            
         if (!e.target.getAttribute("value")) {
             const gameTile = e.target.parentElement;
             this.setState({ game: gameTile.getAttribute("value")})
             gameTile.classList.add("selected");
         } else {
-            debugger
             e.target.classList.add("selected");
             this.setState({ game: e.target.getAttribute("value")})
         }
