@@ -80,7 +80,7 @@ class FrequencyGame {
     this.gameOver = false;
   }
 
-  selectRandomStartTeam(){
+  selectRandomStartTeam() {
     this.activeTeam = Math.random() < 0.5 ? 'red' : 'blue'
   }
 

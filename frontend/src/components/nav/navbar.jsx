@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Dropdown from './dropdown';
+import yoda from '../../assets/images/yoda.png';
+import monkey from '../../assets/images/coolMonkey.png';
+import socrates from '../../assets/images/socrates.png';
+import user_prof from '../../assets/images/user_prof.png';
 
 class NavBar extends React.Component {
     constructor(props) {
@@ -22,8 +26,18 @@ class NavBar extends React.Component {
     getLinks() {
         if (this.props.loggedIn && this.props.user) {
             // if logged in display
+            const { avatar } = this.props.user;
+            const avatars = {
+                'noimage': user_prof,
+                'yoda': yoda,
+                'monkey': monkey,
+                'socrates': socrates
+            };
+
             return (
-                <Dropdown logout={this.props.logout} user={this.props.user}/>
+                <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
+                    <Dropdown logout={this.props.logout} user={this.props.user}/>
+                </div>
             );
         } else {
             return (

@@ -239,12 +239,13 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
 })
 
 router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log(req)
   const { errors, isValid } = validateUpdateAvatar(req.body);
   
   if (!isValid){
     return res.status(400).json(errors);
   }
-
+  
   User.findById(req.user.id)
     .then(user => {
       user.set(req.body)
@@ -253,7 +254,7 @@ router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (
 
 router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {
   
-  User.findById(req.user.id)
+  User.findById(req.id)
     .then(user => {
       user.set(req.body)
       res.json(user)})

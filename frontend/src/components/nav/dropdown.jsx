@@ -11,24 +11,24 @@ class Dropdown extends React.Component {
     }
 
     render() {
-        const avatars = {
-            'noimage': user_prof,
-            'yoda': yoda,
-            'monkey': monkey,
-            'socrates': socrates
-        }
+        // const avatars = {
+        //     'noimage': user_prof,
+        //     'yoda': yoda,
+        //     'monkey': monkey,
+        //     'socrates': socrates
+        // }
 
-        const { avatar } = this.props.user;
-
+        const { avatar, handle } = this.props.user;
         return (
-            <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
+            // <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
                 <div className="dropdown-content">
                     <ul>
                         <Link to="/profile">Profile</Link>
                         <li><button className='logout-btn' onClick={this.props.logout}>Logout</button></li>
+                        <li>{handle}</li>
                     </ul>
                 </div>
-            </div>
+            // </div>
            
         )
     }

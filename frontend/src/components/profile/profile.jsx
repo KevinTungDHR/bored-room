@@ -5,6 +5,7 @@ import socrates from '../../assets/images/socrates.png';
 import user_prof from '../../assets/images/user_prof.png';
 import space from '../../assets/images/space.jpg';
 import earth from '../../assets/images/earth.jpg';
+import game_table from '../../assets/images/game_table.jpg';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class Profile extends React.Component {
         this.state = {
             user: {},
             btn: 'Edit',
-            background: null
+            background: game_table
             // currImg: 1
         }
 
@@ -101,6 +102,8 @@ class Profile extends React.Component {
         
         return (
             <div className='profile-container' style={{ backgroundImage: "url(" + this.state.background + ")" }}>
+                <img className='hidden' src={space} />
+                <img className='hidden' src={earth} />
                 <div className='separator'>
                     <button className='space-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
                     <button className='earth-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
@@ -119,8 +122,7 @@ class Profile extends React.Component {
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>
                     
-                    <div className='profile-board'>
-                        {/* {this.generateGrid()} */}
+                    {/* <div className='profile-board'>
                         <div data-row="1">?</div>
                         <div data-value="10">?</div>
                         <div data-value="20">?</div>
@@ -146,7 +148,7 @@ class Profile extends React.Component {
                         <div data-value="220">?</div>
                         <div data-value="230">?</div>
                         <div data-value="240">?</div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         )
