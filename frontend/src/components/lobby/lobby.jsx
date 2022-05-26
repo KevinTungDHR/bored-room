@@ -99,7 +99,7 @@ class Lobby extends React.Component {
                                 <h1>1. Choose a Game: </h1>
                                 <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
                                     <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
-                                    <div className='six-title-wrapper'><h1 className='six-title-tile'>Taking Six</h1></div>
+                                    <h1 className='six-title-tile'>Taking Six</h1>
                                 </div>
 
                                 <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
