@@ -39,7 +39,6 @@
     color: $text;
     margin: 18px 18px;
     max-width: 50%;
-    margin-top: -20px;
     margin-left: 24px;
 
     h1 {
@@ -148,7 +147,6 @@
     align-items: center;
     justify-content: center;
     margin-top: 12px;
-    
 
     input {
         height: 50px;
@@ -170,6 +168,10 @@
             letter-spacing: 1.3px;
             font-size: 28px;
         }
+    }
+
+    :nth-child(2) {
+        margin: 0 40px;
     }
 
     .submit-clue {
@@ -245,4 +247,12 @@
     font-size: 18px;
     margin-top: 10px;
     margin-left: 10px;
+}
+
+.dial-values {
+    display: flex;
+    justify-content: space-between;
+    width: 630px;
+    margin: auto;
+    padding-top: 10px;
 }

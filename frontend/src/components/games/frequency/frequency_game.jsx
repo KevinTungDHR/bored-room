@@ -6,6 +6,7 @@ import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
 import Dial from './dial';
 import { AiOutlineArrowDown } from 'react-icons/ai';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 
 const FrequencyGame = ({ roomCode, socket }) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -79,12 +80,14 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
     let psychic = teams.find(player => player.isPsychic === true);
-    debugger
+
     if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue} className="clue-form">
-          <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
-          <button className='submit-clue' onClick={handleUpdate}>Submit</button>
+          <div>
+            <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
+            <button className='submit-clue' onClick={handleUpdate}>Submit</button>
+          </div>
         </form>
       )
     }
@@ -127,7 +130,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
   }
 
   const drawDial = (ctx) => {
-    let allPlayers = blueUsers.concat(redUsers);
     ctx.restore()
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.save()
@@ -140,18 +142,15 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.fillStyle = '#eae6da'
     ctx.fill();
 
-    allPlayers.forEach((player) => {
-      if (player._id === sessionId && player.isPsychic) {
-        drawTarget(ctx)
-      } else {
-        drawShield(ctx)
-      }
-    })
-    // Add conditional here
-    // if (psychic and active player) draw target else shield
-    // if ()
-    // drawShield(ctx);
-    // drawTarget(ctx);
+    const allPlayers = blueTeam.concat(redTeam);
+    const player = allPlayers.find(player => player._id === sessionId);
+
+    if (player.isPsychic) {
+      drawTarget(ctx)
+    } else {
+      drawShield(ctx)
+    }
+      
     let length = 300;
     let theta = guess;
     ctx.beginPath();
@@ -221,6 +220,11 @@ const FrequencyGame = ({ roomCode, socket }) => {
   }
 
   const renderScoreboard = () => {
+    let allPlayers = blueTeam.concat(redTeam);
+    // debugger
+    // let player = redUsers[0];
+    // const boo = allPlayers.find(play => player.id === play._id).activePlayer;
+    let currplayer = allPlayers.find(player => player._id === sessionId);
     return (
       <div className='scoreboard-outermost-div'>
         <div className='freq-scoreboard-container'>
@@ -236,7 +240,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <h1 className='blue'>Blue Team</h1>
               <span>{assets.bluePoints}</span>
               <ul>
-                {blueUsers.map(player => <li>{player.handle}</li>)}
+                {blueUsers.map(player => <li><AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer ? "" : "hidden"} />{player.handle}</li>)}
               </ul>
             </div>
           </div>
@@ -251,7 +255,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <h1 className='red'>Red Team</h1>
               <span>{assets.redPoints}</span>
               <ul>
-                {redUsers.map(player => <li>{player.handle}</li>)}
+                {redUsers.map(player => <li><AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer ? "" : "hidden"} />{player.handle}</li>)}
               </ul>
             </div>
           </div>
@@ -305,6 +309,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
       guess: guess,
       leftOrRight: leftOrRight
     };
+
     updateGame(roomCode, payload)
       .then(data => console.log(data))
       .catch(err => console.error(err))
@@ -323,11 +328,16 @@ const FrequencyGame = ({ roomCode, socket }) => {
           <div className='frequency-outer-div'>
             <div className='room-code'>In Room: {roomCode}</div>
           {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {actionDescriptions[action]}</span></h1>)}
-            {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
+            {(sessionId === psychic._id && psychic.activePlayer) ? <div>Dial: {assets.dial}</div> : <div></div>}
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
               <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess}/>
               <div className='right-card'>{assets.currentCard.right}</div>
+            </div>
+
+            <div className='dial-values'>
+              <div className='dial-value-1'>0</div>
+              <div className='dial-value-2'>180</div>
             </div>
 
             <div className='forms-container'>
