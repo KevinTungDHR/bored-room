@@ -96,7 +96,8 @@ router.post('/login', (req, res) => {
               email: user.email,
               avatar: user.avatar,
               eloRating: user.eloRating,
-              bio: user.bio
+              bio: user.bio,
+              // friends: req.user.friends
             };
 
             jwt.sign(
@@ -125,7 +126,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
     avatar: req.user.avatar,
     eloRating: req.user.eloRating,
     bio: req.user.bio,
-    friends: req.user.friends
+    // friends: req.user.friends
   });
 })
 

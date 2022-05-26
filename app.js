@@ -45,7 +45,6 @@ const io = require('socket.io')(server, { cors: { origin: "*"}});
 app.set("io", io);
 
 io.on("connection", socket => {
-  console.log("New WS Connection");
   socket.emit('message', "Connected to Backend");
   socket.broadcast.emit('message', "User has connected");
 
@@ -54,7 +53,6 @@ io.on("connection", socket => {
   });
 
   socket.on("leave_room", (data)=>{
-    console.log(`leaving ${data}`);
     try{
       socket.leave(data);
     } catch (e){
@@ -85,6 +83,5 @@ io.on("connection", socket => {
   });
   socket.on("disconnect", (reason) => {
     io.emit("message", "user has left");
-    console.log(`User Disconnected: ${reason}`);
   });
 });
