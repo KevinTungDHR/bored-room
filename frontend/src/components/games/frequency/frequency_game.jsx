@@ -21,7 +21,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const blueUsers = useSelector(state => state.entities.rooms[roomCode].blueTeam)
   const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
-  const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam)
+  const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam) 
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
-    let psychic = teams.find(player => player.isPsychic === true);
+    let psychic = teams.find(player => player.isPsychic && player.activePlayer);
 
     if(sessionId === psychic._id && psychic.activePlayer){
       return(
@@ -110,7 +110,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
     if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
-      if(leftOrRight === ""){
+      if (leftOrRight === "") {
         return(
           <div className='lt-rt-btns'>
             <button className='left-right-btn' onClick={chooseLeft}>Left</button>
@@ -145,7 +145,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     const allPlayers = blueTeam.concat(redTeam);
     const player = allPlayers.find(player => player._id === sessionId);
 
-    if (player.isPsychic) {
+    if (player.isPsychic && player.activePlayer) {
       drawTarget(ctx)
     } else {
       drawShield(ctx)
@@ -236,7 +236,10 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <h1 className='blue'>Blue Team</h1>
               <span>{assets.bluePoints}</span>
               <ul>
-                {blueUsers.map(player => <li className='handle-li'><AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer ? "active-check" : "hidden"} />{player.handle}</li>)}
+                {blueUsers.map(player => <li className='handle-li'>
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && allPlayers.find(play => player._id === play._id).isPsychic
+                     ? "active-check" : "hidden"} />
+                  {player.handle}</li>)}
               </ul>
             </div>
           </div>
@@ -251,7 +254,9 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <h1 className='red'>Red Team</h1>
               <span>{assets.redPoints}</span>
               <ul>
-                {redUsers.map(player => <li className='handle-li'><AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer ? "active-check" : "hidden"} />{player.handle}</li>)}
+                {redUsers.map(player => <li className='handle-li'>
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && allPlayers.find(play => player._id === play._id).isPsychic
+                     ? "active-check" : "hidden"} />{player.handle}</li>)}
               </ul>
             </div>
           </div>
@@ -325,17 +330,14 @@ const FrequencyGame = ({ roomCode, socket }) => {
             <div className='room-code'>In Room: {roomCode}</div>
           {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {actionDescriptions[action]}</span></h1>)}
             {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>}
-            {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
+            
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
               <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess}/>
               <div className='right-card'>{assets.currentCard.right}</div>
             </div>
 
-            <div className='dial-values'>
-              <div className='dial-value-1'>0</div>
-              <div className='dial-value-2'>180</div>
-            </div>
+            {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
 
             <div className='forms-container'>
               {renderClueForm()} 
