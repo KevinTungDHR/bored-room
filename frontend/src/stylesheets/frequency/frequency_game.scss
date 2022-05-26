@@ -88,7 +88,7 @@
     align-items: center;
     position: relative;
     color: $text;
-    margin: 0px 10px;
+    margin: 26px 10px;
 }
 
 .team-container {
@@ -255,4 +255,21 @@
     width: 630px;
     margin: auto;
     padding-top: 10px;
+}
+
+.dial-answer, .clue {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 22px;
+}
+
+.handle-li {
+    position: relative;
+}
+
+.active-check {
+    position: absolute;
+    left: -24px;
+    margin-top: 0;
 }
