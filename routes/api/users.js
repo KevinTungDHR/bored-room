@@ -148,12 +148,12 @@ router.post('/profile', passport.authenticate('jwt', {session: false}), (req, re
 
 router.delete('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
   const friendHandle = {handle: req.body.friendHandle}
-  const friendList = req.user.friends
   User.findOneAndUpdate(friendHandle)
     .then(friend => {
-      friendList.deleteOne(friend.id)
+      req.user.friends.deleteOne(friend.id)
+      req.user.save()
+      res.json(req.user)
     })
-  res.json(req.user)
 })
 
 router.get('/friend', passport.authenticate('jwt', {session: false}), (req, res) => {
