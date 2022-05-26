@@ -85,16 +85,20 @@ router.post('/create', (req, res) => {
 });
 
 router.get('/:code', async (req, res) => {
-  const assets = await TakingSixModel.findOne({ code: req.params.code })
-  const gameState = takingSixState[assets.currentState];
-
-  if(gameState.description instanceof Function){
-    const g = new games.TakingSixGame(assets);
-    const user = await User.findById(g.getActivePlayer()._id)
-    gameState.description = gameState.description(user.handle);
+  try {
+    const assets = await TakingSixModel.findOne({ code: req.params.code })
+    const gameState = takingSixState[assets.currentState];
+  
+    if(gameState.description instanceof Function){
+      const g = new games.TakingSixGame(assets);
+      const user = await User.findById(g.getActivePlayer()._id)
+      gameState.description = gameState.description(user.handle);
+    }
+  
+    res.json({assets, gameState});
+  } catch (err){
+    res.status(422).json(err)
   }
-
-  res.json({assets, gameState});
 
 });
 
@@ -128,16 +132,20 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
   }
 
   if(g.getState()['name'] === 'PLAYER_CHOOSE_CARD' && !g.botsHaveChosenCards()){
-    g.botsChooseRandomCards();
-    game.set(g);
-    let assets = await game.save()
-    const gameState = takingSixState[assets.currentState];
-    if(gameState.description instanceof Function){
-      const user = await User.findById(g.getActivePlayer()._id)
-      gameState.description = gameState.description(user.handle);
+    try {
+      g.botsChooseRandomCards();
+      game.set(g);
+      let assets = await game.save()
+      const gameState = takingSixState[assets.currentState];
+      if(gameState.description instanceof Function){
+        const user = await User.findById(g.getActivePlayer()._id)
+        gameState.description = gameState.description(user.handle);
+      }
+      
+      io.to(req.params.code).emit("game_updated", { assets, gameState });
+    } catch (err){
+      res.status(422).json(err)
     }
-    
-    io.to(req.params.code).emit("game_updated", { assets, gameState });
   }
 
   while((g.getState()['type'] === "automated" && count < 25) || 
@@ -161,17 +169,20 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
         return res.status(402).json(err);
       }
     } else {
-      g.botTakesRow();
-      game.set(g);
-      let assets = await game.save()
-      const gameState = takingSixState[assets.currentState];
-
-      if(gameState.description instanceof Function){
-        const user = await User.findById(g.getActivePlayer()._id)
-        gameState.description = gameState.description(user.handle);
+      try {
+        g.botTakesRow();
+        game.set(g);
+        let assets = await game.save()
+        const gameState = takingSixState[assets.currentState];
+  
+        if(gameState.description instanceof Function){
+          const user = await User.findById(g.getActivePlayer()._id)
+          gameState.description = gameState.description(user.handle);
+        }
+        io.to(req.params.code).emit("game_updated", { assets, gameState });
+      } catch (err){
+        res.status(422).json(err)
       }
-
-      io.to(req.params.code).emit("game_updated", { assets, gameState });
     }
   }
   
