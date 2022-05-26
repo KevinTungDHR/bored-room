@@ -250,6 +250,14 @@ class FrequencyGame {
   makeGuess(data){
     this.guess = data.guess;
 
+    if(this.activeTeam === 'red'){
+      this.setActiveTeamFalse(this.redTeam);
+      this.setActiveTeam(this.blueTeam);
+    } else {
+      this.setActiveTeamFalse(this.blueTeam);
+      this.setActiveTeam(this.redTeam);
+    }
+
     const nextState = this.getState().transitions.LEFT_RIGHT_PHASE;
     this.setState(nextState);
   }

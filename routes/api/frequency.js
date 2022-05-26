@@ -93,8 +93,11 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     let action = g.getState().actions[0]
     try {
       g.handleEvent(action);
+
       game.set(g);
+      game.markModified('deck');
       let assets = await game.save()
+
       const gameState = frequencyState[assets.currentState];
       io.to(req.params.code).emit("game_updated", { assets, gameState });
     } catch (err) {
