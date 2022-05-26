@@ -12,6 +12,24 @@
     justify-content: space-between;
 }
 
+.curr-game-action {
+    font-size: 28px;
+    color: $title;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+
+    span {
+        color: $seaweed;
+        margin-left: 10px;
+        font-size: 32px;
+    }
+}
+
+.dial-component {
+    z-index: 1;
+}
+
 .frequency-instructions {
     display: flex;
     flex-direction: column;
@@ -32,6 +50,12 @@
         color: $bronze;
         font-size: 18px;
     }
+}
+
+.scoreboard-outermost-div {
+    position: absolute;
+    top: 100px;
+    right: 10px;
 }
 
 .freq-scoreboard-container {

@@ -210,7 +210,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
   const renderScoreboard = () => {
     return (
-      <div>
+      <div className='scoreboard-outermost-div'>
         <div className='freq-scoreboard-container'>
           <div className='scoreboard-background'></div>
           <div className='team-scores-container'>
@@ -303,11 +303,11 @@ const FrequencyGame = ({ roomCode, socket }) => {
       let psychic = teams.find(player => player.isPsychic === true);
       return (
           <div className='frequency-outer-div'>
-
+          {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {action}</span></h1>)}
             {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
-              <div className='semi-circle'></div>
+              <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} />
               <div className='right-card'>{assets.currentCard.right}</div>
             </div>
 
@@ -356,7 +356,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderClueForm()}
               {renderSliderAndConfirm()}
               {renderLeftOrRight()}
-              <DialCanvas draw={drawDial} width={630} height={350} setGuess={setGuess}/>
+              
             </div>
           </div>
       );
