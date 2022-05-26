@@ -24,7 +24,7 @@ const DialCanvas = props => {
     if(isDragging){
       const canvas = canvasRef.current;
 
-      let point = { x: e.clientX - canvas.offsetLeft - 300, y: e.clientY - canvas.offsetTop - 350}
+      let point = { x: e.clientX - canvas.offsetLeft - 315, y: e.clientY - canvas.offsetTop - 350}
       setGuess(Math.floor(calculateDegrees(point)));
     }
   }
@@ -37,7 +37,7 @@ const DialCanvas = props => {
     return Math.acos((bc*bc+ab*ab-ac*ac) / (2*bc*ab)) * (180 / Math.PI); 
   }
 
-  return <canvas ref={canvasRef} {...rest} onMouseMove={handleMouseMove} onMouseDown={startDrag} onMouseUp={endDrag}/>
+  return <canvas ref={canvasRef} {...rest} onMouseMove={handleMouseMove} onMouseDown={startDrag} onMouseUp={endDrag} onMouseLeave={endDrag}/>
 }
 
 export default DialCanvas;

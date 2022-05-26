@@ -122,11 +122,18 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const drawDial = (ctx) => {
     ctx.restore()
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    ctx.fillStyle = '#70b5b0'
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.save()
-    ctx.translate(300, 350)
+    ctx.translate(315, 350)
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, Math.PI, 0);
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#eae6da'
+    ctx.fill();
 
+    // Add conditional here
+    // drawShield(ctx);
     drawTarget(ctx);
     let length = 300;
     let theta = guess;
@@ -135,10 +142,32 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.lineTo(0 - length * Math.cos(Math.PI * theta/180), 0 - length * Math.sin(Math.PI * theta/180))
     ctx.closePath()
     ctx.lineWidth = 5;
-    ctx.fillStyle = 'red';
-    ctx.fill();
-    ctx.strokeStyle = '#550000';
+    ctx.strokeStyle = '#8f0113';
     ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 50, Math.PI, 0);
+    ctx.closePath()
+    ctx.lineWidth = 15;
+    ctx.fillStyle = '#8f0113';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 300, Math.PI, 0);
+    ctx.strokeStyle = '#003452';
+    ctx.stroke();
+
+  }
+
+  const drawShield = (ctx) => {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, Math.PI, 0);
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#a7d7ce'
+    ctx.fill();
   }
 
   const drawTarget = (ctx) => {
@@ -150,7 +179,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, outerArc.start, outerArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = '#c88d20';
     ctx.fill();
 
     ctx.beginPath()
@@ -158,7 +187,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, innerArc.start, innerArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = 'brown';
+    ctx.fillStyle = '#9bc79a';
     ctx.fill();
 
     ctx.beginPath()
@@ -166,12 +195,9 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, targetArc.start, targetArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = 'orange';
+    ctx.fillStyle = '#dc5d3d';
     ctx.fill();
   }
-
-
-
 
   const changeSlider = (e) => {
     setGuess(e.target.value);
@@ -226,7 +252,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
           {renderClueForm()}  
           {renderSliderAndConfirm()}   
           {renderLeftOrRight()}
-          <DialCanvas draw={drawDial} width={600} height={350} setGuess={setGuess}/>
+          <DialCanvas draw={drawDial} width={630} height={350} setGuess={setGuess}/>
         </div>
       );
   }
