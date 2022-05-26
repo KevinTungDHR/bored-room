@@ -70,3 +70,14 @@
 .ai-star-icon {
   color: #ff9933;
 }
+
+.six-title {
+  font-size: 80px;
+  font-family: "Marker";
+  color: red;
+  position: absolute;
+  opacity: 0.5;
+  top: 40%;
+  left: 49%;
+  transform: translate(-50%, 0) rotate(-35deg);
+}

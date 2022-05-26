@@ -116,7 +116,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
               <div className='board-container'>
                 <div className='hand-container'>
-                  
+                  <h1 className='six-title'>Taking Six</h1>
                   {bullLogo}
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {

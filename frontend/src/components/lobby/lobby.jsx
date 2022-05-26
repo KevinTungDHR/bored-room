@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { io } from 'socket.io-client';
 import * as RoomAPIUtil from '../../util/rooms_util';
-
+import bull_logo from '../../assets/images/bull_logo.png';
+import { GiBull } from 'react-icons/gi';
 
 const socket = io();
 class Lobby extends React.Component {
     constructor(props){
         super(props)
-        this.state = { roomName: "", search: "", game: "Taking Six" };
+        this.state = { roomName: "", search: "", game: "" };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleGameChange = this.handleGameChange.bind(this);
@@ -56,15 +57,37 @@ class Lobby extends React.Component {
     }
 
     handleGameChange(e){
-        this.setState({ game: e.target.value})       
+        debugger
+        if (!e.target.getAttribute("value")) {
+            const gameTile = e.target.parentElement;
+            this.setState({ game: gameTile.getAttribute("value")})
+            gameTile.classList.add("selected");
+        } else {
+            debugger
+            e.target.classList.add("selected");
+            this.setState({ game: e.target.getAttribute("value")})
+        }
     }
 
     render() {
-        const { rooms, deleteRoom } = this.props;
+        const { rooms } = this.props;
         let count = 0;
         let sign = 2000;
+
         return (
             <div className='lobby-background'>
+                <div className='select-game-wrapper'>
+                    <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
+                        <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
+                        <h1 className='six-title-tile'>Taking Six</h1>
+                    </div>
+
+                    <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
+                        <h1 className='freq-title-tile'>Frequency</h1>
+                    </div>
+
+                </div>
+                
                 <div className='search-container'>
                     <form className='create-room' onSubmit={this.handleSubmit}>
                         <div className='flex'>
@@ -74,10 +97,6 @@ class Lobby extends React.Component {
                                 <input className='create-btn' type="submit" value="Create" />
                             </div>
                         </div>
-                        <select value={this.state.game} onChange={this.handleGameChange}>
-                            <option value="Taking Six">Taking Six</option>
-                            <option value="Frequency">Frequency</option>
-                        </select>
                     </form>
 
                     <form className='search-rooms'>

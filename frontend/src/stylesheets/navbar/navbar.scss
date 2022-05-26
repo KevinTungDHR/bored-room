@@ -66,20 +66,6 @@
     justify-content: space-evenly;
 }
 
-.instructions-btn {
-    font-size: 32px;
-    font-family: 'Really-Free';
-    background: none;
-    border: none;
-    margin-right: 14px;
-    color: $text;
-
-    &:hover {
-        color: $seaweed;
-        cursor: pointer;
-    }
-}
-
 .nav-links {
     display: flex;
     align-items: center;
