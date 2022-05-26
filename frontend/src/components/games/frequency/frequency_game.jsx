@@ -325,7 +325,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
             {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
-              <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} />
+              <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess}/>
               <div className='right-card'>{assets.currentCard.right}</div>
             </div>
 
