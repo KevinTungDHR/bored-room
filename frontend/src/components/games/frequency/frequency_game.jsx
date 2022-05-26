@@ -79,33 +79,34 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
     let psychic = teams.find(player => player.isPsychic === true);
-    // if(sessionId === psychic._id && psychic.activePlayer){
+    debugger
+    if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue} className="clue-form">
           <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
           <button className='submit-clue' onClick={handleUpdate}>Submit</button>
         </form>
       )
-    // }
+    }
   }
 
   const renderSliderAndConfirm = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    // if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
+    if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
         <div>
           <input className='slider' type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
           <button className='submit-guess' onClick={handleUpdate}>Confirm</button>
         </div>
       )
-    // }
+    }
   }
 
   const renderLeftOrRight = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    // if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
+    if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
       if(leftOrRight === ""){
         return(
           <div className='lt-rt-btns'>
@@ -122,7 +123,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
         )
       }
       
-    // }
+    }
   }
 
   const drawDial = (ctx) => {
