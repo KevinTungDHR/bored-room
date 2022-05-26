@@ -20,7 +20,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const sessionId = useSelector(state => state.session.user.id);
   const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
   const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
-  const userHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
+  // const userHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
@@ -194,12 +194,12 @@ const GameComponent = ({ roomCode, socket }) => {
                   <div>
                     <ol>
                       <h2>Game Play:</h2>
-                      <li>Each turn players simultaneously choose a card. Each card, in ascending order, is then placed in one of the four rows.</li>
-                      <li>The card added to a row must be higher than the last card in that row.</li>
-                      <li>The card added must always be added to a row with the smallest possible difference between the last card and the current one. For example, if the rows are: 10, 12, 15, 30, then the card numbered 16 must go in the third row after 15.</li>
-                      <li>The player who places the sixth card in a row takes all five cards and their card becomes the first card in the row</li>
-                      <li>The player who takes a row loses points based off the number of bull symbols on each card</li>
-                      <li>If a player plays a card that is so low that it cannot be placed in a row, that player must take all cards in a row of their choice.</li>
+                      <li type="1">Each turn players simultaneously choose a card. Each card, in ascending order, is then placed in one of the four rows.</li>
+                      <li type="1">The card added to a row must be higher than the last card in that row.</li>
+                      <li type="1">The card added must always be added to a row with the smallest possible difference between the last card and the current one. For example, if the rows are: 10, 12, 15, 30, then the card numbered 16 must go in the third row after 15.</li>
+                      <li type="1">The player who places the sixth card in a row takes all five cards and their card becomes the first card in the row</li>
+                      <li type="1">The player who takes a row loses points based off the number of bull symbols on each card</li>
+                      <li type="1">If a player plays a card that is so low that it cannot be placed in a row, that player must take all cards in a row of their choice.</li>
                     </ol>
                     <span><h2>Game End:</h2> A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</span>
                   </div>

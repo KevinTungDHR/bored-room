@@ -9,14 +9,15 @@
 @import './profile/profile.scss';
 @import './lobby/lobby.scss';
 @import './profile/avatar.scss';
-@import './game/motion_framer.scss';
-@import './game/cards.scss';
+@import './taking_six/motion_framer.scss';
+@import './taking_six/cards.scss';
 @import './room/room.scss';
-@import './game/grid_row.scss';
-@import './game/scoreboard.scss';
-@import './game/game.scss';
-@import './game/card_selection.scss';
-@import './game/end_game.scss';
+@import './taking_six/grid_row.scss';
+@import './taking_six/scoreboard.scss';
+@import './taking_six/game.scss';
+@import './taking_six/card_selection.scss';
+@import './taking_six/end_game.scss';
+@import './frequency/frequency_game.scss';
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126

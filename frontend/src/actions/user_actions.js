@@ -22,7 +22,7 @@ const receiveUser = (user) => {
 const receiveAvatar = (avatar) => {
     return {
         type: UPDATE_AVATAR,
-        avatar
+        data: avatar.data
     }
 }
 

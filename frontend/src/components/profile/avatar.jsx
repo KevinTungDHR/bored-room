@@ -12,8 +12,8 @@ class Avatar extends React.Component {
 
     handleClick(e) {
         e.preventDefault()
-        const user = Object.assign({}, this.props.user, { avatar: e.target.value});
-        this.props.updateUser(user).then(() => 
+        const avatar = Object.assign({}, this.props.user, { avatar: e.target.value});
+        this.props.updateAvatar(avatar).then(() => 
             this.props.closeModal(),
             errors => receiveErrors(errors));
         
@@ -22,12 +22,11 @@ class Avatar extends React.Component {
     render() {
         
         return (
-            <div className='avatar-outer'>
+            <div className='avatar-outer' >
                 <div className="avatar-container">
                     <button onClick={this.handleClick} value="monkey" className='profile-avatar-modal' style={{ backgroundImage: "url(" + monkey + ")" }}></button>
                     <button onClick={this.handleClick} value="yoda" className='profile-avatar-modal' style={{ backgroundImage: "url(" + yoda + ")" }}></button>
                     <button onClick={this.handleClick} value="socrates" className='profile-avatar-modal' style={{ backgroundImage: "url(" + socrates + ")" }}></button>
-                    {/* <div className='profile-avatar' style={{ backgroundImage: "url(" + monkey + ")" }}></div> */}
                 </div>
             </div>
         )
