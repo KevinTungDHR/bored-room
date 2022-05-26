@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGame } from '../../../util/frequency_util';
 import { fetchGame, receiveGame } from '../../../actions/frequency_actions';
+import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
 import Dial from './dial';
 import { AiOutlineArrowDown } from 'react-icons/ai';
@@ -11,7 +12,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const [leftOrRight, setLeftOrRight] = useState("");
   const [stateQueue, setStateQueue] = useState([]);
   const [clue, setClue] = useState("");
-  const [guess, setGuess] = useState(0);
+  const [guess, setGuess] = useState(90);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
@@ -50,7 +51,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     }
     if(gameState.name === 'PSYCHIC_PHASE'){
       setClue("");
-      setGuess(0);
+      setGuess(90);
       setLeftOrRight("");
     }
   }, [gameState])
@@ -92,9 +93,9 @@ const FrequencyGame = ({ roomCode, socket }) => {
     let currentPlayer = teams.find(player => player._id === sessionId);
     // if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
-        <div className='clue-form'>
-          <input type="range" min="-90" max="90" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
-          <button className='freq-confirm-btn' onClick={handleUpdate}>Confirm</button>
+        <div>
+          <input type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
+          <button onClick={handleUpdate}>Confirm Guess</button>
         </div>
       )
     // }
@@ -121,6 +122,86 @@ const FrequencyGame = ({ roomCode, socket }) => {
       }
       
     // }
+  }
+
+  const drawDial = (ctx) => {
+    ctx.restore()
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.save()
+    ctx.translate(315, 350)
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, Math.PI, 0);
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#eae6da'
+    ctx.fill();
+
+    // Add conditional here
+    // drawShield(ctx);
+    drawTarget(ctx);
+    let length = 300;
+    let theta = guess;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0 - length * Math.cos(Math.PI * theta/180), 0 - length * Math.sin(Math.PI * theta/180))
+    ctx.closePath()
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#8f0113';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 50, Math.PI, 0);
+    ctx.closePath()
+    ctx.lineWidth = 15;
+    ctx.fillStyle = '#8f0113';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 300, Math.PI, 0);
+    ctx.strokeStyle = '#003452';
+    ctx.stroke();
+
+  }
+
+  const drawShield = (ctx) => {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, Math.PI, 0);
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#a7d7ce'
+    ctx.fill();
+  }
+
+  const drawTarget = (ctx) => {
+    const outerArc = { start: Math.PI/180 * (assets.dial - 12 + 180), end: Math.PI/180 * (assets.dial + 12 + 180)}
+    const innerArc = { start: Math.PI/180 * (assets.dial - 7 + 180), end: Math.PI/180 * (assets.dial + 7 + 180)}
+    const targetArc = { start: Math.PI/180 * (assets.dial - 2 + 180), end: Math.PI/180 * (assets.dial + 2 + 180)}
+    ctx.beginPath()
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, outerArc.start, outerArc.end)
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#c88d20';
+    ctx.fill();
+
+    ctx.beginPath()
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, innerArc.start, innerArc.end)
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#9bc79a';
+    ctx.fill();
+
+    ctx.beginPath()
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 300, targetArc.start, targetArc.end)
+    ctx.lineTo(0, 0);
+    ctx.closePath()
+    ctx.fillStyle = '#dc5d3d';
+    ctx.fill();
   }
 
   const changeSlider = (e) => {
@@ -275,6 +356,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderClueForm()}
               {renderSliderAndConfirm()}
               {renderLeftOrRight()}
+              <DialCanvas draw={drawDial} width={630} height={350} setGuess={setGuess}/>
             </div>
           </div>
       );

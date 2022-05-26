@@ -37,6 +37,7 @@ class TakingSixGame {
     players.forEach((player) => {
       this.players.push({
         _id: player._id,
+        bot: false,
         activePlayer: false,
         score: 66,
         pile: [],

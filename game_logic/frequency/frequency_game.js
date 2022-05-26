@@ -229,7 +229,7 @@ class FrequencyGame {
   }
 
   setRandomDial(){
-    this.dial = Math.floor(Math.random() * 181) - 90;
+    this.dial = Math.floor(Math.random() * 181);
   }
 
   giveClue(data) {
