@@ -14,7 +14,10 @@ const GameComponent = ({ roomCode, socket }) => {
   const [chosenCard, setChosenCard] = useState();
   const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isDelayed, setIsDelayed] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
+  const [timers, setTimers] = useState([]);
+  const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
@@ -24,21 +27,43 @@ const GameComponent = ({ roomCode, socket }) => {
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
-
+  
   useEffect(() => {
     dispatch(fetchGame(roomCode));
     socket.on('game_updated', (game) => {
-      if(stateQueue.length !== 0 || isAnimating){
-        setStateQueue(oldState => [...oldState, game])
-      } else {
-        dispatch(receiveGame(game))
-      }
+      setStateQueue(oldState =>  [...oldState, game])
     });
+
+    return () => {
+      timerRef.current.forEach(timer => clearTimeout(timerRef));
+    }
   },[]);
+
+  useEffect(() => {
+    if(!isDelayed && stateQueue.length > 0){
+      let nextUpdate = stateQueue[0];
+      if(nextUpdate.gameState.type === 'automated') {
+        setIsDelayed(true)
+        setStateQueue(oldState => oldState.slice(1));
+        dispatch(receiveGame(nextUpdate))
+
+        const timer = setTimeout(() => {
+          setIsDelayed(false)
+          setTimers(oldState => oldState.slice(1));
+        }, 1000);
+
+        setTimers(oldState => [...oldState, timer]);
+        // Need to clearTimeout but it's being called on every rerender
+      } else {
+        setStateQueue(oldState => oldState.slice(1));
+        dispatch(receiveGame(nextUpdate))
+      }
+    } 
+  }, [stateQueue, isDelayed])
 
   const setChoiceAndUpdate = (c, e) => {
     const chosenEles = document.getElementsByClassName('card chosen').length;
-    if (gameState.possibleActions[0] === 'playCard' && chosenEles === 0) {
+    if (gameState.actions[0] === 'playCard' && chosenEles === 0) {
       if (e.target.className !== 'card') {
         e.target.parentElement.className += " chosen";
         setChosenCard(c);
@@ -82,15 +107,6 @@ const GameComponent = ({ roomCode, socket }) => {
     
     handleUpdate();
   }, [chosenRow])
-
-
-  useEffect(() => {
-    if(!isAnimating && stateQueue.length > 0){
-      let nextUpdate = stateQueue[0];
-      setStateQueue(oldState => oldState.slice(1));
-      dispatch(receiveGame(nextUpdate))
-    }
-  }, [isAnimating])
 
   const handleUpdate = (e) => {
     // e.preventDefault();
@@ -146,7 +162,7 @@ const GameComponent = ({ roomCode, socket }) => {
 
                   {/* insert player selections */}
                   <div className='selected-cards-wrapper'>
-                    {<CardSelection cards={assets.playedCards} setIsAnimating={setIsAnimating} />}
+                    {<CardSelection cards={assets.playedCards} allUsers={allUsers} setIsAnimating={setIsAnimating} />}
                   </div>
                 </div>
 
