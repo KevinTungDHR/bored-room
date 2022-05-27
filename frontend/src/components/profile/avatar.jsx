@@ -16,7 +16,6 @@ class Avatar extends React.Component {
         this.props.updateAvatar(avatar).then(() => 
             this.props.closeModal(),
             errors => receiveErrors(errors));
-        
     }
 
     render() {

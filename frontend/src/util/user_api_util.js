@@ -4,7 +4,7 @@ export const updateUser = (user) => {
     return axios.patch('/api/users/profile', user)
 }
 
-export const fetchUser = () => {
+export const fetchCurrentUser = () => {
     return axios.get('/api/users/profile')
 }
 

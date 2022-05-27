@@ -27,7 +27,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
-        this.props.fetchUser()
+        this.props.fetchCurrentUser()
     }
 
     componentDidUpdate(prevProps){

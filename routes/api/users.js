@@ -183,35 +183,7 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), (req, r
       user.set(req.body)
       user.save()
       res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
-
-router.patch('/update-handle', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateHandle(req.body);
-  
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
-
-router.patch('/update-email', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateEmail(req.body);
-  
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
+    .catch(errors => res.status(400).json(errors))
 })
 
 router.patch('/update-password', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -239,7 +211,7 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
           )
         })
       })
-    .catch(errors => res.status(400).json({errors}))
+    .catch(errors => res.status(400).json(errors))
   }
 })
 
@@ -254,23 +226,6 @@ router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (
   User.findById(req.user.id)
     .then(user => {
       user.set(req.body)
+      user.save()
       res.json(user)})
-})
-
-router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {
-  
-  User.findById(req.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
-
-router.patch('/update-elo-rating', passport.authenticate('jwt', {session: false}), (req, res) => {
-  
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
 })

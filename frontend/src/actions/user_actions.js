@@ -11,8 +11,8 @@ const receiveUser = (user) => {
     }
 }
 
-export const fetchUser = () => dispatch => {
-    return APIUtil.fetchUser()
+export const fetchCurrentUser = () => dispatch => {
+    return APIUtil.fetchCurrentUser()
         .then(res => dispatch(receiveCurrentUser(res.data)),
         errors => dispatch(receiveErrors(errors)))
 }
@@ -28,14 +28,3 @@ export const updateAvatar = avatar => dispatch => {
         .then(res => dispatch(receiveCurrentUser(res.data)),
         errors => dispatch(receiveErrors(errors)))
 }
-
-// export const fetchUser = user => dispatch => {
-//     return APIUtil.
-// }
-
-// id: req.user.id,
-//     handle: req.user.handle,
-//         email: req.user.email,
-//             avatar: req.user.avatar,
-//                 eloRating: req.user.eloRating,
-//                     bio: req.user.bio

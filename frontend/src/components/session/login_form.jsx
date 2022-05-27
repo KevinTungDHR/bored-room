@@ -15,14 +15,6 @@ class LoginForm extends React.Component {
         this.renderErrors = this.renderErrors.bind(this);
     }
     
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.currentUser === true) {
-            this.props.history.push('/lobby');
-        }
-
-        // Set or clear errors
-        this.setState({ errors: nextProps.errors })
-    }
 
     // Handle field updates (called in the render method)
     update(field) {
@@ -51,9 +43,9 @@ class LoginForm extends React.Component {
     renderErrors() {
         return (
             <ul>
-                {Object.keys(this.state.errors).map((error, i) => (
+                {Object.keys(this.props.errors).map((error, i) => (
                     <li className='session-error' key={`error-${i}`}>
-                        {this.state.errors[error]}
+                        {this.props.errors[error]}
                     </li>
                 ))}
             </ul>
