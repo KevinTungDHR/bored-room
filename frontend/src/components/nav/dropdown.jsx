@@ -23,6 +23,7 @@ class Dropdown extends React.Component {
             // <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
                 <div className="dropdown-content">
                     <ul>
+                        <Link to="/lobby">Game Lobby</Link>
                         <Link to="/profile">Profile</Link>
                         <li><button className='logout-btn' onClick={this.props.logout}>Logout</button></li>
                         <li>{handle}</li>
