@@ -14,17 +14,17 @@ const receiveUser = (user) => {
 export const fetchCurrentUser = () => dispatch => {
     return APIUtil.fetchCurrentUser()
         .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors)))
+        errors => dispatch(receiveErrors(errors.response.data)))
 }
 
 export const updateUser = user => dispatch => {
     return APIUtil.updateUser(user)
         .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors)))
+        errors => dispatch(receiveErrors(errors.response.data)))
 }
 
 export const updateAvatar = avatar => dispatch => {
     return APIUtil.updateAvatar(avatar)
         .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors)))
+        errors => dispatch(receiveErrors(errors.response.data)))
 }

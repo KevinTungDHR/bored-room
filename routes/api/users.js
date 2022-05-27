@@ -7,8 +7,6 @@ const keys = require('../../config/keys');
 const passport = require('passport');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
-const validateUpdateHandle = require('../../validation/update/update_handle');
-const validateUpdateEmail = require('../../validation/update/update_email');
 const validateUpdatePassword = require('../../validation/update/update_password');
 const validateUpdateAvatar = require('../../validation/update/update_avatar');
 const validateUpdateProfile = require('../../validation/update/update_profile');
@@ -112,7 +110,7 @@ router.post('/login', (req, res) => {
                 });
               });
           } else {
-            errors.password = 'Incorrect password'
+            errors.password = 'Invalid Username/Password Combination'
             return res.status(400).json(errors);
           }
         })

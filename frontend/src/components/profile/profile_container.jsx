@@ -5,7 +5,8 @@ import Profile from './profile';
 import { openModal } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
-    user: state.entities.users[state.session.user.id]
+    user: state.entities.users[state.session.user.id],
+    errors: state.errors.session
 });
 
 const mapDispatchToProps = dispatch => ({

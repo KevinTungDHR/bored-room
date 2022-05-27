@@ -114,6 +114,13 @@ class Profile extends React.Component {
                         </div>
                         <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
                         <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />
+                        <ul>
+                            {Object.keys(this.props.errors).map((error, i) => (
+                                <li className='session-error' key={`error-${i}`}>
+                                    {this.props.errors[error]}
+                                </li>
+                            ))}
+                        </ul>
                         <div>Elo Ratings</div>
                         <div>{Object.keys(eloRating).map(key => {
                             return(
