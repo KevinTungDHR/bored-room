@@ -19,6 +19,12 @@ class Lobby extends React.Component {
         this.updateSearch = this.updateSearch.bind(this);
     }
 
+    camelize = (str) => {
+        return str.replace(/(?:^\w|\[A-Z\]|\b\w)/g, (word, index) => {
+            return index === 0 ? word.toLowerCase() : word.toUpperCase();
+        }).replace(/\s+/g, '');
+    }
+
     handleChange(e){
         let newState = this.state;
         newState.roomName = e.target.value;
@@ -34,7 +40,7 @@ class Lobby extends React.Component {
     handleSubmit(e){
         e.preventDefault();
         if(this.state.roomName !== "" && this.state.game !== ""){
-            RoomAPIUtil.createRoom(this.state.roomName, this.state.game)
+            RoomAPIUtil.createRoom(this.state.roomName, this.state.game, this.camelize(this.state.game))
         }
 
         this.setState({ roomName: ""});
@@ -144,7 +150,7 @@ class Lobby extends React.Component {
                                     {room.seatedUsers.map((user, i) => {
                                         if (user.handle) {
                                             return (
-                                                <li key={i}>{user.handle + " " + user.eloRating}</li>
+                                                <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
                                             )
                                         }
                                         

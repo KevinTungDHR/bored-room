@@ -4,8 +4,8 @@ export const fetchAllRooms = () => {
   return axios.get('/api/rooms/')
 }
 
-export const createRoom = (name, game) => {
-  return axios.post('/api/rooms/', { name, game })
+export const createRoom = (name, game, gameId) => {
+  return axios.post('/api/rooms/', { name, game, gameId })
 }
 
 export const fetchRoom = (roomCode) => {

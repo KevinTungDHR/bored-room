@@ -20,8 +20,8 @@ const CardSelection = ({cards, setIsAnimating, allUsers}) => {
             className='selected-cards-container'>
             {cards.map((card, i) => {
                 return (
-                    <div>
-                        <Card card={card[1]} key={ i } />
+                    <div key={i}>
+                        <Card card={card[1]} />
                         <div>{allUsers.find(player => player._id === card[0]).handle}</div>
                     </div>
                 )

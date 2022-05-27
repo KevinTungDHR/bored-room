@@ -14,6 +14,10 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
+  gameId: {
+    type: String,
+    required: true
+  },
   seatedUsers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

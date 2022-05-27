@@ -15,9 +15,16 @@ const UserSchema = new Schema({
     required: true
   },
   eloRating: {
-    type: Number,
-    required: true,
-    default: 800
+    takingSix: {
+      type: Number,
+      required: true,
+      default: 800
+    },
+    frequency: {
+      type: Number,
+      required: true,
+      default: 800
+    }
   },
   avatar: {
     type: String,
@@ -30,10 +37,15 @@ const UserSchema = new Schema({
     default: ""
   },
   friends: {
-    type: Array,
+    type: Object,
     required: false,
-    default: []
+    default: {}
   }
+  // friendList: {
+  //   type: Object,
+  //   required: false,
+  //   default: {}
+  // }
 }, {
   timestamps: true
 })
