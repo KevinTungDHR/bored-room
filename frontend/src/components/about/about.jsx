@@ -10,7 +10,7 @@ const AboutDevelopers = () => {
     return (
         <div className='about-outer-div'>
             <div className='about-header'>
-                <h1>About the Developer Team</h1>
+                <h1>About the Developers</h1>
             </div>
 
             <div className='bios-container'>

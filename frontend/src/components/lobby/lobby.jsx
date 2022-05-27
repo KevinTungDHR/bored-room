@@ -68,7 +68,7 @@ class Lobby extends React.Component {
         if (prevSelection.length > 0) {
             prevSelection[0].classList.remove("selected");
         }
-            // debugger
+
         if (!e.target.getAttribute("value")) {
             const gameTile = e.target.parentElement;
             this.setState({ game: gameTile.getAttribute("value")})
@@ -76,9 +76,8 @@ class Lobby extends React.Component {
         } else if (e.currentTarget.classList[0] === "freq-game-logo") {
             const div = document.getElementsByClassName("freq-game-logo");
             this.setState({ game: "Frequency" })
-            div.classList.add("selected");
+            div[0].classList.add("selected");
         } else {
-            debugger
             e.target.classList.add("selected");
             this.setState({ game: e.target.getAttribute("value")})
         }
@@ -99,27 +98,32 @@ class Lobby extends React.Component {
             )
         } else {
             return (
-                <div>
-                    <div>Red Team</div>
-                    <ul>
-                        {room.redTeam.map((user, i) => {
-                            if (user.handle) {
-                                return (
-                                    <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
-                                )
-                            }
-                        })}
-                    </ul>
-                    <div>Blue Team</div>
-                    <ul>
-                        {room.blueTeam.map((user, i) => {
-                            if (user.handle) {
-                                return (
-                                    <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
-                                )
-                            }
-                        })}
-                    </ul>
+                <div className='freq-teams'>
+                    <div>
+                        <ul>
+                            <div className='red'>Red Team</div>
+                            {room.redTeam.map((user, i) => {
+                                if (user.handle) {
+                                    return (
+                                        <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <div className='blue'>Blue Team</div>
+                            {room.blueTeam.map((user, i) => {
+                                if (user.handle) {
+                                    return (
+                                        <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                   
                 </div>
             )
         }
@@ -132,24 +136,17 @@ class Lobby extends React.Component {
 
         return (
             <div className='lobby-background'>
-                {/* <div className='select-game-wrapper'>
-                    <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
-                        <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
-                        <h1 className='six-title-tile'>Taking Six</h1>
-                    </div>
-
-                    <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
-                        <h1 className='freq-title-tile'>Frequency</h1>
-                    </div>
-
-                </div> */}
-                
+                <h1 className='lobby-head'>Welcome to the <span id='logo'>Bored Room</span></h1>          
                 <div className='search-container'>
                     <form className='create-room' onSubmit={this.handleSubmit}>
                         <div className='flex'>
                             <div className='select-game-wrapper'>
                                 <h1>1. Choose a Game: </h1>
                                 <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
+                                    <GiBull height="160px" width="160px" className='gi-bull-top-left' />
+                                    <GiBull height="160px" width="160px" className='gi-bull-top-right' />
+                                    <GiBull height="160px" width="160px" className='gi-bull-bot-left' />
+                                    <GiBull height="160px" width="160px" className='gi-bull-bot-right' />
                                     <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
                                     <h1 className='six-title-tile'>Taking Six</h1>
                                 </div>
@@ -194,8 +191,8 @@ class Lobby extends React.Component {
 
                             return <motion.li key={idx} className='room-container' animate={{ x: [sign, 0], scale: [0.1, 1] }} transition={{ ease: "easeOut", duration: 0.8 }}>
                             <h1>{room.name}</h1>
-                            <h2>{room.game}</h2>
-                            <div>
+                            <h2>Game: {room.game}</h2>
+                            <div className='room-members'>
                                 {this.renderUsers(room)}
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
