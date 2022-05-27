@@ -9,13 +9,19 @@ class SignupForm extends React.Component {
             handle: '',
             password: '',
             password2: '',
-            errors: {}
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.loginDemo = this.loginDemo.bind(this);
+
         this.clearedErrors = false;
     }
 
+    loginDemo(e){
+        e.preventDefault();
+        const demoUser = { email: "DemoUser@demouser.com", password: "demouser" }
+        this.props.login(demoUser)
+    }
 
     update(field) {
         return e => this.setState({
@@ -79,6 +85,8 @@ class SignupForm extends React.Component {
                             placeholder="Confirm Password"
                         />
                         <input className='signup-btn' type="submit" value="Sign Up" />
+                        <div>or</div>
+                        <input className='signup-btn' type="submit" onClick={this.loginDemo} value="Sign in as Demo User" />
                         {this.renderErrors()}
                     </div>
                 </form>

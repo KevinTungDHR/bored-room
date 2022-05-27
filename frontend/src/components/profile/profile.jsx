@@ -122,9 +122,9 @@ class Profile extends React.Component {
                             ))}
                         </ul>
                         <div>Elo Ratings</div>
-                        <div>{Object.keys(eloRating).map(key => {
+                        <div>{Object.keys(eloRating).map((key, i) => {
                             return(
-                                <div>{`${key}: ${eloRating[key]}`}</div>
+                                <div key={i}>{`${key}: ${eloRating[key]}`}</div>
                             )
                         })}</div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
