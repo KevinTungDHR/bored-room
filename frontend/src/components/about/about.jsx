@@ -4,6 +4,7 @@ import kevin from '../../assets/images/Kevin.png';
 import sean from '../../assets/images/sean.png';
 import github from '../../assets/images/github.png';
 import linkedin from '../../assets/images/linkedin.png';
+import angellist from '../../assets/images/angellist.png';
 
 const AboutDevelopers = () => {
     return (
@@ -22,6 +23,7 @@ const AboutDevelopers = () => {
                         <span>Connect: </span>
                         <a href='https://github.com/Peterkim88'><img src={github} /></a>
                         <a href='https://www.linkedin.com/in/peter-kim-898aa223a/'><img className='linkedin' src={linkedin} /></a>
+                        <a href=''><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
                 <div className='bio'>
@@ -33,6 +35,7 @@ const AboutDevelopers = () => {
                         <span>Connect: </span>
                         <a href='https://github.com/KevinTungDHR'><img src={github} /></a>
                         <a href='https://www.linkedin.com/in/kevintungdev/'><img className='linkedin' src={linkedin} /></a>
+                        <a href=''><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
                 <div className='bio'>
@@ -44,6 +47,7 @@ const AboutDevelopers = () => {
                         <span>Connect: </span>
                         <a href='https://github.com/sodea1'><img src={github} /></a>
                         <a href='https://linkedin.com/sodea1'><img className='linkedin' src={linkedin} /></a>
+                        <a href='https://angel.co/u/sean-o-dea-4'><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
             </div>

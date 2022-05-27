@@ -10,6 +10,8 @@ const GameEnd = ({ allPlayers, allUsers }) => {
         const winnerId = Object.keys(allPlayers).reduce(function(a, b) { return allPlayers[a] > allPlayers[b] ? a : b })
         const loserIds = Object.keys(allPlayers).filter((key) => key !== winnerId );
         const winnerScore = allPlayers[winnerId];
+        const winner = users.filter(user => user._id === winnerId);
+        const winnerElo = winner[0].eloRating.takingSix;
 
         const loserIdScores = {}; // 
 
@@ -33,10 +35,13 @@ const GameEnd = ({ allPlayers, allUsers }) => {
                         <span>{winnerScore}</span>
                         <AiFillTrophy className="ai-trophy-icon" />
                     </div>
+                    <div>Elo Rating: {winnerElo}</div>
                 </div>
 
                 <div className='losers-body'>
-
+                    <div>
+                        
+                    </div>
                 </div>
             </div>
         )

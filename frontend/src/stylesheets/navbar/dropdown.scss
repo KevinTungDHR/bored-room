@@ -76,6 +76,11 @@ a:hover {
     font-size: 32px;
 }
 
+#logout-border {
+    border-bottom: 1px solid $bronze;
+    margin: 0px 8px;
+}
+
 .logout-btn:hover {
     opacity: 0.7;
     transition: 0.2;
