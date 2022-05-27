@@ -96,9 +96,7 @@ class FrequencyGame {
 
   setActiveTeam(team){
     team.forEach(player => {
-      if(!player.isPsychic){
-        player.activePlayer = true
-      }
+      player.activePlayer = true
     })
   }
 
@@ -236,11 +234,11 @@ class FrequencyGame {
     this.clue = data.clue;
     
     if(this.activeTeam === 'red'){
-      this.redTeam[this.redPsychic].activePlayer = false;
       this.setActiveTeam(this.redTeam);
+      this.redTeam[this.redPsychic].activePlayer = false;
     } else {
-      this.blueTeam[this.bluePsychic].activePlayer = false;
       this.setActiveTeam(this.blueTeam);
+      this.blueTeam[this.bluePsychic].activePlayer = false;
     }
 
     const nextState = this.getState().transitions.TEAM_PHASE;

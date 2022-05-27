@@ -297,7 +297,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   }
   
   const handleUpdate = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     const payload = {
       action: gameState.actions[0],
       clue: clue,
