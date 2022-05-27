@@ -20,17 +20,17 @@ const receiveGameErrors = (errors) => {
 export const fetchGame = (roomCode) => (dispatch) => {
   return GameAPIUtil.fetchGame(roomCode)
     .then(res => dispatch(receiveGame(res.data)))
-    .catch(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors.response.data)))
 }
 
 export const createGame = (code, users) => (dispatch) => {
   return GameAPIUtil.createGame(code, users)
     .then(res => dispatch(receiveGame(res.data)))
-    .catch(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors.response.data)))
 }
 
 export const updateGame = (roomCode, payload) => dispatch => {
   return GameAPIUtil.updateGame(roomCode, payload)
     .then(res => dispatch(receiveGame(res.data)))
-    .catch(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors.response.data)))
 }

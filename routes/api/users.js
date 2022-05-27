@@ -7,8 +7,6 @@ const keys = require('../../config/keys');
 const passport = require('passport');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
-const validateUpdateHandle = require('../../validation/update/update_handle');
-const validateUpdateEmail = require('../../validation/update/update_email');
 const validateUpdatePassword = require('../../validation/update/update_password');
 const validateUpdateAvatar = require('../../validation/update/update_avatar');
 const validateUpdateProfile = require('../../validation/update/update_profile');
@@ -19,56 +17,61 @@ router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
 module.exports = router;
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const {errors, isValid} = validateRegisterInput(req.body);
   
   if(!isValid){
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email })
-    .then(user => {
-      if (user){
-        errors.email = 'Email already exists';
-        return res.status(400).json(errors)
-      } else {
-        const newUser = new User({
-          handle: req.body.handle,
-          email: req.body.email,
-          password: req.body.password
-        })
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err;
-            newUser.password = hash;
-            newUser.save()
-              .then(user => {
-                const payload = { 
-                  id: user.id, 
-                  handle: user.handle, 
-                  email: user.email,
-                  avatar: user.avatar,
-                  eloRating: user.eloRating,
-                  bio: user.bio,
-                  friends: user.friends
-                }
+  const userWithEmail = await User.findOne({ email: req.body.email })
+  if (userWithEmail){
+    errors.email = 'Email already registered'
+    return res.status(400).json(errors);
+  } 
 
-                jwt.sign(
-                  payload,
-                  keys.secretOrKey,
-                  {expiresIn: 72000},
-                  (err, token) => {
-                    res.json({
-                      success: true,
-                      token: 'Bearer ' + token
-                    });
-                  });
-              })
-              .catch(err => console.log(err));
-          })
+  const userWithHandle = await User.findOne({ handle: req.body.handle })
+  if (userWithHandle){
+    errors.handle = 'Handle already registered'
+    return res.status(400).json(errors);
+  } 
+  
+  const newUser = new User({
+    handle: req.body.handle,
+    email: req.body.email,
+    password: req.body.password
+  })
+
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(newUser.password, salt, (err, hash) => {
+      if (err) throw err;
+      newUser.password = hash;
+      newUser.save()
+        .then(user => {
+          const payload = { 
+            id: user.id, 
+            handle: user.handle, 
+            email: user.email,
+            avatar: user.avatar,
+            eloRating: user.eloRating,
+            bio: user.bio,
+            friends: user.friends
+          }
+
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            {expiresIn: 72000},
+            (err, token) => {
+              res.json({
+                success: true,
+                token: 'Bearer ' + token
+              });
+            });
         })
-      }
+        .catch(err => res.status(500).json(err));
     })
+  })
 })
 
 router.post('/login', (req, res) => {
@@ -112,7 +115,7 @@ router.post('/login', (req, res) => {
                 });
               });
           } else {
-            errors.password = 'Incorrect password'
+            errors.password = 'Invalid Username/Password Combination'
             return res.status(400).json(errors);
           }
         })
@@ -171,47 +174,36 @@ router.get('/friend', passport.authenticate('jwt', {session: false}), (req, res)
     })
 })
 
-router.patch('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.patch('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
   const { errors, isValid } = validateUpdateProfile(req.body);
   
   if (!isValid){
     return res.status(400).json(errors);
   }
 
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      user.save()
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
+  try {
+    const user = await User.findById(req.user.id)
 
-router.patch('/update-handle', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateHandle(req.body);
+    const userWithEmail = await User.findOne({ email: req.body.email })
+    console.log(user)
+
+    if (userWithEmail && !userWithEmail._id.equals(user._id)){
+      errors.email = 'Email already registered'
+      return res.status(400).json(errors);
+    } 
   
-  if (!isValid){
-    return res.status(400).json(errors);
+    const userWithHandle = await User.findOne({ handle: req.body.handle })
+    if (userWithHandle && !userWithHandle._id.equals(user._id)){
+      errors.handle = 'Handle already registered'
+      return res.status(400).json(errors);
+    } 
+
+    user.set(req.body)
+    let savedUser = await user.save()
+    res.json(savedUser)
+  } catch (errors) {
+    res.status(400).json(errors)
   }
-
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
-
-router.patch('/update-email', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const { errors, isValid } = validateUpdateEmail(req.body);
-  
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
 })
 
 router.patch('/update-password', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -239,7 +231,7 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
           )
         })
       })
-    .catch(errors => res.status(400).json({errors}))
+    .catch(errors => res.status(400).json(errors))
   }
 })
 
@@ -254,23 +246,8 @@ router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (
   User.findById(req.user.id)
     .then(user => {
       user.set(req.body)
-      res.json(user)})
-})
-
-router.patch('/update-bio', passport.authenticate('jwt', {session: false}), (req, res) => {
-  
-  User.findById(req.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
-})
-
-router.patch('/update-elo-rating', passport.authenticate('jwt', {session: false}), (req, res) => {
-  
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      res.json(user)})
-    .catch(errors => res.status(400).json({errors}))
+      user.save()
+        .then(savedUser => res.json(savedUser))
+      })
+    .catch(errors => res.status(422).json(errors))
 })

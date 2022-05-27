@@ -14,7 +14,9 @@ class NavBar extends React.Component {
     }
 
     componentDidMount() {
-        this.props.fetchUser();
+        if(this.props.loggedIn){
+            this.props.fetchCurrentUser();
+        }
     }
 
     logoutUser(e) {

@@ -84,6 +84,47 @@ class Lobby extends React.Component {
         }
     }
 
+    renderUsers(room) {
+        if (room.gameId === 'takingSix'){
+            return (
+                <ul>
+                    {room.seatedUsers.map((user, i) => {
+                        if (user.handle) {
+                            return (
+                                <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
+                            )
+                        }
+                    })}
+                </ul>
+            )
+        } else {
+            return (
+                <div>
+                    <div>Red Team</div>
+                    <ul>
+                        {room.redTeam.map((user, i) => {
+                            if (user.handle) {
+                                return (
+                                    <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
+                                )
+                            }
+                        })}
+                    </ul>
+                    <div>Blue Team</div>
+                    <ul>
+                        {room.blueTeam.map((user, i) => {
+                            if (user.handle) {
+                                return (
+                                    <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
+                                )
+                            }
+                        })}
+                    </ul>
+                </div>
+            )
+        }
+    }
+
     render() {
         const { rooms } = this.props;
         let count = 0;
@@ -155,16 +196,7 @@ class Lobby extends React.Component {
                             <h1>{room.name}</h1>
                             <h2>{room.game}</h2>
                             <div>
-                                <ul>
-                                    {room.seatedUsers.map((user, i) => {
-                                        if (user.handle) {
-                                            return (
-                                                <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
-                                            )
-                                        }
-                                        
-                                    })}
-                                </ul>
+                                {this.renderUsers(room)}
                             </div>
                             <Link to={`/rooms/${room.code}`}><button className='join-btn'>Join Room</button></Link>
                             <button className='delete-btn' onClick={() => this.handleRoomDelete(room.code)}>Delete Room</button>

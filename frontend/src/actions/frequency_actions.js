@@ -18,17 +18,17 @@ const receiveGameErrors = (errors) => {
 export const fetchGame = (roomCode) => (dispatch) => {
   return FrequencyAPIUtil.fetchGame(roomCode)
     .then(res => dispatch(receiveGame(res.data)))
-    .catch(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors.response.data)))
 }
 
 export const createGame = (code, users) => (dispatch) => {
   return FrequencyAPIUtil.createGame(code, users)
     .then(res => dispatch(receiveGame(res.data)))
-    .catch(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors.response.data)))
 }
 
 export const updateGame = (roomCode, payload) => dispatch => {
   return FrequencyAPIUtil.updateGame(roomCode, payload)
     .then(res => dispatch(receiveGame(res.data)))
-    .catch(errors => dispatch(receiveGameErrors(errors)))
+    .catch(errors => dispatch(receiveGameErrors(errors.response.data)))
 }

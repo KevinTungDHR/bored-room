@@ -11,31 +11,20 @@ const receiveUser = (user) => {
     }
 }
 
-export const fetchUser = () => dispatch => {
-    return APIUtil.fetchUser()
+export const fetchCurrentUser = () => dispatch => {
+    return APIUtil.fetchCurrentUser()
         .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors)))
+        errors => dispatch(receiveErrors(errors.response.data)))
 }
 
 export const updateUser = user => dispatch => {
     return APIUtil.updateUser(user)
         .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors)))
+        errors => dispatch(receiveErrors(errors.response.data)))
 }
 
 export const updateAvatar = avatar => dispatch => {
     return APIUtil.updateAvatar(avatar)
         .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors)))
+        errors => dispatch(receiveErrors(errors.response.data)))
 }
-
-// export const fetchUser = user => dispatch => {
-//     return APIUtil.
-// }
-
-// id: req.user.id,
-//     handle: req.user.handle,
-//         email: req.user.email,
-//             avatar: req.user.avatar,
-//                 eloRating: req.user.eloRating,
-//                     bio: req.user.bio
