@@ -247,6 +247,7 @@ router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (
     .then(user => {
       user.set(req.body)
       user.save()
-      res.json(user)})
+        .then(savedUser => res.json(savedUser))
+      })
     .catch(errors => res.status(422).json(errors))
 })
