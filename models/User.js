@@ -15,9 +15,16 @@ const UserSchema = new Schema({
     required: true
   },
   eloRating: {
-    type: Number,
-    required: true,
-    default: 800
+    takingSix: {
+      type: Number,
+      required: true,
+      default: 800
+    },
+    frequency: {
+      type: Number,
+      required: true,
+      default: 800
+    }
   },
   avatar: {
     type: String,

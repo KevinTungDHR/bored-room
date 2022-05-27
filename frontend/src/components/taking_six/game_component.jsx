@@ -137,7 +137,7 @@ const GameComponent = ({ roomCode, socket }) => {
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
                       return (
-                      <div className='card-overlay' onClick={(e) => setChoiceAndUpdate(c, e)} >
+                      <div className='card-overlay'  onClick={(e) => setChoiceAndUpdate(c, e)} >
                         <Card card={c} type={{value: 'hand'}} key={idx} />
                       </div>)
                     })}
