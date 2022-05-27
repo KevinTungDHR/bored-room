@@ -13,7 +13,7 @@ class Profile extends React.Component {
 
         this.state = {
             user: {},
-            btn: 'Edit',
+            btn: 'Edit Profile',
             background: game_table
             // currImg: 1
         }
@@ -64,15 +64,15 @@ class Profile extends React.Component {
         let newState = this.state;
         let prevBtn = newState.btn;
 
-        newState.btn = (newState.btn === 'Edit') ? 'Save' : 'Edit'; // switch state value
+        newState.btn = (newState.btn === 'Edit Profile') ? 'Save' : 'Edit Profile'; // switch state value
 
-        (newState.btn === 'Edit') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
-        (newState.btn === 'Edit') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
-        (newState.btn === 'Edit') ? email.setAttribute("disabled", "true") : email.removeAttribute("disabled");
+        (newState.btn === 'Edit Profile') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
+        (newState.btn === 'Edit Profile') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
+        (newState.btn === 'Edit Profile') ? email.setAttribute("disabled", "true") : email.removeAttribute("disabled");
 
         let button = document.getElementById('profile-btn');
-        button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit";
-        button.className = (prevBtn === 'Edit') ? 'profile-save-btn' : 'profile-edit-btn';
+        button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit Profile";
+        button.className = (prevBtn === 'Edit Profile') ? 'profile-save-btn' : 'profile-edit-btn';
         if (prevBtn === 'Save') {
             this.props.updateUser(this.state.user);
             this.setState({ newState })
@@ -121,12 +121,14 @@ class Profile extends React.Component {
                                 </li>
                             ))}
                         </ul>
-                        <div>Elo Ratings</div>
-                        <div>{Object.keys(eloRating).map((key, i) => {
-                            return(
-                                <div key={i}>{`${key}: ${eloRating[key]}`}</div>
-                            )
-                        })}</div>
+                        <div className='prof-elo-wrapper'>
+                            <h1>Elo Ratings</h1>
+                            <div>{Object.keys(eloRating).map(key => {
+                                return(
+                                    <div>{`${key}: ${eloRating[key]}`}</div>
+                                )
+                            })}</div>
+                        </div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>

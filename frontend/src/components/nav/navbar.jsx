@@ -37,13 +37,17 @@ class NavBar extends React.Component {
             };
 
             return (
-                <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
-                    <Dropdown logout={this.props.logout} user={this.props.user}/>
+                <div className='right-nav'>
+                    <Link to={'/about'} className='about-link'>About the Developer Team</Link>
+                    <div className='profile-icon' style={{ backgroundImage: "url(" + avatars[avatar] + ")" }}>
+                        <Dropdown logout={this.props.logout} user={this.props.user}/>
+                    </div>
                 </div>
             );
         } else {
             return (
                 <div>
+                    <Link to={'/about'} className='about-link'>About the Developer Team</Link>
                     <Link to={'/register'} className="nav-default"><button className="nav-btn">Register</button></Link>
                     <Link to={'/login'} className="nav-default"><button className="nav-btn">Login</button></Link>
                 </div>

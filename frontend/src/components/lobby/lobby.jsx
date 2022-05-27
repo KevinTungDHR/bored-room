@@ -64,16 +64,21 @@ class Lobby extends React.Component {
     }
 
     handleGameChange(e){
-        const prevSelection = document.getElementsByClassName("selected")
+        const prevSelection = document.getElementsByClassName("selected");
         if (prevSelection.length > 0) {
             prevSelection[0].classList.remove("selected");
         }
-            
+            // debugger
         if (!e.target.getAttribute("value")) {
             const gameTile = e.target.parentElement;
             this.setState({ game: gameTile.getAttribute("value")})
             gameTile.classList.add("selected");
+        } else if (e.currentTarget.classList[0] === "freq-game-logo") {
+            const div = document.getElementsByClassName("freq-game-logo");
+            this.setState({ game: "Frequency" })
+            div.classList.add("selected");
         } else {
+            debugger
             e.target.classList.add("selected");
             this.setState({ game: e.target.getAttribute("value")})
         }
@@ -151,7 +156,10 @@ class Lobby extends React.Component {
 
                                 <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
                                     <h1 className='freq-title-tile'>Frequency</h1>
-                                    <GiSundial height="160px" width="160px" />
+                                    <GiSundial size={150} color="turquoise" style={{
+                                        position: "absolute",
+                                        right: "15%"
+                                    }}/>
                                 </div>
 
                             </div>
@@ -186,6 +194,7 @@ class Lobby extends React.Component {
 
                             return <motion.li key={idx} className='room-container' animate={{ x: [sign, 0], scale: [0.1, 1] }} transition={{ ease: "easeOut", duration: 0.8 }}>
                             <h1>{room.name}</h1>
+                            <h2>{room.game}</h2>
                             <div>
                                 {this.renderUsers(room)}
                             </div>

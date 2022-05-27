@@ -81,6 +81,10 @@ io.on("connection", socket => {
     // socket.broadcast.emit("receive_message", data);
     io.in(data.roomCode).emit("guess_updated", data);
   });
+  socket.on('updateSelection', (data) => {
+    // socket.broadcast.emit("receive_message", data);
+    io.in(data.roomCode).emit("selection_updated", data);
+  });
   socket.on("disconnect", (reason) => {
     io.emit("message", "user has left");
   });
