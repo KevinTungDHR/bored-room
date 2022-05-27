@@ -172,20 +172,30 @@ class FrequencyGame {
     this.guess = null;
   }
 
+  setNewRedPsychic(){
+    this.redTeam[this.redPsychic % this.redTeam.length].isPsychic = false
+    this.redPsychic += 1;
+    let newPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
+    newPsychic.isPsychic = true;
+    newPsychic.activePlayer = true;
+  }
+
+  setNewBluePsychic(){
+    this.blueTeam[this.bluePsychic % this.blueTeam.length].isPsychic = false
+    this.bluePsychic += 1;
+    let newPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
+    newPsychic.isPsychic = true;
+    newPsychic.activePlayer = true;
+  }
+
   switchTurn(){
     if(this.activeTeam === 'red'){
       this.setActiveTeamFalse(this.redTeam);
-      this.bluePsychic += 1;
-      let currentPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewBluePsychic()
       this.activeTeam = 'blue';
     } else {
       this.setActiveTeamFalse(this.blueTeam);
-      this.redPsychic += 1;
-      let currentPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewRedPsychic()
       this.activeTeam = 'red';
     }
 
@@ -195,16 +205,10 @@ class FrequencyGame {
   activeTeamGoesAgain(){
     if(this.activeTeam === 'red'){
       this.setActiveTeamFalse(this.redTeam);
-      this.redPsychic += 1;
-      let currentPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewRedPsychic()
     } else {
       this.setActiveTeamFalse(this.blueTeam);
-      this.bluePsychic += 1;
-      let currentPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewBluePsychic()
     }
 
     this.newTurnSetup()

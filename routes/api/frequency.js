@@ -45,6 +45,8 @@ router.post('/create', (req, res) => {
             new: true
           })
           .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+          .populate("redTeam")
+          .populate("blueTeam")
           .then(room => io.to(req.body.code).emit("game_started", room));
             
           res.json("success");
