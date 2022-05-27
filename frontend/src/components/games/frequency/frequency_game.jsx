@@ -239,6 +239,26 @@ const FrequencyGame = ({ roomCode, socket }) => {
     setGuess(e.target.value);
   }
 
+  const bobbingArrow = (activeTeam) => {
+    const currTeam = assets.activeTeam;
+    const turnType = gameState.actions[0]; // 'chooseLeftRight'
+
+    const arrow = <motion.div className='arrow-icon' animate={{ y: [-5, 5, -5] }} transition={{ repeat: Infinity }}>
+      <AiOutlineArrowDown
+        height="22px"
+        width="22px"
+        className='active-player-arrow'
+      /></motion.div>
+
+    if (activeTeam === currTeam && turnType !== "chooseLeftRight") {
+      return arrow;
+    } else if (activeTeam !== currTeam && turnType === "chooseLeftRight") {
+      return arrow;
+    } else {
+      return <div></div>
+    }
+  }
+
   const renderScoreboard = () => {
     let allPlayers = blueTeam.concat(redTeam);
 
@@ -247,12 +267,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
         <div className='freq-scoreboard-container'>
           <div className='scoreboard-background'></div>
           <div className='team-scores-container'>
-            {assets.activeTeam === 'blue' ? <motion.div className='arrow-icon' animate={{y: [-5, 5, -5]}} transition={{repeat: Infinity}}>
-              <AiOutlineArrowDown 
-                height="22px" 
-                width="22px" 
-                className='active-player-arrow'
-              /></motion.div> : <div></div>}
+            {bobbingArrow("blue")}
             <div className='team-container'>
               <h1 className='blue'>Blue Team</h1>
               <span>{assets.bluePoints}</span>
@@ -266,12 +281,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
           </div>
           <div className='team-scores-container'>
             {/* CHANGE ASSETS.ACTIVETEAM TO THE ACTIVEPLAYER'S TEAM */}
-            {assets.activeTeam === 'red' ? <motion.div className='arrow-icon' animate={{ y: [-5, 5, -5] }} transition={{ repeat: Infinity }}>
-              <AiOutlineArrowDown
-                height="22px"
-                width="22px"
-                className='active-player-arrow'
-              /></motion.div> : <div></div>}
+            {bobbingArrow("red")}
             <div className='team-container'>
               <h1 className='red'>Red Team</h1>
               <span>{assets.redPoints}</span>

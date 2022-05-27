@@ -11,9 +11,8 @@
 }
 
 .about-header {
-    font-size: 58px;
+    font-size: 68px;
     color: $title;
-
 }
 
 .bios-container {
@@ -37,11 +36,12 @@
     }
 
     .name {
-        font-size: 50px;
+        font-size: 40px;
+        height: 44px;
     }
 
     .role {
-        font-size: 38px;
+        font-size: 22px;
         color: $seaweed;
     }
 
@@ -68,6 +68,11 @@
         .linkedin {
             height: 64px;
             width: 70px;
+        }
+
+        .angellist {
+            height: 60px;
+            width: 42px;
         }
     }
 
