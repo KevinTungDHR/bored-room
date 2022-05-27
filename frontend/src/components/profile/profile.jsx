@@ -114,12 +114,14 @@ class Profile extends React.Component {
                         </div>
                         <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
                         <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />
-                        <div>Elo Ratings</div>
-                        <div>{Object.keys(eloRating).map(key => {
-                            return(
-                                <div>{`${key}: ${eloRating[key]}`}</div>
-                            )
-                        })}</div>
+                        <div className='prof-elo-wrapper'>
+                            <h1>Elo Ratings</h1>
+                            <div>{Object.keys(eloRating).map(key => {
+                                return(
+                                    <div>{`${key}: ${eloRating[key]}`}</div>
+                                )
+                            })}</div>
+                        </div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>

@@ -63,12 +63,25 @@
         color: $text;
         border-radius: 10px;
         background-color: #f8f8ff;
+        resize: none;
+        overflow: scroll;
     }
 
     textarea:focus, input:focus {
         outline: none !important;
     }
     
+}
+
+.prof-elo-wrapper {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
+
+    h1 {
+        text-decoration: underline;
+        
+    }
 }
 
 .avatar-image {
