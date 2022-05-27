@@ -6,6 +6,7 @@ import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
 import Dial from './dial';
 import { AiOutlineArrowDown } from 'react-icons/ai';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 
 const FrequencyGame = ({ roomCode, socket }) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -20,7 +21,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const blueUsers = useSelector(state => state.entities.rooms[roomCode].blueTeam)
   const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
-  const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam)
+  const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam) 
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -78,35 +79,38 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
-    let psychic = teams.find(player => player.isPsychic === true);
-    // if(sessionId === psychic._id && psychic.activePlayer){
+    let psychic = teams.find(player => player.isPsychic && player.activePlayer);
+
+    if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue} className="clue-form">
-          <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
-          <button className='submit-clue' onClick={handleUpdate}>Submit</button>
+          <div>
+            <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
+            <button className='submit-clue' onClick={handleUpdate}>Submit</button>
+          </div>
         </form>
       )
-    // }
+    }
   }
 
   const renderSliderAndConfirm = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    // if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
+    if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
         <div>
           <input className='slider' type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
           <button className='submit-guess' onClick={handleUpdate}>Confirm</button>
         </div>
       )
-    // }
+    }
   }
 
   const renderLeftOrRight = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    // if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
-      if(leftOrRight === ""){
+    if(currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE'){
+      if (leftOrRight === "") {
         return(
           <div className='lt-rt-btns'>
             <button className='left-right-btn' onClick={chooseLeft}>Left</button>
@@ -122,11 +126,10 @@ const FrequencyGame = ({ roomCode, socket }) => {
         )
       }
       
-    // }
+    }
   }
 
   const drawDial = (ctx) => {
-    let allPlayers = blueUsers.concat(redUsers);
     ctx.restore()
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.save()
@@ -139,18 +142,15 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.fillStyle = '#eae6da'
     ctx.fill();
 
-    allPlayers.forEach((player) => {
-      if (player._id === sessionId && player.isPsychic) {
-        drawTarget(ctx)
-      } else {
-        drawShield(ctx)
-      }
-    })
-    // Add conditional here
-    // if (psychic and active player) draw target else shield
-    // if ()
-    // drawShield(ctx);
-    // drawTarget(ctx);
+    const allPlayers = blueTeam.concat(redTeam);
+    const player = allPlayers.find(player => player._id === sessionId);
+
+    if (player.isPsychic && player.activePlayer) {
+      drawTarget(ctx)
+    } else {
+      drawShield(ctx)
+    }
+      
     let length = 300;
     let theta = guess;
     ctx.beginPath();
@@ -220,12 +220,13 @@ const FrequencyGame = ({ roomCode, socket }) => {
   }
 
   const renderScoreboard = () => {
+    let allPlayers = blueTeam.concat(redTeam);
     return (
       <div className='scoreboard-outermost-div'>
         <div className='freq-scoreboard-container'>
           <div className='scoreboard-background'></div>
           <div className='team-scores-container'>
-            {assets.activeTeam === 'blue' ? <motion.div className='arrow-icon' animate={{y: [-5, 5]}} transition={{yoyo: Infinity}}>
+            {assets.activeTeam === 'blue' ? <motion.div className='arrow-icon' animate={{y: [-5, 5, -5]}} transition={{repeat: Infinity}}>
               <AiOutlineArrowDown 
                 height="22px" 
                 width="22px" 
@@ -235,12 +236,15 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <h1 className='blue'>Blue Team</h1>
               <span>{assets.bluePoints}</span>
               <ul>
-                {blueUsers.map(player => <li>{player.handle}</li>)}
+                {blueUsers.map(player => <li className='handle-li'>
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && allPlayers.find(play => player._id === play._id).isPsychic
+                     ? "active-check" : "hidden"} />
+                  {player.handle}</li>)}
               </ul>
             </div>
           </div>
           <div className='team-scores-container'>
-            {assets.activeTeam === 'red' ? <motion.div className='arrow-icon' animate={{ y: [-5, 5] }} transition={{ yoyo: Infinity }}>
+            {assets.activeTeam === 'red' ? <motion.div className='arrow-icon' animate={{ y: [-5, 5, -5] }} transition={{ repeat: Infinity }}>
               <AiOutlineArrowDown
                 height="22px"
                 width="22px"
@@ -250,7 +254,9 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <h1 className='red'>Red Team</h1>
               <span>{assets.redPoints}</span>
               <ul>
-                {redUsers.map(player => <li>{player.handle}</li>)}
+                {redUsers.map(player => <li className='handle-li'>
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && allPlayers.find(play => player._id === play._id).isPsychic
+                     ? "active-check" : "hidden"} />{player.handle}</li>)}
               </ul>
             </div>
           </div>
@@ -304,6 +310,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
       guess: guess,
       leftOrRight: leftOrRight
     };
+
     updateGame(roomCode, payload)
       .then(data => console.log(data))
       .catch(err => console.error(err))
@@ -322,12 +329,15 @@ const FrequencyGame = ({ roomCode, socket }) => {
           <div className='frequency-outer-div'>
             <div className='room-code'>In Room: {roomCode}</div>
           {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {actionDescriptions[action]}</span></h1>)}
-            {(sessionId === psychic._id && psychic.activePlayer) ? <div>{assets.dial}</div> : <div></div>}
+            {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>}
+            
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
               <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess}/>
               <div className='right-card'>{assets.currentCard.right}</div>
             </div>
+
+            {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
 
             <div className='forms-container'>
               {renderClueForm()} 
