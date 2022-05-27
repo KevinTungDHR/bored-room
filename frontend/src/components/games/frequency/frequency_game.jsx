@@ -79,7 +79,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
   const renderClueForm = () => {
     let teams = redTeam.concat(blueTeam)
-    let psychic = teams.find(player => player.isPsychic && player.activePlayer);
+    let psychic = teams.find(player => player.isPsychic);
 
     if(sessionId === psychic._id && psychic.activePlayer){
       return(
@@ -221,6 +221,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
   const renderScoreboard = () => {
     let allPlayers = blueTeam.concat(redTeam);
+
+
     return (
       <div className='scoreboard-outermost-div'>
         <div className='freq-scoreboard-container'>

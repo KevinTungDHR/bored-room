@@ -20,8 +20,8 @@ class FrequencyGame {
       this.activeTeam = data.activeTeam;
       this.redTeam = data.redTeam;
       this.blueTeam = data.blueTeam;
-      this.redPsychic = 0;
-      this.bluePsychic = 0;
+      this.redPsychic = data.redPsychic;
+      this.bluePsychic = data.bluePsychic;
       this.dial = data.dial;
       this.guess = data.guess;
       this.clue = data.clue;
@@ -172,20 +172,33 @@ class FrequencyGame {
     this.guess = null;
   }
 
+  setNewRedPsychic(){
+    this.blueTeam[this.bluePsychic % this.blueTeam.length].isPsychic = false
+    this.redTeam[this.redPsychic % this.redTeam.length].isPsychic = false
+    this.redPsychic += 1;
+    let newPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
+    newPsychic.isPsychic = true;
+    newPsychic.activePlayer = true;
+}
+
+  setNewBluePsychic() {
+    this.redTeam[this.redPsychic % this.redTeam.length].isPsychic = false
+    this.blueTeam[this.bluePsychic % this.blueTeam.length].isPsychic = false
+    this.bluePsychic += 1;
+    let newPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
+    newPsychic.isPsychic = true;
+    newPsychic.activePlayer = true;
+
+  }
+
   switchTurn(){
     if(this.activeTeam === 'red'){
       this.setActiveTeamFalse(this.redTeam);
-      this.bluePsychic += 1;
-      let currentPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewBluePsychic()
       this.activeTeam = 'blue';
     } else {
       this.setActiveTeamFalse(this.blueTeam);
-      this.redPsychic += 1;
-      let currentPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewRedPsychic()
       this.activeTeam = 'red';
     }
 
@@ -194,17 +207,13 @@ class FrequencyGame {
 
   activeTeamGoesAgain(){
     if(this.activeTeam === 'red'){
+      this.setActiveTeamFalse(this.blueTeam);
       this.setActiveTeamFalse(this.redTeam);
-      this.redPsychic += 1;
-      let currentPsychic = this.redTeam[this.redPsychic % this.redTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setNewRedPsychic()
     } else {
       this.setActiveTeamFalse(this.blueTeam);
-      this.bluePsychic += 1;
-      let currentPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
-      currentPsychic.isPsychic = true;
-      currentPsychic.activePlayer = true;
+      this.setActiveTeamFalse(this.redTeam);
+      this.setNewBluePsychic()
     }
 
     this.newTurnSetup()
@@ -232,13 +241,12 @@ class FrequencyGame {
 
   giveClue(data) {
     this.clue = data.clue;
-    
     if(this.activeTeam === 'red'){
       this.setActiveTeam(this.redTeam);
-      this.redTeam[this.redPsychic].activePlayer = false;
+      this.redTeam[this.redPsychic % this.redTeam.length].activePlayer = false;
     } else {
       this.setActiveTeam(this.blueTeam);
-      this.blueTeam[this.bluePsychic].activePlayer = false;
+      this.blueTeam[this.bluePsychic % this.blueTeam.length].activePlayer = false;
     }
 
     const nextState = this.getState().transitions.TEAM_PHASE;
