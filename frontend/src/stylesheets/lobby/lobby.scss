@@ -24,6 +24,12 @@
   position: relative;
 }
 
+.freq-game-logo > h1 {
+  text-align: center;
+  color: tan;
+  font-size: 32px;
+}
+
 .tile-logo {
   position: absolute;
   top: 50%;
@@ -146,6 +152,11 @@
       margin-top: 22px;
       font-size: 52px;
       color: #000018;
+    }
+
+    h2 {
+      display: flex;
+      justify-content: center;
     }
 
     li {

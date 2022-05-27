@@ -56,11 +56,11 @@
     display: block;
     margin: 0px 8px;
     border-bottom: 1px solid $bronze;
-}
 
-a:hover {
-    opacity: 0.7;
-    transition: 0.2;
+    a:hover {
+            opacity: 0.7;
+            transition: 0.2;
+        }
 }
 
 .logout-btn {
@@ -74,6 +74,11 @@ a:hover {
     margin-top: 14px;
     font-family: 'Really-Free';
     font-size: 32px;
+}
+
+#logout-border {
+    border-bottom: 1px solid $bronze;
+    margin: 0px 8px;
 }
 
 .logout-btn:hover {

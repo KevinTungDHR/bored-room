@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 const DialCanvas = props => {
   const canvasRef = useRef(null);
 
+  const currPlayer = props.allPlayers.filter(player => player._id === props.sessionId)
+
   let { draw, setGuess, updateGuess, ...rest } = props;
   let [isDragging, setIsDragging] = useState(false)
   useEffect(() => {
@@ -13,7 +15,9 @@ const DialCanvas = props => {
   }, [draw])
 
   const startDrag = (e) => {
-    setIsDragging(true)
+    if (currPlayer[0].activePlayer && props.gameState.actions[0] === 'makeGuess') {
+      setIsDragging(true)
+    }
   }
 
   const endDrag = (e) => {

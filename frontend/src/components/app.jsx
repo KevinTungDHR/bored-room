@@ -12,6 +12,7 @@ import Modal from './modal/modal';
 import '../stylesheets/app.scss';
 import Room from './rooms/room';
 import { ProfileMotion } from './profile/profile_motion';
+import AboutDevelopers from './about/about';
 
 const App = () => (
     <div>
@@ -23,6 +24,7 @@ const App = () => (
             <ProtectedRoute path="/rooms/:code" component={Room} />
             <ProtectedRoute path="/profile" component={ProfileContainer} />
             <ProtectedRoute path="/lobby" component={LobbyContainer} />
+            <Route exact path="/about" component={AboutDevelopers} />
             <AuthRoute path="/" component={MainPage} />
         </Switch>
         <Footer />

@@ -227,6 +227,7 @@
 .lt-rt-btns {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .left-right-btn {
@@ -273,3 +274,8 @@
     left: -24px;
     margin-top: 0;
 }
+
+.selected-lt-rt {
+    font-size: 18px;
+    margin-left: 20px;
+}   

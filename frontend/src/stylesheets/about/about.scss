@@ -1,0 +1,79 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.about-outer-div {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Cormorant-Garamond";
+    margin: 10px 10px;
+}
+
+.about-header {
+    font-size: 68px;
+    color: $title;
+}
+
+.bios-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 22px;
+}
+
+.bio {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 33%;
+    
+    .headshot {
+        height: 220px;
+        width: 220px;
+        border-radius: 50%;
+    }
+
+    .name {
+        font-size: 40px;
+        height: 44px;
+    }
+
+    .role {
+        font-size: 22px;
+        color: $seaweed;
+    }
+
+    .bio-description {
+        margin-top: 10px;
+        line-height: 1.4;
+    }
+
+    .connect-links {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 20px;
+        width: 100%;
+
+        span {
+            margin-right: 12px;
+        }
+
+        a {
+            margin-right: 12px;
+        }
+
+        .linkedin {
+            height: 64px;
+            width: 70px;
+        }
+
+        .angellist {
+            height: 60px;
+            width: 42px;
+        }
+    }
+
+}
