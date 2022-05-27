@@ -81,9 +81,12 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
 
   try {
     g.handleEvent(req.body.action, { ...req.body, player } );
+    
     game.set(g);
+
     let assets = await game.save()
     const gameState = frequencyState[assets.currentState];
+
     io.to(req.params.code).emit("game_updated", { assets, gameState });
   } catch (err) {
     return res.status(402).json(err);
