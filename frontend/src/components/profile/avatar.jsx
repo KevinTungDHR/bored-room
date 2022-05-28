@@ -12,8 +12,8 @@ class Avatar extends React.Component {
 
     handleClick(e) {
         e.preventDefault()
-        const avatar = Object.assign({}, this.props.user, { avatar: e.target.value});
-        this.props.updateAvatar(avatar)
+        const user = Object.assign({}, this.props.user, { avatar: e.target.value});
+        this.props.updateUser(user)
             .then(() => this.props.closeModal())
     }
 

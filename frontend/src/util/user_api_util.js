@@ -7,7 +7,3 @@ export const updateUser = (user) => {
 export const fetchCurrentUser = () => {
     return axios.get('/api/users/profile')
 }
-
-export const updateAvatar = (avatar) => {
-    return axios.patch('/api/users/update-avatar', avatar)
-}

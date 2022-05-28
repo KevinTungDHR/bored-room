@@ -22,9 +22,3 @@ export const updateUser = user => dispatch => {
         .then(res => dispatch(receiveCurrentUser(res.data)),
         errors => dispatch(receiveErrors(errors.response.data)))
 }
-
-export const updateAvatar = avatar => dispatch => {
-    return APIUtil.updateAvatar(avatar)
-        .then(res => dispatch(receiveCurrentUser(res.data)),
-        errors => dispatch(receiveErrors(errors.response.data)))
-}
