@@ -28,6 +28,7 @@ class FrequencyGame {
       this.redPoints = data.redPoints;
       this.bluePoints = data.bluePoints;
       this.leftOrRight = data.leftOrRight;
+      this.dialRevealed = data.dialRevealed;
 
       this.currentState = data.currentState;
       this.gameOver = data.gameOver;
@@ -38,7 +39,7 @@ class FrequencyGame {
 
   async setupNewGame({redTeam, blueTeam}){
     this.name = "Frequency";
-    this.discard = []
+    this.discard = [];
     this.redTeam = [];
     this.blueTeam = [];
     this.redPsychic = 0;
@@ -49,6 +50,7 @@ class FrequencyGame {
     this.clue = null;
     this.dial = null;
     this.leftOrRight = null;
+    this.dialRevealed = false;
 
     await Card.find()
     .then(data => this.deck = (data))
@@ -170,6 +172,7 @@ class FrequencyGame {
     this.clue = null;
     this.leftOrRight = null;
     this.guess = null;
+    this.dialRevealed = false;
   }
 
   setNewRedPsychic(){
@@ -188,7 +191,6 @@ class FrequencyGame {
     let newPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
     newPsychic.isPsychic = true;
     newPsychic.activePlayer = true;
-
   }
 
   switchTurn(){
@@ -239,6 +241,8 @@ class FrequencyGame {
     this.dial = Math.floor(Math.random() * 181);
   }
 
+  // State Actions Below
+
   giveClue(data) {
     this.clue = data.clue;
     if(this.activeTeam === 'red'){
@@ -276,6 +280,7 @@ class FrequencyGame {
   }
 
   scorePoints(data) {
+    this.dialRevealed = true;
     let points = this.checkGuess(this.guess);
 
     if(this.activeTeam === 'red'){
@@ -289,19 +294,28 @@ class FrequencyGame {
     let [currentTeamPts, opposingTeamPts] = this.activeTeam === 'red' ? [this.redPoints, this.bluePoints] : [this.bluePoints, this.redPoints]
 
     if(this.isGameOver()){
+      this.gameOver = true;
       const nextState = this.getState().transitions.GAME_END;
       this.setState(nextState);
-      return;
-    } else if(points === 4 && currentTeamPts < opposingTeamPts) {
+    } else {
+      const nextState = this.getState().transitions.REVEAL_PHASE;
+      this.setState(nextState);
+    }
+  }
+
+  nextRound(data){
+    let points = this.checkGuess(this.guess);
+    let [currentTeamPts, opposingTeamPts] = this.activeTeam === 'red' ? [this.redPoints, this.bluePoints] : [this.bluePoints, this.redPoints]
+    
+    if(points === 4 && currentTeamPts < opposingTeamPts) {
       this.activeTeamGoesAgain();
     } else {
       this.switchTurn();
     }
-    
+
     const nextState = this.getState().transitions.PSYCHIC_PHASE;
     this.setState(nextState);
   }
-
 };
 
 module.exports = FrequencyGame;

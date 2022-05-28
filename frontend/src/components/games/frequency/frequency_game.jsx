@@ -165,7 +165,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     const allPlayers = blueTeam.concat(redTeam);
     const player = allPlayers.find(player => player._id === sessionId);
 
-    if (player.isPsychic) {
+    if (player.isPsychic || assets.dialRevealed) {
       drawTarget(ctx)
     } else {
       drawShield(ctx)
@@ -355,7 +355,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
         "giveClue": "Give Clue",
         "makeGuess": "Make Guess",
         "chooseLeftRight": "Choose Left or Right",
-        "scorePoints": "Tally Points"
+        "scorePoints": "Tally Points",
+        "nextRound": "Reveal Phase"
       }
       const allPlayers = blueTeam.concat(redTeam);
       return (
@@ -363,7 +364,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
             <div className='room-code'>In Room: {roomCode}</div>
           {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {actionDescriptions[action]}</span></h1>)}
             {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
-            
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
               <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
@@ -376,6 +376,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderClueForm()} 
               {renderSliderAndConfirm()}
               {renderLeftOrRight()}
+              {gameState.name === 'REVEAL_PHASE' && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
               {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
             </div>
 

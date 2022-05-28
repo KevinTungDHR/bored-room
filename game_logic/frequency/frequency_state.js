@@ -49,14 +49,16 @@ const state = {
     type: "automated",
     actions: ["scorePoints"],
     transitions: {
-      PSYCHIC_PHASE: 2,
+      REVEAL_PHASE: 6,
       GAME_END: 99
     }
   },
-  10: {
-    name: "ROUND_SETUP",
-    type: "automated",
-    actions: ["setupNewRound"],
+  6: {
+    name: "REVEAL_PHASE",
+    type: "multipleActivePlayer",
+    possibleActions: ["nextRound"],
+    actions: ["nextRound"],
+    description: "Reveal Phase: Click to end round",
     transitions: {
       PSYCHIC_PHASE: 2
     }
