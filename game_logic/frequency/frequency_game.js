@@ -102,7 +102,7 @@ class FrequencyGame {
     })
   }
 
-  setActiveTeamFalse(team){
+  setActivePlayersFalse(team){
     team.forEach(player => player.activePlayer = false)
   }
 
@@ -195,11 +195,11 @@ class FrequencyGame {
 
   switchTurn(){
     if(this.activeTeam === 'red'){
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.blueTeam);
       this.setNewBluePsychic()
       this.activeTeam = 'blue';
     } else {
-      this.setActiveTeamFalse(this.blueTeam);
+      this.setActivePlayersFalse(this.redTeam);
       this.setNewRedPsychic()
       this.activeTeam = 'red';
     }
@@ -209,12 +209,10 @@ class FrequencyGame {
 
   activeTeamGoesAgain(){
     if(this.activeTeam === 'red'){
-      this.setActiveTeamFalse(this.blueTeam);
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.blueTeam);
       this.setNewRedPsychic()
     } else {
-      this.setActiveTeamFalse(this.blueTeam);
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.redTeam);
       this.setNewBluePsychic()
     }
 
@@ -261,10 +259,10 @@ class FrequencyGame {
     this.guess = data.guess;
 
     if(this.activeTeam === 'red'){
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.redTeam);
       this.setActiveTeam(this.blueTeam);
     } else {
-      this.setActiveTeamFalse(this.blueTeam);
+      this.setActivePlayersFalse(this.blueTeam);
       this.setActiveTeam(this.redTeam);
     }
 

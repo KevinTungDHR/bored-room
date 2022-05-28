@@ -273,7 +273,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <span>{assets.bluePoints}</span>
               <ul>
                 {blueUsers.map(player => <li className='handle-li'>
-                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />
                   {player.handle}</li>)}
               </ul>
@@ -287,7 +287,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <span>{assets.redPoints}</span>
               <ul>
                 {redUsers.map(player => <li className='handle-li'>
-                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />{player.handle}</li>)}
               </ul>
             </div>
