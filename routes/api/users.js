@@ -185,7 +185,11 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), async (
     const user = await User.findById(req.user.id)
 
     const userWithEmail = await User.findOne({ email: req.body.email })
-    console.log(user)
+    
+    if (user.email === 'DemoUser@demouser.com' && user.email !== req.body.email){
+      errors.email = 'Cannot change Demo User email'
+      return res.status(400).json(errors);
+    }
 
     if (userWithEmail && !userWithEmail._id.equals(user._id)){
       errors.email = 'Email already registered'
