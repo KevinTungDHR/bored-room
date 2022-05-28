@@ -14,11 +14,21 @@
   height: 220px;
 }
 
-.six-game-logo, .freq-game-logo {
+.six-game-logo {
   height: 200px;
   width: 200px;
   margin: 8px 8px;
-  background-color: aliceblue;
+  background-color: rgb(245, 167, 167);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.freq-game-logo {
+  height: 200px;
+  width: 200px;
+  margin: 8px 8px;
+  background-color: rgb(244, 244, 152);
   border-radius: 10px;
   cursor: pointer;
   position: relative;

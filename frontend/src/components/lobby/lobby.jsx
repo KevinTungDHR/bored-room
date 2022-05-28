@@ -173,7 +173,6 @@ class Lobby extends React.Component {
                             <div className='search-title'>Search for a Room</div>
                             <div>
                                 <input className='search-room-input' value={this.state.search} onChange={this.updateSearch} />
-                                {/* <input className='create-btn' type="submit" value="Search" /> */}
                             </div>
                         </div>
                     </form>
