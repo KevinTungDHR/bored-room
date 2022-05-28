@@ -42,7 +42,7 @@ const AboutDevelopers = () => {
                     <img className='headshot' src={sean} />
                     <span className='name'>Sean O'Dea</span>
                     <span className='role'>Frontend Lead</span>
-                    <p className='bio-description'></p>
+                    <p className='bio-description'>Sea </p>
                     <div className='connect-links'>
                         <span>Connect: </span>
                         <a href='https://github.com/sodea1'><img src={github} /></a>
