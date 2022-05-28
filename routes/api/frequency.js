@@ -15,15 +15,26 @@ router.post('/createDemo', async (req, res) => {
   const bots = await User.find({handle: /DemoBot/ });
   const teams = req.body.teams;
 
+  let redStart;
   if(Object.values(teams.redTeam).length === 0){
+    await Room.findOneAndUpdate({ code: req.body.code }, 
+      { $push: { blueTeam: bots[0] }})
+    await Room.findOneAndUpdate({ code: req.body.code }, 
+      { $push: { redTeam: { $each: bots.slice(1) }}})
     teams.blueTeam.push(bots[0]);
     teams.redTeam.push(bots.slice(1));
+    redStart = false;
   } else {
+    await Room.findOneAndUpdate({ code: req.body.code }, 
+      { $push: { redTeam: bots[0] }})
+    await Room.findOneAndUpdate({ code: req.body.code }, 
+      { $push: { blueTeam: { $each: bots.slice(1) }}})
+    redStart = true;
     teams.redTeam.push(bots[0]);
-    teams.blueTeam.push(bots.slice(1));
+    teams.blueTeam.push(...bots.slice(1));
   }
 
-  g.setupDemoGame(teams)
+  g.setupDemoGame(teams, redStart)
     .then(() => {
       const gameModel = FrequencyModel({
         code: req.body.code,
@@ -42,6 +53,8 @@ router.post('/createDemo', async (req, res) => {
         clue: g.clue,
         dial: g.dial,
         dialRevealed: g.dialRevealed,
+        demoGame: g.demoGame,
+        demoTurnCounter: g.demoTurnCounter,
         leftOrRight: g.leftOrRight,
         gameOver: g.gameOver,
         currentState: g.currentState,
@@ -93,6 +106,8 @@ router.post('/create', (req, res) => {
         dial: g.dial,
         leftOrRight: g.leftOrRight,
         dialRevealed: g.dialRevealed,
+        demoGame: g.demoGame,
+        demoTurnCounter: g.demoTurnCounter,
         gameOver: g.gameOver,
         currentState: g.currentState,
       });
@@ -172,23 +187,21 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
   }
 
   // Need to check if bot turn
+  while(g.demoGame && !g.userIsActivePlayer(req.user._id) && g.getState()['name'] !== 'REVEAL_PHASE' && count < 25){
+    count += 1;
+    let action = g.getState().actions[0]
+    try {
+      g.handleEvent(action, { botTurn: true });
 
-  // while(g.demoGame && count < 25){
-  //   count += 1;
-  //   let action = g.getState().actions[0]
-  //   try {
-  //     g.handleEvent(action);
-
-  //     game.set(g);
-  //     game.markModified('deck');
-  //     let assets = await game.save()
-
-  //     const gameState = frequencyState[assets.currentState];
-  //     io.to(req.params.code).emit("game_updated", { assets, gameState });
-  //   } catch (err) {
-  //     return res.status(402).json(err);
-  //   }
-  // }
+      game.set(g);
+      game.markModified('deck');
+      let assets = await game.save()
+      const gameState = frequencyState[assets.currentState];
+      io.to(req.params.code).emit("game_updated", { assets, gameState, botTurn: true });
+    } catch (err) {
+      return res.status(402).json(err);
+    }
+  }
 
   res.json("success")
 });

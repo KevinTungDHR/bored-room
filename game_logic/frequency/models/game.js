@@ -45,6 +45,7 @@ const FrequencyGameSchema = new Schema({
   dial: Number,
   leftOrRight: String,
   dialRevealed: Boolean,
+  demoGame: Boolean,
   demoTurnCounter: Number,
   gameOver: Boolean,
   currentState: Number,

@@ -50,7 +50,7 @@ class FrequencyGame {
     this.bluePsychic = 0;
     this.redPoints = 0;
     this.bluePoints = 0;
-    this.guess = null;
+    this.guess = 90;
     this.clue = null;
     this.dial = null;
     this.leftOrRight = null;
@@ -98,7 +98,7 @@ class FrequencyGame {
     this.bluePsychic = 0;
     this.redPoints = 0;
     this.bluePoints = 0;
-    this.guess = null;
+    this.guess = 90;
     this.clue = null;
     this.dial = null;
     this.leftOrRight = null;
@@ -125,7 +125,7 @@ class FrequencyGame {
 
     this.activeTeam = redStart ? 'red' : 'blue'
     this.selectStartingPsychic();
-    this.setRandomDial()
+    this.dial = demo_clues[this.demoTurnCounter].dial;
     this.currentCard = this.deck.pop();
     this.currentState = 2;
     this.gameOver = false;
@@ -179,6 +179,16 @@ class FrequencyGame {
     return frequencyState[this.currentState];
   }
 
+  getActivePlayers(){
+    const teams = this.redTeam.concat(this.blueTeam);
+    return teams.filter(player => player.activePlayer).map(player => player._id);
+  }
+
+  userIsActivePlayer(userId){
+    const ids = this.getActivePlayers();
+    return ids.some(id => id.equals(userId));
+  }
+
   checkGuess(guess){
     switch(true){
       case (guess >= this.dial - 2 && guess <= this.dial + 2):
@@ -219,7 +229,7 @@ class FrequencyGame {
     this.currentCard = this.deck.pop();
     this.clue = null;
     this.leftOrRight = null;
-    this.guess = null;
+    this.guess = 90;
     this.dialRevealed = false;
 
     if(this.demoGame){
@@ -330,6 +340,8 @@ class FrequencyGame {
     if(data.botTurn){
       this.randomGuess()
     } else {
+      console.log("not bot guess")
+
       this.guess = data.guess;
     }
 
