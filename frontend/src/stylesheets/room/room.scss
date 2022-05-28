@@ -114,6 +114,7 @@
 
     li {
         padding: 4px 4px;
+        font-size: 36px;
     }
 }
 
@@ -132,7 +133,7 @@
     background-color: #fff;
     opacity: 0.9;
     border: 2px solid $coral;
-    font-size: 22px;
+    font-size: 30px;
     overflow: scroll;
 }
 
@@ -143,7 +144,7 @@
     margin-bottom: 8px;
 
     span:first-child {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     input {
@@ -156,14 +157,14 @@
     }
 
     :last-child {
-        width: 60px;
+        width: 70px;
         height: 30px;
         background-color: $bronze;
         border-radius: 12px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         border: none;
         font-family: "Really-Free";
-        font-size: 22px;
+        font-size: 28px;
         cursor: pointer;
         color: $text;
     }

@@ -14,20 +14,57 @@
   height: 220px;
 }
 
-.six-game-logo, .freq-game-logo {
+.six-game-logo {
   height: 200px;
   width: 200px;
   margin: 8px 8px;
-  background-color: aliceblue;
+  background-color: rgb(245, 167, 167);
   border-radius: 10px;
   cursor: pointer;
   position: relative;
+}
+
+.freq-game-logo {
+  height: 200px;
+  width: 200px;
+  margin: 8px 8px;
+  background-color: rgb(244, 244, 152);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.gi-bull-top-left {
+  color: red;
+  position: absolute;
+  left: 2px;
+}
+
+.gi-bull-top-right {
+  color: red; 
+  position: absolute;
+  right: 2px;
+}
+
+.gi-bull-bot-left {
+  color: red;
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+}
+
+.gi-bull-bot-right {
+  color: red;
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
 }
 
 .freq-game-logo > h1 {
   text-align: center;
   color: tan;
   font-size: 32px;
+  
 }
 
 .tile-logo {
@@ -65,7 +102,6 @@
 
   h1 {
     font-size: 48px;
-    margin-right: 20px;
   }
 }
 
@@ -77,6 +113,18 @@
     font-size: 32px;
     color: $text;
     width: 100%;
+
+    .lobby-head {
+      font-size: 52px;
+      text-align: center;
+      text-decoration: underline;
+    }
+
+    #logo {
+      font-size: 52px;
+      font-family: "Om-Botak";
+      color: $coral;
+    }
 }
 
 .create-room, .search-rooms {
@@ -124,10 +172,13 @@
 .search-room-input {
   height: 20px;
   width: 250px;
+  font-family: "Really-Free";
+  font-size: 22px;
 }
 
 .search-title {
   text-align: center;
+  font-size: 34px;
 }
 
 .lobby-rooms {
@@ -198,11 +249,29 @@
     }
   }
 
+  .freq-teams {
+    display: flex;
+    justify-content: space-evenly;
+
+    .red, .blue {
+      text-align: center;
+      text-decoration: underline;
+      color: $title;
+    }
+
+    .red {
+      color: red;
+    }
+
+    .blue {
+      color: blue;
+    }
+  }
+
   @for $i from 1 through length($colors) {
     .room-container:nth-child(#{length($colors)}n+#{$i}) {
       background: nth($colors, $i)
     }
   }
 }
-
 
