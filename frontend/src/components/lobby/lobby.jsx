@@ -190,7 +190,7 @@ class Lobby extends React.Component {
 
                             return <motion.li key={idx} className='room-container' animate={{ x: [sign, 0], scale: [0.1, 1] }} transition={{ ease: "easeOut", duration: 0.8 }}>
                             <h1>{room.name}</h1>
-                            <h2>Game: {room.game}</h2>
+                            <h2>{room.game}</h2>
                             <div className='room-members'>
                                 {this.renderUsers(room)}
                             </div>
