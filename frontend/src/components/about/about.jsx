@@ -46,7 +46,7 @@ const AboutDevelopers = () => {
                     <div className='connect-links'>
                         <span>Connect: </span>
                         <a href='https://github.com/sodea1'><img src={github} /></a>
-                        <a href='https://linkedin.com/sodea1'><img className='linkedin' src={linkedin} /></a>
+                        <a href='https://www.linkedin.com/in/seanodea1/'><img className='linkedin' src={linkedin} /></a>
                         <a href='https://angel.co/u/sean-o-dea-4'><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
