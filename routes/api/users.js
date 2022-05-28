@@ -8,7 +8,6 @@ const passport = require('passport');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 const validateUpdatePassword = require('../../validation/update/update_password');
-const validateUpdateAvatar = require('../../validation/update/update_avatar');
 const validateUpdateProfile = require('../../validation/update/update_profile');
 const { db } = require("../../models/User");
 const { json } = require("express/lib/response");
@@ -83,8 +82,9 @@ router.post('/login', (req, res) => {
   
   const email = req.body.email;
   const password = req.body.password;
-  
+
   User.findOne({email})
+    .select("+password") // Schema password is set to select: false so other queries don't retrieve password
     .then(user => {
       if (!user) {
         errors.email = 'User not found'
@@ -233,21 +233,4 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
       })
     .catch(errors => res.status(400).json(errors))
   }
-})
-
-router.patch('/update-avatar', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log(req)
-  const { errors, isValid } = validateUpdateAvatar(req.body);
-  
-  if (!isValid){
-    return res.status(400).json(errors);
-  }
-  
-  User.findById(req.user.id)
-    .then(user => {
-      user.set(req.body)
-      user.save()
-        .then(savedUser => res.json(savedUser))
-      })
-    .catch(errors => res.status(422).json(errors))
 })

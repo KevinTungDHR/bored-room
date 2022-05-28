@@ -6,7 +6,8 @@ module.exports = function validateUpdateProfile(data) {
 
   data.handle = validText(data.handle) ? data.handle : '';
   data.email = validText(data.email) ? data.email : '';
-
+  data.avatar = validText(data.avatar) ? data.avatar : '';
+  
   if (!Validator.isLength(data.handle, { min: 2, max: 30 })) {
     errors.handle = 'Handle must be between 2 and 30 characters';
   }
