@@ -42,7 +42,8 @@ const AboutDevelopers = () => {
                     <img className='headshot' src={sean} />
                     <span className='name'>Sean O'Dea</span>
                     <span className='role'>Frontend Lead</span>
-                    <p className='bio-description'>Sea </p>
+                    <p className='bio-description'>An inquisitive learner, critical thinker, and creativer doer. Sean loves to learn new technologies, apply his skills judiciously, and exercise his creative mind to build excellent products.</p>
+                    <br />
                     <div className='connect-links'>
                         <span>Connect: </span>
                         <a href='https://github.com/sodea1'><img src={github} /></a>
