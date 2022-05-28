@@ -12,7 +12,6 @@ class Profile extends React.Component {
         super(props);
 
         this.state = {
-            user: {},
             btn: 'Edit Profile',
             background: game_table
             // currImg: 1
@@ -26,34 +25,26 @@ class Profile extends React.Component {
         this.changeBackground = this.changeBackground.bind(this);
     }
 
-    componentDidMount() {
-        this.props.fetchCurrentUser()
+    componentDidMount(){
+        this.setState({user: {...this.props.user}})            
     }
 
     componentDidUpdate(prevProps){
-        if(prevProps.user !== this.props.user) {
-            this.setState({user: this.props.user})            
+        if (prevProps.user !== this.props.user){
+            this.setState({user: {...this.props.user}})  
         }
     }
 
     handleChangeBio(e) {
-        let newState = this.state;
-        newState.user.bio = e.target.value;
-        this.setState(newState);
-        // this.setState({user: {bio: e.target.value}})
+        this.setState((prevState) => ({ user: { ...prevState.user, bio: e.target.value }}))
     }
 
     handleChangeHandle(e) {
-        let newState = this.state;
-        newState.user.handle = e.target.value;
-        this.setState(newState);
-        // this.setState({user: {handle: e.target.value}})
+        this.setState((prevState) => ({ user: { ...prevState.user, handle: e.target.value }}))
     }
 
     handleChangeEmail(e) {
-        let newState = this.state;
-        newState.user.email = e.target.value;
-        this.setState(newState);
+        this.setState((prevState) => ({ user: { ...prevState.user, email: e.target.value }}))
     }
 
     toggleBtn(e) {
@@ -75,7 +66,7 @@ class Profile extends React.Component {
         button.className = (prevBtn === 'Edit Profile') ? 'profile-save-btn' : 'profile-edit-btn';
         if (prevBtn === 'Save') {
             this.props.updateUser(this.state.user);
-            this.setState({ newState })
+            this.setState({ ...newState })
         }
         
     }
@@ -95,7 +86,7 @@ class Profile extends React.Component {
             'monkey': monkey,
             'socrates': socrates
         };
-        const { email, bio, handle, eloRating, avatar } = this.props.user;
+        const { email, bio, handle, eloRating, avatar } = this.state.user;
         
         return (
             <div className='profile-container' style={{ backgroundImage: "url(" + this.state.background + ")" }}>
@@ -166,10 +157,9 @@ class Profile extends React.Component {
     }
 
     render() {        
-        
         return (
             <div>
-                {this.props.user && this.profile()}
+                {this.state.user && this.profile()}
             </div>
 
         )
