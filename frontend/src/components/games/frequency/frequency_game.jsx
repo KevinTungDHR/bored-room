@@ -8,11 +8,13 @@ import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 
 const FrequencyGame = ({ roomCode, socket }) => {
-  const [isAnimating, setIsAnimating] = useState(false);
   const [leftOrRight, setLeftOrRight] = useState("");
-  const [stateQueue, setStateQueue] = useState([]);
   const [clue, setClue] = useState("");
   const [guess, setGuess] = useState(90);
+  const [isDelayed, setIsDelayed] = useState(false);
+  const [stateQueue, setStateQueue] = useState([]);
+  const [timers, setTimers] = useState([]);
+  const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
   const sessionId = useSelector(state => state.session.user.id);
@@ -27,31 +29,51 @@ const FrequencyGame = ({ roomCode, socket }) => {
   useEffect(() => {
     dispatch(fetchGame(roomCode));
     socket.on('game_updated', (game) => {
-      if(stateQueue.length !== 0 || isAnimating){
-        setStateQueue(oldState => [...oldState, game])
-      } else {
-        dispatch(receiveGame(game))
-      }
+      setStateQueue(oldState =>  [...oldState, game])
     });
+   
     socket.on('guess_updated',(data) => {
       setGuess(data.guess)
     })
     socket.on('selection_updated', (data) => {
       setLeftOrRight(data.leftOrRight)
     })
+
+    return () => {
+      timerRef.current.forEach(timer => clearTimeout(timerRef));
+    }
   },[]);
+
+  useEffect(() => {
+    if(!isDelayed && stateQueue.length > 0){
+      let nextUpdate = stateQueue[0];
+      if(nextUpdate.assets.demoGame && nextUpdate.botTurn) {
+        setIsDelayed(true)
+       
+        const timer = setTimeout(() => {
+          setStateQueue(oldState => oldState.slice(1));
+          dispatch(receiveGame({ gameState: nextUpdate.gameState, assets: nextUpdate.assets }))
+          if(nextUpdate.gameState.name === 'LEFT_RIGHT_PHASE'){
+            setGuess(nextUpdate.assets.guess);
+          }
+          setIsDelayed(false)
+          setTimers(oldState => oldState.slice(1));
+        }, 2500);
+
+        setTimers(oldState => [...oldState, timer]);
+        // Need to clearTimeout but it's being called on every rerender
+      } else {
+        setStateQueue(oldState => oldState.slice(1));
+        dispatch(receiveGame({ gameState: nextUpdate.gameState, assets: nextUpdate.assets }))
+      }
+    } 
+  }, [stateQueue, isDelayed])
+
+
 
   const updateSelection = () => {
     socket.emit("updateSelection", { roomCode: roomCode, leftOrRight: leftOrRight })
   }
-
-  useEffect(() => {
-    if(!isAnimating && stateQueue.length > 0){
-      let nextUpdate = stateQueue[0];
-      setStateQueue(oldState => oldState.slice(1));
-      dispatch(receiveGame(nextUpdate))
-    }
-  }, [isAnimating])
 
   useEffect(() => {
     if(!gameState){
@@ -61,6 +83,10 @@ const FrequencyGame = ({ roomCode, socket }) => {
       setClue("");
       setGuess(90);
       setLeftOrRight("");
+    }
+
+    if(gameState.name !== 'PSYCHIC_PHASE'){
+      setGuess(assets.guess)
     }
   }, [gameState])
 
@@ -165,7 +191,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     const allPlayers = blueTeam.concat(redTeam);
     const player = allPlayers.find(player => player._id === sessionId);
 
-    if (player.isPsychic) {
+    if (player.isPsychic || assets.dialRevealed) {
       drawTarget(ctx)
     } else {
       drawShield(ctx)
@@ -273,7 +299,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <span>{assets.bluePoints}</span>
               <ul>
                 {blueUsers.map(player => <li className='handle-li'>
-                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />
                   {player.handle}</li>)}
               </ul>
@@ -287,7 +313,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               <span>{assets.redPoints}</span>
               <ul>
                 {redUsers.map(player => <li className='handle-li'>
-                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer
+                  <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />{player.handle}</li>)}
               </ul>
             </div>
@@ -350,20 +376,29 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
     if (gameState) {
       let teams = redTeam.concat(blueTeam);
+      let userActive = teams.find(player => player._id === sessionId).activePlayer
       let psychic = teams.find(player => player.isPsychic === true);
       const actionDescriptions = {
         "giveClue": "Give Clue",
         "makeGuess": "Make Guess",
         "chooseLeftRight": "Choose Left or Right",
-        "scorePoints": "Tally Points"
+        "scorePoints": "Tally Points",
+        "nextRound": "Reveal Phase"
+      }
+
+      const botDescriptions = {
+        "giveClue": "DemoBot is thinking of a clue",
+        "makeGuess": "DemoBot is making a guess",
+        "chooseLeftRight": "DemoBots are choosing Left or Right",
+        "scorePoints": "Tallying Points",
+        "nextRound": "Reveal Phase"
       }
       const allPlayers = blueTeam.concat(redTeam);
       return (
           <div className='frequency-outer-div'>
             <div className='room-code'>In Room: {roomCode}</div>
-          {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {actionDescriptions[action]}</span></h1>)}
+          {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {assets.demoGame && !userActive ? botDescriptions[action] : actionDescriptions[action]}</span></h1>)}
             {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
-            
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
               <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
@@ -376,6 +411,8 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderClueForm()} 
               {renderSliderAndConfirm()}
               {renderLeftOrRight()}
+              {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
+              {gameState.name === 'REVEAL_PHASE' && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
               {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
             </div>
 

@@ -67,7 +67,9 @@ const Room = () => {
         TakingSixUtil.createDemo(roomCode, rooms[roomCode]?.seatedUsers);
         break;
       case 'Frequency':
-        return
+        const { redTeam, blueTeam } = rooms[roomCode]
+        FrequencyUtil.createDemo(roomCode, { redTeam, blueTeam })
+        break;
       default:
         return null;
     }

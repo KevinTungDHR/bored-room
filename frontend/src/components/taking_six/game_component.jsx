@@ -44,10 +44,10 @@ const GameComponent = ({ roomCode, socket }) => {
       let nextUpdate = stateQueue[0];
       if(nextUpdate.gameState.type === 'automated') {
         setIsDelayed(true)
-        setStateQueue(oldState => oldState.slice(1));
-        dispatch(receiveGame(nextUpdate))
 
         const timer = setTimeout(() => {
+          setStateQueue(oldState => oldState.slice(1));
+          dispatch(receiveGame(nextUpdate))
           setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
         }, 1000);

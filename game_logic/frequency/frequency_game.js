@@ -2,7 +2,8 @@ const frequencyState = require('./frequency_state');
 const Card = require('./models/card');
 const mongoose = require('mongoose');
 const db = require('../../config/keys').mongoURI;
-
+const { demo_cards } = require('./demo_cards')
+const { demo_clues } = require('./demo_clues')
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => console.log("Connected to MongoDB successfully"))
@@ -13,6 +14,7 @@ class FrequencyGame {
   constructor(data){
     this.name = "Frequency";
     if(data){
+      this.demoGame = data.demoGame;
       this.deck = data.deck;
       this.currentCard = data.currentCard;
       this.discard = data.discard;
@@ -28,6 +30,8 @@ class FrequencyGame {
       this.redPoints = data.redPoints;
       this.bluePoints = data.bluePoints;
       this.leftOrRight = data.leftOrRight;
+      this.dialRevealed = data.dialRevealed;
+      this.demoTurnCounter = data.demoTurnCounter;
 
       this.currentState = data.currentState;
       this.gameOver = data.gameOver;
@@ -38,17 +42,21 @@ class FrequencyGame {
 
   async setupNewGame({redTeam, blueTeam}){
     this.name = "Frequency";
-    this.discard = []
+    this.demoGame = false;
+    this.discard = [];
     this.redTeam = [];
     this.blueTeam = [];
     this.redPsychic = 0;
     this.bluePsychic = 0;
     this.redPoints = 0;
     this.bluePoints = 0;
-    this.guess = null;
+    this.guess = 90;
     this.clue = null;
     this.dial = null;
     this.leftOrRight = null;
+    this.dialRevealed = false;
+    this.demoTurnCounter = 0;
+
 
     await Card.find()
     .then(data => this.deck = (data))
@@ -80,6 +88,49 @@ class FrequencyGame {
     this.gameOver = false;
   }
 
+  async setupDemoGame({redTeam, blueTeam}, redStart){
+    this.name = "Frequency";
+    this.demoGame = true;
+    this.discard = [];
+    this.redTeam = [];
+    this.blueTeam = [];
+    this.redPsychic = 0;
+    this.bluePsychic = 0;
+    this.redPoints = 0;
+    this.bluePoints = 0;
+    this.guess = 90;
+    this.clue = null;
+    this.dial = null;
+    this.leftOrRight = null;
+    this.dialRevealed = false;
+    this.demoTurnCounter = 0;
+
+    this.deck = demo_cards.reverse();
+
+    redTeam.forEach((player) => {
+      this.redTeam.push({
+        _id: player._id,
+        activePlayer: false,
+        isPsychic: false
+      })
+    })
+
+    blueTeam.forEach((player) => {
+      this.blueTeam.push({
+        _id: player._id,
+        activePlayer: false,
+        isPsychic: false
+      })
+    })
+
+    this.activeTeam = redStart ? 'red' : 'blue'
+    this.selectStartingPsychic();
+    this.dial = demo_clues[this.demoTurnCounter].dial;
+    this.currentCard = this.deck.pop();
+    this.currentState = 2;
+    this.gameOver = false;
+  }
+
   selectRandomStartTeam() {
     this.activeTeam = Math.random() < 0.5 ? 'red' : 'blue'
   }
@@ -100,7 +151,7 @@ class FrequencyGame {
     })
   }
 
-  setActiveTeamFalse(team){
+  setActivePlayersFalse(team){
     team.forEach(player => player.activePlayer = false)
   }
 
@@ -126,6 +177,16 @@ class FrequencyGame {
 
   getState() {
     return frequencyState[this.currentState];
+  }
+
+  getActivePlayers(){
+    const teams = this.redTeam.concat(this.blueTeam);
+    return teams.filter(player => player.activePlayer).map(player => player._id);
+  }
+
+  userIsActivePlayer(userId){
+    const ids = this.getActivePlayers();
+    return ids.some(id => id.equals(userId));
   }
 
   checkGuess(guess){
@@ -166,10 +227,28 @@ class FrequencyGame {
   newTurnSetup(){
     this.discard.push(this.currentCard)
     this.currentCard = this.deck.pop();
-    this.setRandomDial();
     this.clue = null;
     this.leftOrRight = null;
-    this.guess = null;
+    this.guess = 90;
+    this.dialRevealed = false;
+
+    if(this.demoGame){
+      this.demoTurnCounter += 1;
+      this.dial = demo_clues[this.demoTurnCounter].dial
+    } else {
+      this.setRandomDial();
+    }
+  }
+
+  randomGuess(){
+    if(Math.random() < 0.75){
+      this.guess = (Math.floor(Math.random() * 25) + this.dial - 12)
+    } else {
+      this.guess = Math.floor(Math.random() * 181)
+    }
+  }
+  randomLeftOrRight(){
+    this.leftOrRight = Math.random() < 0.5 ? 'left' : 'right'
   }
 
   setNewRedPsychic(){
@@ -188,16 +267,15 @@ class FrequencyGame {
     let newPsychic = this.blueTeam[this.bluePsychic % this.blueTeam.length]
     newPsychic.isPsychic = true;
     newPsychic.activePlayer = true;
-
   }
 
   switchTurn(){
     if(this.activeTeam === 'red'){
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.blueTeam);
       this.setNewBluePsychic()
       this.activeTeam = 'blue';
     } else {
-      this.setActiveTeamFalse(this.blueTeam);
+      this.setActivePlayersFalse(this.redTeam);
       this.setNewRedPsychic()
       this.activeTeam = 'red';
     }
@@ -207,12 +285,10 @@ class FrequencyGame {
 
   activeTeamGoesAgain(){
     if(this.activeTeam === 'red'){
-      this.setActiveTeamFalse(this.blueTeam);
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.blueTeam);
       this.setNewRedPsychic()
     } else {
-      this.setActiveTeamFalse(this.blueTeam);
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.redTeam);
       this.setNewBluePsychic()
     }
 
@@ -239,8 +315,15 @@ class FrequencyGame {
     this.dial = Math.floor(Math.random() * 181);
   }
 
+  // State Actions Below
+
   giveClue(data) {
-    this.clue = data.clue;
+    if(data.botTurn){
+      this.clue = demo_clues[this.demoTurnCounter].clue
+    } else {
+      this.clue = data.clue;
+    }
+  
     if(this.activeTeam === 'red'){
       this.setActiveTeam(this.redTeam);
       this.redTeam[this.redPsychic % this.redTeam.length].activePlayer = false;
@@ -254,13 +337,19 @@ class FrequencyGame {
   }
 
   makeGuess(data){
-    this.guess = data.guess;
+    if(data.botTurn){
+      this.randomGuess()
+    } else {
+      console.log("not bot guess")
+
+      this.guess = data.guess;
+    }
 
     if(this.activeTeam === 'red'){
-      this.setActiveTeamFalse(this.redTeam);
+      this.setActivePlayersFalse(this.redTeam);
       this.setActiveTeam(this.blueTeam);
     } else {
-      this.setActiveTeamFalse(this.blueTeam);
+      this.setActivePlayersFalse(this.blueTeam);
       this.setActiveTeam(this.redTeam);
     }
 
@@ -269,13 +358,18 @@ class FrequencyGame {
   }
 
   chooseLeftRight(data){
-    this.leftOrRight = data.leftOrRight;
+    if(data.botTurn){
+      this.randomLeftOrRight()
+    } else {
+      this.leftOrRight = data.leftOrRight;
+    }
 
     const nextState = this.getState().transitions.SCORE_PHASE;
     this.setState(nextState);
   }
 
   scorePoints(data) {
+    this.dialRevealed = true;
     let points = this.checkGuess(this.guess);
 
     if(this.activeTeam === 'red'){
@@ -286,22 +380,29 @@ class FrequencyGame {
       this.redPoints += this.checkLeftOrRight();
     }
 
-    let [currentTeamPts, opposingTeamPts] = this.activeTeam === 'red' ? [this.redPoints, this.bluePoints] : [this.bluePoints, this.redPoints]
-
     if(this.isGameOver()){
+      this.gameOver = true;
       const nextState = this.getState().transitions.GAME_END;
       this.setState(nextState);
-      return;
-    } else if(points === 4 && currentTeamPts < opposingTeamPts) {
+    } else {
+      const nextState = this.getState().transitions.REVEAL_PHASE;
+      this.setState(nextState);
+    }
+  }
+
+  nextRound(data){
+    let points = this.checkGuess(this.guess);
+    let [currentTeamPts, opposingTeamPts] = this.activeTeam === 'red' ? [this.redPoints, this.bluePoints] : [this.bluePoints, this.redPoints]
+    
+    if(points === 4 && currentTeamPts < opposingTeamPts) {
       this.activeTeamGoesAgain();
     } else {
       this.switchTurn();
     }
-    
+
     const nextState = this.getState().transitions.PSYCHIC_PHASE;
     this.setState(nextState);
   }
-
 };
 
 module.exports = FrequencyGame;

@@ -1,0 +1,12 @@
+exports.demo_clues = [{dial: 160, clue: "The first day of summer"},
+{dial: 100,	clue: "Star Wars"},
+{dial: 150,	clue: "A swimming pool"},
+{dial: 20,	clue: "The Shawshank Redemption"},
+{dial: 70,	clue: "Speed Chess"},
+{dial: 10,	clue: "Mr. Rogers"},
+{dial: 30,	clue: "Pineapple Pizza"},
+{dial: 95,	clue: "A salad"},
+{dial: 25,	clue: "Airplane Seats"},
+{dial: 35,	clue: "Pudding"},
+{dial: 160,	clue: "Gummy Bears"},
+]
