@@ -380,8 +380,6 @@ class FrequencyGame {
       this.redPoints += this.checkLeftOrRight();
     }
 
-    let [currentTeamPts, opposingTeamPts] = this.activeTeam === 'red' ? [this.redPoints, this.bluePoints] : [this.bluePoints, this.redPoints]
-
     if(this.isGameOver()){
       this.gameOver = true;
       const nextState = this.getState().transitions.GAME_END;

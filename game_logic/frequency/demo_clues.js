@@ -1,5 +1,5 @@
 exports.demo_clues = [{dial: 160, clue: "The first day of summer"},
-{dial: 100,	right: "Star Wars"},
+{dial: 100,	clue: "Star Wars"},
 {dial: 150,	clue: "A swimming pool"},
 {dial: 20,	clue: "The Shawshank Redemption"},
 {dial: 70,	clue: "Speed Chess"},

@@ -389,7 +389,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
       const botDescriptions = {
         "giveClue": "DemoBot is thinking of a clue",
         "makeGuess": "DemoBot is making a guess",
-        "chooseLeftRight": "DemoBot is choosing Left or Right",
+        "chooseLeftRight": "DemoBots are choosing Left or Right",
         "scorePoints": "Tallying Points",
         "nextRound": "Reveal Phase"
       }
@@ -411,6 +411,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderClueForm()} 
               {renderSliderAndConfirm()}
               {renderLeftOrRight()}
+              {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
               {gameState.name === 'REVEAL_PHASE' && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
               {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
             </div>
