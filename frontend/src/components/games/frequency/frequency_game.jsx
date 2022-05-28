@@ -8,7 +8,6 @@ import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 
 const FrequencyGame = ({ roomCode, socket }) => {
-  const [isAnimating, setIsAnimating] = useState(false);
   const [leftOrRight, setLeftOrRight] = useState("");
   const [stateQueue, setStateQueue] = useState([]);
   const [clue, setClue] = useState("");
@@ -27,12 +26,9 @@ const FrequencyGame = ({ roomCode, socket }) => {
   useEffect(() => {
     dispatch(fetchGame(roomCode));
     socket.on('game_updated', (game) => {
-      if(stateQueue.length !== 0 || isAnimating){
-        setStateQueue(oldState => [...oldState, game])
-      } else {
-        dispatch(receiveGame(game))
-      }
+      dispatch(receiveGame(game))
     });
+    
     socket.on('guess_updated',(data) => {
       setGuess(data.guess)
     })
@@ -44,14 +40,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const updateSelection = () => {
     socket.emit("updateSelection", { roomCode: roomCode, leftOrRight: leftOrRight })
   }
-
-  useEffect(() => {
-    if(!isAnimating && stateQueue.length > 0){
-      let nextUpdate = stateQueue[0];
-      setStateQueue(oldState => oldState.slice(1));
-      dispatch(receiveGame(nextUpdate))
-    }
-  }, [isAnimating])
 
   useEffect(() => {
     if(!gameState){

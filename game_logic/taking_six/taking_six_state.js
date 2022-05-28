@@ -75,7 +75,6 @@ const state = {
   99: {
     name: "GAME_END",
     description: "Game Over",
-    type: "automated",
     actions: ["gameEnd"],
   }
 };

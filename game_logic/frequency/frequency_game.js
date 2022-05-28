@@ -2,7 +2,8 @@ const frequencyState = require('./frequency_state');
 const Card = require('./models/card');
 const mongoose = require('mongoose');
 const db = require('../../config/keys').mongoURI;
-
+const { demo_cards } = require('./demo_cards')
+const { demo_clues } = require('./demo_clues')
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => console.log("Connected to MongoDB successfully"))
@@ -13,6 +14,7 @@ class FrequencyGame {
   constructor(data){
     this.name = "Frequency";
     if(data){
+      this.demoGame = data.demoGame;
       this.deck = data.deck;
       this.currentCard = data.currentCard;
       this.discard = data.discard;
@@ -29,6 +31,7 @@ class FrequencyGame {
       this.bluePoints = data.bluePoints;
       this.leftOrRight = data.leftOrRight;
       this.dialRevealed = data.dialRevealed;
+      this.demoTurnCounter = data.demoTurnCounter;
 
       this.currentState = data.currentState;
       this.gameOver = data.gameOver;
@@ -39,6 +42,7 @@ class FrequencyGame {
 
   async setupNewGame({redTeam, blueTeam}){
     this.name = "Frequency";
+    this.demoGame = false;
     this.discard = [];
     this.redTeam = [];
     this.blueTeam = [];
@@ -51,6 +55,8 @@ class FrequencyGame {
     this.dial = null;
     this.leftOrRight = null;
     this.dialRevealed = false;
+    this.demoTurnCounter = 0;
+
 
     await Card.find()
     .then(data => this.deck = (data))
@@ -77,6 +83,49 @@ class FrequencyGame {
     this.selectStartingPsychic();
     this.setRandomDial()
     this.shuffleCards();
+    this.currentCard = this.deck.pop();
+    this.currentState = 2;
+    this.gameOver = false;
+  }
+
+  async setupDemoGame({redTeam, blueTeam}, redStart){
+    this.name = "Frequency";
+    this.demoGame = true;
+    this.discard = [];
+    this.redTeam = [];
+    this.blueTeam = [];
+    this.redPsychic = 0;
+    this.bluePsychic = 0;
+    this.redPoints = 0;
+    this.bluePoints = 0;
+    this.guess = null;
+    this.clue = null;
+    this.dial = null;
+    this.leftOrRight = null;
+    this.dialRevealed = false;
+    this.demoTurnCounter = 0;
+
+    this.deck = demo_cards.reverse();
+
+    redTeam.forEach((player) => {
+      this.redTeam.push({
+        _id: player._id,
+        activePlayer: false,
+        isPsychic: false
+      })
+    })
+
+    blueTeam.forEach((player) => {
+      this.blueTeam.push({
+        _id: player._id,
+        activePlayer: false,
+        isPsychic: false
+      })
+    })
+
+    this.activeTeam = redStart ? 'red' : 'blue'
+    this.selectStartingPsychic();
+    this.setRandomDial()
     this.currentCard = this.deck.pop();
     this.currentState = 2;
     this.gameOver = false;
@@ -168,11 +217,28 @@ class FrequencyGame {
   newTurnSetup(){
     this.discard.push(this.currentCard)
     this.currentCard = this.deck.pop();
-    this.setRandomDial();
     this.clue = null;
     this.leftOrRight = null;
     this.guess = null;
     this.dialRevealed = false;
+
+    if(this.demoGame){
+      this.demoTurnCounter += 1;
+      this.dial = demo_clues[this.demoTurnCounter].dial
+    } else {
+      this.setRandomDial();
+    }
+  }
+
+  randomGuess(){
+    if(Math.random() < 0.75){
+      this.guess = (Math.floor(Math.random() * 25) + this.dial - 12)
+    } else {
+      this.guess = Math.floor(Math.random() * 181)
+    }
+  }
+  randomLeftOrRight(){
+    this.leftOrRight = Math.random() < 0.5 ? 'left' : 'right'
   }
 
   setNewRedPsychic(){
@@ -242,7 +308,12 @@ class FrequencyGame {
   // State Actions Below
 
   giveClue(data) {
-    this.clue = data.clue;
+    if(data.botTurn){
+      this.clue = demo_clues[this.demoTurnCounter].clue
+    } else {
+      this.clue = data.clue;
+    }
+  
     if(this.activeTeam === 'red'){
       this.setActiveTeam(this.redTeam);
       this.redTeam[this.redPsychic % this.redTeam.length].activePlayer = false;
@@ -256,7 +327,11 @@ class FrequencyGame {
   }
 
   makeGuess(data){
-    this.guess = data.guess;
+    if(data.botTurn){
+      this.randomGuess()
+    } else {
+      this.guess = data.guess;
+    }
 
     if(this.activeTeam === 'red'){
       this.setActivePlayersFalse(this.redTeam);
@@ -271,7 +346,11 @@ class FrequencyGame {
   }
 
   chooseLeftRight(data){
-    this.leftOrRight = data.leftOrRight;
+    if(data.botTurn){
+      this.randomLeftOrRight()
+    } else {
+      this.leftOrRight = data.leftOrRight;
+    }
 
     const nextState = this.getState().transitions.SCORE_PHASE;
     this.setState(nextState);

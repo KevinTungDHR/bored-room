@@ -1,0 +1,17 @@
+exports.demo_cards = [{left: "Worst day of the year",	right: "Best day of the year"},
+{left: "Fantasy",	right: "Sci-Fi"},
+{left: "Underrated thing to own",	right: "Overrated thing to own"},
+{left: "Movie that Godzilla would ruin",	right: "Movie that Godzilla would improve"},
+{left: "Mental activity",	right: "Physical activity"},
+{left: "Genuine person",	right: "Phony person"},
+{left: "Bad pizza topping",	right: "Good pizza topping"},
+{left: "Snack",	right: "Meal"},
+{left: "Too small",	right: "Too big"},
+{left: "Bad mouthfeel",	right: "Good mouthfeel"},
+{left: "Bad candy",	right: "Good candy"},
+{left: "Mildly addictive",	right: "Highly addictive"},
+{left: "Hot",	right: "Cold"},
+{left: "Geek",	right: "Dork"},
+{left: "Underrated actor",	right: "Overrated actor"},
+{left: "Guilty pleasure",	right: "Openly love"}
+]
