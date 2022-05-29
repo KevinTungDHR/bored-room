@@ -10,8 +10,8 @@
     bottom: 0;
     overflow: hidden;
     width: 100%;
-    background-color: rgba(0, 0, 0, .25);
-    z-index: 20;
+    background-color: rgba(0, 0, 0, .3);
+    z-index: 1;
     transition: 0.2s;
 }
 
@@ -24,7 +24,7 @@
     top: 35%;
     left: 50%;
     transform: translate(-50%, 0);
-    // z-index: 1;
+    z-index: 20;
 }
 
 .profile-avatar-modal {
