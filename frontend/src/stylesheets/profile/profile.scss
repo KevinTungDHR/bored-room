@@ -40,6 +40,7 @@
     justify-content: space-evenly;
     align-items: center;
     height: 550px;
+    min-width: 500px;
     margin-right: 20px;
     padding-bottom: 10px;
     background-color: $tan;
@@ -49,12 +50,19 @@
 
     input[type=text] {
         font-family: 'Om-Botak';
-        font-size: 50px;
-        background: none;
+        font-size: 32px;
+        background: #fff;
         border: none;
+        border-radius: 10px;
         color: $text;
         text-align: center;
         cursor: auto;
+        outline: none;
+        margin-bottom: 8px;
+
+        &:disabled {
+            background: none;
+        }
     }
 
     textarea {

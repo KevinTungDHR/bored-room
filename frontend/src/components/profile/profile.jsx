@@ -23,6 +23,7 @@ class Profile extends React.Component {
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.profile = this.profile.bind(this);
         this.changeBackground = this.changeBackground.bind(this);
+        this.adjustWidth = this.adjustWidth.bind(this);
     }
 
     componentDidMount(){
@@ -52,21 +53,26 @@ class Profile extends React.Component {
         let handle = document.getElementById('profile-handle');
         let description = document.getElementById('profile-description');
         let email = document.getElementById('profile-email');
-        let newState = this.state;
-        let prevBtn = newState.btn;
+        let copiedState = this.state;
+        let prevBtn = copiedState.btn;
 
-        newState.btn = (newState.btn === 'Edit Profile') ? 'Save' : 'Edit Profile'; // switch state value
+        copiedState.btn = (copiedState.btn === 'Edit Profile') ? 'Save' : 'Edit Profile'; // switch state value
 
-        (newState.btn === 'Edit Profile') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
-        (newState.btn === 'Edit Profile') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
-        (newState.btn === 'Edit Profile') ? email.setAttribute("disabled", "true") : email.removeAttribute("disabled");
+        (copiedState.btn === 'Edit Profile') ? handle.setAttribute("disabled", "true") : handle.removeAttribute("disabled");
+        (copiedState.btn === 'Edit Profile') ? description.setAttribute("disabled", "true") : description.removeAttribute("disabled");
+        (copiedState.btn === 'Edit Profile') ? email.setAttribute("disabled", "true") : email.removeAttribute("disabled");
+
+        if (copiedState.btn === 'Save') {
+            handle.style.width = handle.value.length + 1 + 'em';
+            email.style.width = email.value.length + 1 + 'em';
+        }
 
         let button = document.getElementById('profile-btn');
-        button.innerText = (newState.btn === 'Save') ? 'Save' : "Edit Profile";
+        button.innerText = (copiedState.btn === 'Save') ? 'Save' : "Edit Profile";
         button.className = (prevBtn === 'Edit Profile') ? 'profile-save-btn' : 'profile-edit-btn';
         if (prevBtn === 'Save') {
             this.props.updateUser(this.state.user);
-            this.setState({ ...newState })
+            this.setState({ ...copiedState })
         }
         
     }
@@ -77,6 +83,11 @@ class Profile extends React.Component {
         let newState = this.state;
         newState.background = image;
         this.setState({ newState });
+    }
+
+    adjustWidth(e) {
+        const newWidth = e.target.value.length + 1 + 'em';
+        e.target.style.width = newWidth;
     }
 
     profile() {
@@ -103,7 +114,7 @@ class Profile extends React.Component {
                                 <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>
                             </div>
                         </div>
-                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' />
+                        <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' onKeyDown={this.adjustWidth} />
                         <input onChange={this.handleChangeEmail} disabled id='profile-email' type="text" value={email} maxLength='30' />
                         <ul>
                             {Object.keys(this.props.errors).map((error, i) => (
@@ -124,33 +135,6 @@ class Profile extends React.Component {
                         <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
                     </div>
                     
-                    {/* <div className='profile-board'>
-                        <div data-row="1">?</div>
-                        <div data-value="10">?</div>
-                        <div data-value="20">?</div>
-                        <div data-value="30">?</div>
-                        <div data-value="40" id='prize'>?</div>
-                        <div data-value="50">?</div>
-                        <div data-value="60">?</div>
-                        <div data-value="70">?</div>
-                        <div data-value="80">?</div>
-                        <div data-value="90">?</div>
-                        <div data-value="100">?</div>
-                        <div data-value="110">?</div>
-                        <div data-value="120">?</div>
-                        <div data-value="130">?</div>
-                        <div data-value="140">?</div>
-                        <div data-value="150">?</div>
-                        <div data-value="160">?</div>
-                        <div data-value="170">?</div>
-                        <div data-value="180">?</div>
-                        <div data-value="190">?</div>
-                        <div data-value="200">?</div>
-                        <div data-value="210">?</div>
-                        <div data-value="220">?</div>
-                        <div data-value="230">?</div>
-                        <div data-value="240">?</div>
-                    </div> */}
                 </div>
             </div>
         )

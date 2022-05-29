@@ -140,18 +140,17 @@
     margin-bottom: 20px;
     border-radius: 8px;
     text-indent: 20px;
+    font-family: "Really-Free";
+    font-size: 28px;
+    
     &::placeholder {
-      font-family: "Really-Free";
-      font-size: 24px;
-      padding-left: 20px;
+      font-size: 28px;
     }
 
-  }
+    &:focus {
+      outline: none;
+    }
 
-  .create-room-input:focus {
-    outline: none;
-    font-family: 'Really-Free';
-    font-size: 32px;    
   }
 
   .create-btn {
