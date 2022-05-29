@@ -29,8 +29,6 @@ app.use("/api/frequency", frequency);
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
-
-
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('frontend/build'));
   app.get('/', (req, res) => {
