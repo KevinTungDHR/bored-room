@@ -27,7 +27,12 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        this.setState({user: {...this.props.user}})            
+        this.setState({user: {...this.props.user}})
+        document.addEventListener("keydown", event => {
+            if (event.key === 'Escape') {
+                this.props.closeModal()
+            }
+        })
     }
 
     componentDidUpdate(prevProps){
@@ -94,6 +99,12 @@ class Profile extends React.Component {
     adjustWidth(e) {
         const newWidth = e.target.value.length + 1 + 'em';
         e.target.style.width = newWidth;
+    }
+
+    camelize(str) {
+        return str.replace(/(?:^\w|\[A-Z\]|\b\w)/g, (word, index) => {
+            return index === 0 ? word.toLowerCase() : word.toUpperCase();
+        }).replace(/\s+/g, '');
     }
 
     profile() {
