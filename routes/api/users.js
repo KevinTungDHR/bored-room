@@ -11,6 +11,8 @@ const validateUpdatePassword = require('../../validation/update/update_password'
 const validateUpdateProfile = require('../../validation/update/update_profile');
 const { db } = require("../../models/User");
 const { json } = require("express/lib/response");
+const mongoose = require('mongoose');
+
 
 router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
@@ -123,10 +125,10 @@ router.post('/login', (req, res) => {
 router.get('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
   let user;
   try {
-    if (req.body._id === req.user._id){
+    if (req.body._id === req.user._id.toString()){
       user = await User.findById(req.user._id)
     } else {
-      user = await User.findById(req.user._id).select('-rejectedFriends -pendingFriends -requestedFriends')
+      user = await User.findById(req.body._id).select('-rejectedFriends -pendingFriends -requestedFriends')
     }
 
     res.json(user)
@@ -172,36 +174,46 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), async (
 })
 
 router.post('/friends/request', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  const friendId = { _id: req.body.friendId }
-
   try {
-    const requester = await User.findOneAndUpdate({ _id: req.user._id },
-      { $addToSet: { requestedFriends: friendId }},
+    const requester = await User.findOneAndUpdate(
+      { _id: req.user._id, acceptedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) } },
+      { $addToSet: { requestedFriends: mongoose.Types.ObjectId(req.body.friendId) }},
       { new: true })
   
-    const requestee = await User.findOneAndUpdate(friendId,
+    const requestee = await User.findOneAndUpdate(
+      { _id: req.body.friendId, acceptedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) }, rejectedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) } },
       { $addToSet: { pendingFriends: req.user._id }},
       { new: true })
   
-    res.json(requester)
+    res.json(requester || req.user)
   } catch (error) {
     res.status(422).json(error)
   }
-  
+})
+
+
+router.delete('/friends/request', passport.authenticate('jwt', {session: false}), async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate({ _id: req.user._id },
+      { $pull: { pendingFriends: mongoose.Types.ObjectId(req.body.friendId) }},
+      { new: true })
+
+      res.json(user)
+  } catch (error) {
+    res.status(422).json(error)
+  }
 })
 
 router.post('/friends/accept', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  const friendId = { _id: req.body.friendId }
-
   try {
     const user = await User.findOneAndUpdate({ _id: req.user._id },
-      { $addToSet: { acceptedFriends: friendId },
-        $pull: { pendingFriends: friendId }},
+      { $addToSet: { acceptedFriends: req.body.friendId  },
+        $pull: { pendingFriends: mongoose.Types.ObjectId(req.body.friendId) }},
       { new: true })
 
-    const friend = await User.findOneAndUpdate(friendId,
-      { $addToSet: { acceptedFriends: { _id: req.user._id } },
-        $pull: { requestedFriends: { _id: req.user._id } }},
+    const friend = await User.findOneAndUpdate({ _id: req.body.friendId },
+      { $addToSet: { acceptedFriends: req.user._id },
+        $pull: { requestedFriends: req.user._id }},
       { new: true })
 
       res.json(user)
@@ -212,12 +224,11 @@ router.post('/friends/accept', passport.authenticate('jwt', {session: false}), a
 })
 
 router.post('/friends/reject', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  const friendId = { _id: req.body.friendId }
-
   try {
-    const user = await User.findOneAndUpdate({ _id: req.user._id },
-      { $addToSet: { rejectedFriends: friendId },
-        $pull: { pendingFriends: friendId }},
+    const user = await User.findOneAndUpdate(
+      { _id: req.user._id, acceptedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) } },
+      { $addToSet: { rejectedFriends: mongoose.Types.ObjectId(req.body.friendId) },
+        $pull: { pendingFriends: mongoose.Types.ObjectId(req.body.friendId) }},
       { new: true })
 
       res.json(user)
@@ -227,11 +238,9 @@ router.post('/friends/reject', passport.authenticate('jwt', {session: false}), a
 })
 
 router.delete('/friends', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  const friendId = { _id: req.body.friendId }
-
   try {
     const user = await User.findOneAndUpdate({ _id: req.user._id },
-      { $pull: { acceptedFriends: friendId }},
+      { $pull: { acceptedFriends: mongoose.Types.ObjectId(req.body.friendId) }},
       { new: true })
 
       res.json(user)
