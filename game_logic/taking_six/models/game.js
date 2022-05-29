@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const TakingSixGameSchema = new Schema({
   code: {
     type: String,
+    index: true,
+    unique: true,
     required: true
   },
   name: {

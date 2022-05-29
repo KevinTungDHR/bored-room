@@ -4,6 +4,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 const Room = require("../../models/Room");
+const TakingSixModel = require('../../game_logic/taking_six/models/game');
+const FrequencyModel = require('../../game_logic/frequency/models/game');
 
 const generateRoomCode = (length = 6) => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -80,32 +82,39 @@ router.patch('/:code/join', passport.authenticate('jwt', {session: false}), (req
     .catch(err => res.status(422).json({ roomNotFound: "Could not join room"}))
 })
 
-router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.patch('/:code/leave', passport.authenticate('jwt', {session: false}), async (req, res) => {
   let io = req.app.get("io");
 
-  Room.findOne({ code: req.params.code })
+  try {
+    const room = await Room.findOne({ code: req.params.code })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .then(room => {
-      if(!room) {
-        return res.status(404).json("No room");
-      }
+    .exec()
 
-      room.seatedUsers.pull(req.user._id)
+    room.seatedUsers.pull(req.user._id)
 
-      // Delete the room if empty. Might need to change json response
-      if(room.seatedUsers.length < 1) {
-        Room.findOneAndDelete({ code: req.params.code })
-          .then(deleted => res.json(deleted))
-      } else {
-        room.save()
-          .then(room => {
-            io.to(req.params.code).emit("user_leaves", room);
-            io.to('lobby').emit("room_updated", room);
-            res.json("success");
-          })
-        .catch(errs => res.json(errs))
+    // Delete the room if empty. Might need to change json response
+    if(room.seatedUsers.length < 1) {
+      const deletedRoom = await Room.findOneAndDelete({ code: req.params.code })
+      switch(deletedRoom.gameId){
+        case 'takingSix':
+          const deletedTakeSix = await TakingSixModel.findOneAndDelete({ code: req.params.code });
+          break;
+        case 'frequency':
+          const deletedFreq = await FrequencyModel.findOneAndDelete({ code: req.params.code });
+          break;
+        default:
+          break;
       }
-    })
+      res.json(deletedRoom)
+    } else {
+      const savedRoom = await room.save();
+      io.to(req.params.code).emit("user_leaves", savedRoom);
+      io.to('lobby').emit("room_updated", savedRoom);
+      res.json("success");
+    }
+  } catch (errors){
+    errs => res.status(422).json(errs)
+  }
 })
 
 router.patch('/:code/joinTeam', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -169,12 +178,28 @@ router.get('/:code', (req, res) => {
     );
 });
 
-router.delete('/:code', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/:code', passport.authenticate('jwt', {session: false}), async (req, res) => {
   let io = req.app.get("io");
 
-  Room.findOneAndDelete({ code: req.params.code })
-    .then(room => io.to('lobby').emit("room_deleted", req.params.code))
-    .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" }));
+  try {
+    const deletedRoom = await Room.findOneAndDelete({ code: req.params.code })
+    console.log(deletedRoom.gameId);
+    switch(deletedRoom.gameId){
+      case 'takingSix':
+        const deletedTakeSix = await TakingSixModel.findOneAndDelete({ code: req.params.code });
+        break;
+      case 'frequency':
+        const deletedFreq = await FrequencyModel.findOneAndDelete({ code: req.params.code });
+        break;
+      default:
+        break;
+    }
+
+    io.to('lobby').emit("room_deleted", req.params.code)
+    res.json("success");
+  } catch (err) {
+    res.status(404).json({ roomNotFound: "No room with that code exists" })
+  }
 });
 
 module.exports = router;

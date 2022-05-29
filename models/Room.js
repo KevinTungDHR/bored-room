@@ -8,7 +8,9 @@ const RoomSchema = new Schema({
   },
   code: {
     type: String,
-    required: true
+    required: true,
+    index: true,
+    unique: true,
   },
   game: {
     type: String,

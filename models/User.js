@@ -41,16 +41,22 @@ const UserSchema = new Schema({
     required: false,
     default: ""
   },
-  friends: {
-    type: Object,
-    required: false,
-    default: {}
-  }
-  // friendList: {
-  //   type: Object,
-  //   required: false,
-  //   default: {}
-  // }
+  acceptedFriends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  requestedFriends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  pendingFriends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  rejectedFriends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }]
 }, {
   timestamps: true
 })
