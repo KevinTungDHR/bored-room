@@ -152,8 +152,16 @@
         margin-left: 10px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
         border: none;
-        height: 28px;
+        height: 32px;
         border-radius: 6px;
+        font-family: "Really-Free";
+        font-size: 24px;
+        text-indent: 6px;
+
+        &:focus {
+            outline: none;
+        }
+
     }
 
     :last-child {
