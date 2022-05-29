@@ -22,7 +22,7 @@ const CardSelection = ({cards, setIsAnimating, allUsers}) => {
                 return (
                     <div key={i}>
                         <Card card={card[1]} />
-                        <div>{allUsers.find(player => player._id === card[0]).handle}</div>
+                        <div className='player-name'>{allUsers.find(player => player._id === card[0]).handle}</div>
                     </div>
                 )
             })}
