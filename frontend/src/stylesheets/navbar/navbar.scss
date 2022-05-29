@@ -26,6 +26,7 @@
     height: 50px;
     background-size: contain;
     background-repeat: no-repeat;
+    outline: none;
 }
 
 .nav-title {
@@ -33,6 +34,11 @@
     font-size: 30px;
     color: $coral;
     margin-left: 12px;
+    outline: none;
+
+    &:hover {
+        opacity: 0.7;
+    }
 }
 
 .nav-btn {
@@ -85,4 +91,8 @@
     font-family: "Patrick-Hand";
     font-size: 26px;
     margin-right: 18px;
+
+    &:hover {
+        opacity: 0.5;
+    }
 }

@@ -128,6 +128,14 @@ const GameComponent = ({ roomCode, socket }) => {
           </div>
 
           <div className='game-background'>
+            {gameState.actions[0] === 'gameEnd' &&
+            <motion.div
+              className='end-game-backdrop'
+              animate={{ scale: [0, 1] }}
+              transition={{ duration: 0.5 }}>
+              <GameEnd allUsers={allUsers} allPlayers={allPlayers} />
+            </motion.div>
+            }
             <div className='game-container'>
 
               <div className='board-container'>
@@ -222,16 +230,6 @@ const GameComponent = ({ roomCode, socket }) => {
                   
                 </div>
               </div>
-              
-                {gameState.actions[0] === 'gameEnd' && 
-                  <motion.div 
-                    className='end-game-backdrop'
-                    animate={{ scale: [0, 1] }}
-                    transition={{ duration: 0.5 }}>
-                    <GameEnd allUsers={allUsers} allPlayers={allPlayers} />
-                  </motion.div>
-                }
-
             </div>
           </div>
         </div>

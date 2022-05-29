@@ -14,10 +14,13 @@ const AboutDevelopers = () => {
             </div>
 
             <div className='bios-container'>
+                {/* Peter */}
                 <div className='bio'>
                     <img className='headshot' src={peter} />
-                    <span className='name'>Peter Kim</span>
-                    <span className='role'>Backend Lead</span>
+                    <div className='name-div'>
+                        <span className='name'>Peter Kim</span>
+                        <span className='role'>Backend Lead</span>
+                    </div>
                     <p className='bio-description'>Peter is a problem-solver at heart who loves to dive into complex logic, learn new frameworks, and fix challenging bugs. He has a passion for backend development and understands its role and influence in the context of the whole stack.</p>
                     <div className='connect-links'>
                         <span>Connect: </span>
@@ -26,10 +29,14 @@ const AboutDevelopers = () => {
                         <a href=''><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
+
+                {/* Kevin */}
                 <div className='bio'>
                     <img className='headshot' src={kevin} />
-                    <span className='name'>Kevin Tung</span>
-                    <span className='role'>Project Manager/Team Lead</span>
+                    <div className='name-div'>
+                        <span className='name'>Kevin Tung</span>
+                        <span className='role'>Project Manager/Team Lead</span>
+                    </div>
                     <p className='bio-description'>Jack-of-all-trades...master of many. Kevin is a go-getter who loves to work across the entire codebase, combining his knack for strategic-thinking, deep technical prowess, and natural leadership ability to achieve success.</p>
                     <div className='connect-links'>
                         <span>Connect: </span>
@@ -38,10 +45,14 @@ const AboutDevelopers = () => {
                         <a href=''><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
+
+                {/* Sean */}
                 <div className='bio'>
                     <img className='headshot' src={sean} />
-                    <span className='name'>Sean O'Dea</span>
-                    <span className='role'>Frontend Lead</span>
+                    <div className='name-div'>
+                        <span className='name'>Sean O'Dea</span>
+                        <span className='role'>Frontend Lead</span>
+                    </div>
                     <p className='bio-description'>An inquisitive learner, critical thinker, and creativer doer. Sean loves to learn new technologies, apply his skills judiciously, and exercise his creative mind to build excellent products.</p>
                     <br />
                     <div className='connect-links'>

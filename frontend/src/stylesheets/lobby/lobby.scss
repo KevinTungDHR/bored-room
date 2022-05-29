@@ -76,7 +76,7 @@
 }
 
 .selected {
-  outline: 3px solid $coral;
+  outline: 3px solid $seaweed;
 }
 
 .six-title-tile {
@@ -107,6 +107,7 @@
 
 .lobby-background {
     background-image: url(../../assets/images/game_table.jpg);
+    background-size: cover;
     background-repeat: repeat-y;
     font-family: "Really-Free";
     min-height: 100vh;
@@ -118,6 +119,7 @@
       font-size: 52px;
       text-align: center;
       text-decoration: underline;
+      cursor: default;
     }
 
     #logo {
@@ -140,18 +142,17 @@
     margin-bottom: 20px;
     border-radius: 8px;
     text-indent: 20px;
+    font-family: "Really-Free";
+    font-size: 28px;
+    
     &::placeholder {
-      font-family: "Really-Free";
-      font-size: 24px;
-      padding-left: 20px;
+      font-size: 28px;
     }
 
-  }
+    &:focus {
+      outline: none;
+    }
 
-  .create-room-input:focus {
-    outline: none;
-    font-family: 'Really-Free';
-    font-size: 32px;    
   }
 
   .create-btn {
@@ -184,7 +185,6 @@
 .lobby-rooms {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
   gap: 40px;
   justify-content: center;
   width: 80%;

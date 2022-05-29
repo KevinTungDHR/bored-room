@@ -2,9 +2,7 @@ import React from 'react';
 import { AiFillTrophy } from 'react-icons/ai';
 
 const GameEnd = ({ allPlayers, allUsers }) => {
-
     const displayPlayers = (players, users) => {
-        console.log(users)
         const allPlayers = {};
         players.forEach((player) => allPlayers[player._id] = player.score)
         const winnerId = Object.keys(allPlayers).reduce(function(a, b) { return allPlayers[a] > allPlayers[b] ? a : b })
@@ -12,12 +10,6 @@ const GameEnd = ({ allPlayers, allUsers }) => {
         const winnerScore = allPlayers[winnerId];
         const winner = users.filter(user => user._id === winnerId);
         const winnerElo = winner[0].eloRating.takingSix;
-
-        const loserIdScores = {}; // 
-
-        if (loserIds.length > 0) {
-            loserIds.forEach((loserId) => loserIdScores[loserId] = allPlayers[loserId]);
-        }
 
         let winnerHandle; 
 
@@ -38,10 +30,31 @@ const GameEnd = ({ allPlayers, allUsers }) => {
                     <div>Elo Rating: {winnerElo}</div>
                 </div>
 
-                <div className='losers-body'>
-                    <div>
-                        
-                    </div>
+                {/* AllPlayers.score, ._id */}
+                {/* allUsers.eloRating.takingSix, .handle, ._id */}
+                <div className='final-score'>
+                    <table>
+                        <tr>
+                            <th>Place</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Elo Rating</th>
+                        </tr>
+
+                        {players.map((player, i) => {
+                            const currId = player._id;
+                            const playerScore = player.score;
+                            const nextUser = users.filter(user => user._id === currId);
+                            return (
+                                <tr>
+                                    <td>{i + 1}</td>
+                                    <td>{nextUser[0].handle}</td>
+                                    <td>{playerScore}</td>
+                                    <td>{nextUser[0].eloRating.takingSix}</td>
+                                </tr>
+                            )
+                        })}
+                    </table>
                 </div>
             </div>
         )
