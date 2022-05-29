@@ -79,6 +79,12 @@ class Profile extends React.Component {
 
     changeBackground(e) {
         e.preventDefault();
+        const styled = document.getElementsByClassName("space-earth-btn");
+        if (styled.length > 0) {
+            styled[0].classList.remove("space-earth-btn");
+        }
+        e.target.classList.add("space-earth-btn");
+
         const image = (e.target.value === 'space') ? space : earth;
         let newState = this.state;
         newState.background = image;
@@ -104,8 +110,8 @@ class Profile extends React.Component {
                 <img className='hidden' src={space} />
                 <img className='hidden' src={earth} />
                 <div className='separator'>
-                    <button className='space-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
-                    <button className='earth-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
+                    <button className='background-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
+                    <button className='background-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
                 </div>
                 <div className='profile-inner-container'>
                     <div className='profile-form'>

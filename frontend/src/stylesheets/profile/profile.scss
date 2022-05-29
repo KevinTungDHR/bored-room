@@ -220,20 +220,12 @@
 
 }
 
-.space-btn:focus {
-    background-color: $seaweed;
-
-    .earth-btn {
-        background-color: $tan;
-    }
+.background-btn {
+    background-color: $tan;
 }
 
-.earth-btn:focus {
+.space-earth-btn {
     background-color: $seaweed;
-
-    .space-btn {
-        background-color: $tan;
-    }
 }
 
 .hidden {
