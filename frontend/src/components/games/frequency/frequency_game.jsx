@@ -410,7 +410,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
               {renderSliderAndConfirm()}
               {renderLeftOrRight()}
               {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
-              {gameState.name === 'REVEAL_PHASE' && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
+              {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
               {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
             </div>
 
