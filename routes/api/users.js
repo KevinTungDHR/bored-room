@@ -48,13 +48,12 @@ router.post('/register', async (req, res) => {
       newUser.save()
         .then(user => {
           const payload = { 
-            id: user.id, 
+            _id: user._id, 
             handle: user.handle, 
             email: user.email,
             avatar: user.avatar,
             eloRating: user.eloRating,
             bio: user.bio,
-            friends: user.friends
           }
 
           jwt.sign(
@@ -95,13 +94,12 @@ router.post('/login', (req, res) => {
         .then(isMatch => {
           if (isMatch) {
             const payload = {
-              id: user.id, 
+              _id: user._id, 
               handle: user.handle, 
               email: user.email,
               avatar: user.avatar,
               eloRating: user.eloRating,
               bio: user.bio,
-              friends: user.friends
             };
 
             jwt.sign(
@@ -122,17 +120,19 @@ router.post('/login', (req, res) => {
     })
 })
 
-router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
-  res.json({
-    id: req.user.id,
-    handle: req.user.handle,
-    email: req.user.email,
-    avatar: req.user.avatar,
-    eloRating: req.user.eloRating,
-    bio: req.user.bio,
-    friends: req.user.friends
-  });
-  
+router.get('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
+  let user;
+  try {
+    if (req.body._id === req.user._id){
+      user = await User.findById(req.user._id)
+    } else {
+      user = await User.findById(req.user._id).select('-rejectedFriends -pendingFriends -requestedFriends')
+    }
+
+    res.json(user)
+  } catch (error) {
+    res.status(422).json(error)
+  }
 })
 
 router.patch('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
@@ -143,7 +143,7 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), async (
   }
 
   try {
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user._id)
 
     const userWithEmail = await User.findOne({ email: req.body.email })
     
@@ -175,12 +175,12 @@ router.post('/friends/request', passport.authenticate('jwt', {session: false}), 
   const friendId = { _id: req.body.friendId }
 
   try {
-    const requester = await User.findOneAndUpdate({ _id: req.user.id },
+    const requester = await User.findOneAndUpdate({ _id: req.user._id },
       { $addToSet: { requestedFriends: friendId }},
       { new: true })
   
     const requestee = await User.findOneAndUpdate(friendId,
-      { $addToSet: { pendingFriends: req.user.id }},
+      { $addToSet: { pendingFriends: req.user._id }},
       { new: true })
   
     res.json(requester)
@@ -194,14 +194,14 @@ router.post('/friends/accept', passport.authenticate('jwt', {session: false}), a
   const friendId = { _id: req.body.friendId }
 
   try {
-    const user = await User.findOneAndUpdate({ _id: req.user.id },
+    const user = await User.findOneAndUpdate({ _id: req.user._id },
       { $addToSet: { acceptedFriends: friendId },
         $pull: { pendingFriends: friendId }},
       { new: true })
 
     const friend = await User.findOneAndUpdate(friendId,
-      { $addToSet: { acceptedFriends: { _id: req.user.id } },
-        $pull: { requestedFriends: { _id: req.user.id } }},
+      { $addToSet: { acceptedFriends: { _id: req.user._id } },
+        $pull: { requestedFriends: { _id: req.user._id } }},
       { new: true })
 
       res.json(user)
@@ -215,7 +215,7 @@ router.post('/friends/reject', passport.authenticate('jwt', {session: false}), a
   const friendId = { _id: req.body.friendId }
 
   try {
-    const user = await User.findOneAndUpdate({ _id: req.user.id },
+    const user = await User.findOneAndUpdate({ _id: req.user._id },
       { $addToSet: { rejectedFriends: friendId },
         $pull: { pendingFriends: friendId }},
       { new: true })
@@ -230,7 +230,7 @@ router.delete('/friends', passport.authenticate('jwt', {session: false}), async 
   const friendId = { _id: req.body.friendId }
 
   try {
-    const user = await User.findOneAndUpdate({ _id: req.user.id },
+    const user = await User.findOneAndUpdate({ _id: req.user._id },
       { $pull: { acceptedFriends: friendId }},
       { new: true })
 
@@ -242,7 +242,7 @@ router.delete('/friends', passport.authenticate('jwt', {session: false}), async 
 
 router.get('/friends', passport.authenticate('jwt', {session: false}), async (req, res) => {
   try{
-    const user = await User.find({ _id: req.body._id });
+    const user = await User.findById({ _id: req.body._id });
     const friends = await User.find({ _id: { $in: user.acceptedFriends }});
     res.json(friends);
   } catch (errors){
@@ -258,7 +258,7 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
   }
 
   if (req.body.password === req.body.password2){
-    User.findById(req.user.id)
+    User.findById(req.user._id)
       .then((user) => {
         user.password = req.body.password;
         const updatedUser = {user};

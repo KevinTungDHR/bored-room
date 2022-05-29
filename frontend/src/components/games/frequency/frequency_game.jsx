@@ -17,7 +17,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
-  const sessionId = useSelector(state => state.session.user.id);
+  const sessionId = useSelector(state => state.session.user._id);
   const room = useSelector(state => state.entities.rooms[roomCode])
   const blueUsers = useSelector(state => state.entities.rooms[roomCode].blueTeam)
   const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)

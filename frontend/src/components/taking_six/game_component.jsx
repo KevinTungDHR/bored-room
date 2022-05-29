@@ -20,7 +20,7 @@ const GameComponent = ({ roomCode, socket }) => {
   const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
-  const sessionId = useSelector(state => state.session.user.id);
+  const sessionId = useSelector(state => state.session.user._id);
   const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
   const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
   // const userHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))

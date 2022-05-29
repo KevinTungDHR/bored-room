@@ -36,7 +36,7 @@ router.post('/', passport.authenticate("jwt", { session: false }),
         _id: req.user._id
       }],
       redTeam: [{
-        _id: req.user.id
+        _id: req.user._id
       }],
       blueTeam: [],
       code: roomCode
