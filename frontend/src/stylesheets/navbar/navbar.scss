@@ -34,6 +34,11 @@
     font-size: 30px;
     color: $coral;
     margin-left: 12px;
+    outline: none;
+
+    &:hover {
+        opacity: 0.7;
+    }
 }
 
 .nav-btn {
