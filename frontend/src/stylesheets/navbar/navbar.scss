@@ -86,4 +86,8 @@
     font-family: "Patrick-Hand";
     font-size: 26px;
     margin-right: 18px;
+
+    &:hover {
+        opacity: 0.5;
+    }
 }
