@@ -23,6 +23,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
   const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam) 
+
   let selectionMade = false;
   const dispatch = useDispatch();
 
@@ -133,7 +134,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderSliderAndConfirm = () => {
     let teams = redTeam.concat(blueTeam)
     let currentPlayer = teams.find(player => player._id === sessionId);
-    if(currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
+    if(currentPlayer && currentPlayer.activePlayer && gameState.name === 'TEAM_PHASE'){
       return(
         <div>
           <input className='slider' type="range" min="0" max="180" value={guess} onChange={changeSlider} onMouseUp={updateGuess}/>
@@ -149,7 +150,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     
     let display;
 
-    if (currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE') {
+    if (currentPlayer && currentPlayer.activePlayer && gameState.name === 'LEFT_RIGHT_PHASE') {
       if (leftOrRight === "") {
         display =
           <div className='lt-rt-btns'>
@@ -191,7 +192,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     const allPlayers = blueTeam.concat(redTeam);
     const player = allPlayers.find(player => player._id === sessionId);
 
-    if (player.isPsychic || assets.dialRevealed) {
+    if (!player || player.isPsychic || assets.dialRevealed) {
       drawTarget(ctx)
     } else {
       drawShield(ctx)
@@ -359,7 +360,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
       </div>
     )
   }
-  
+ 
   const handleUpdate = (e) => {
     e.preventDefault();
     const payload = {
@@ -375,29 +376,26 @@ const FrequencyGame = ({ roomCode, socket }) => {
   };
 
     if (gameState) {
-      let teams = redTeam.concat(blueTeam);
-      let userActive = teams.find(player => player._id === sessionId).activePlayer
-      let psychic = teams.find(player => player.isPsychic === true);
-      const actionDescriptions = {
-        "giveClue": "Give Clue",
-        "makeGuess": "Make Guess",
-        "chooseLeftRight": "Choose Left or Right",
-        "scorePoints": "Tally Points",
-        "nextRound": "Reveal Phase"
-      }
+      const allPlayers = blueTeam.concat(redTeam);
+      const currentPlayer = allPlayers.find(player => player.activePlayer);
+      let playerInGame = allPlayers.find(player => player._id === sessionId)
+      let userActive = playerInGame && playerInGame.activePlayer;
+      const curPlayerHandle = room.blueTeam.concat(room.redTeam).find(user => user._id === currentPlayer._id).handle;
 
-      const botDescriptions = {
-        "giveClue": "DemoBot is thinking of a clue",
-        "makeGuess": "DemoBot is making a guess",
-        "chooseLeftRight": "DemoBots are choosing Left or Right",
+      const actionDescriptions = {
+        "giveClue": `${curPlayerHandle} is thinking of a clue`,
+        "makeGuess": `${curPlayerHandle} is making a guess`,
+        "chooseLeftRight": `${assets.activeTeam} Team is choosing Left or Right`,
         "scorePoints": "Tallying Points",
         "nextRound": "Reveal Phase"
       }
-      const allPlayers = blueTeam.concat(redTeam);
+  
       return (
           <div className='frequency-outer-div'>
             <div className='room-code'>In Room: {roomCode}</div>
-          {gameState.actions.map((action, idx) => <h1 className='curr-game-action'>Current Move:<span key={idx}> {assets.demoGame && !userActive ? botDescriptions[action] : actionDescriptions[action]}</span></h1>)}
+            <h1 className='curr-game-action'>
+              Current Move:<span> {actionDescriptions[gameState.actions[0]]}</span>
+            </h1>
             {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
             <div className='dial-container'>
               <div className='left-card'>{assets.currentCard.left}</div>
