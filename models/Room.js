@@ -6,6 +6,10 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
+  teamGame: {
+    type: Boolean,
+    required: true
+  },
   code: {
     type: String,
     required: true,

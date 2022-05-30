@@ -39,6 +39,7 @@ router.post('/createDemo', async (req, res) => {
       const gameModel = FrequencyModel({
         code: req.body.code,
         name: g.name,
+        teamGame: g.teamGame,
         deck: g.deck,
         currentCard: g.currentCard,
         discard: g.discard,
@@ -91,6 +92,7 @@ router.post('/create', (req, res) => {
       const gameModel = FrequencyModel({
         code: req.body.code,
         name: g.name,
+        teamGame: g.teamGame,
         deck: g.deck,
         currentCard: g.currentCard,
         discard: g.discard,

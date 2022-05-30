@@ -12,6 +12,10 @@ const FrequencyGameSchema = new Schema({
     type: String,
     required: true,
   },
+  teamGame: {
+    type: Boolean,
+    required: true,
+  },
   deck: [{
     left: String,
     right: String

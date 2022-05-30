@@ -12,6 +12,10 @@ const TakingSixGameSchema = new Schema({
     type: String,
     required: true
   },
+  teamGame: {
+    type: Boolean,
+    required: true,
+  },
   deck: [{
     value: Number,
     bulls: Number,

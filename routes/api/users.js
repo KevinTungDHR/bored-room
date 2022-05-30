@@ -18,6 +18,15 @@ router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
 module.exports = router;
 
+router.get('/', (req, res) => {
+  User.find()
+    .select('-requestedFriends -rejectedFriends -pendingFriends')
+    .then(users =>{
+      res.json(users);
+    })
+    .catch(error => res.status(422).json(error))
+})
+
 router.post('/register', async (req, res) => {
   const {errors, isValid} = validateRegisterInput(req.body);
   

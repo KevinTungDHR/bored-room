@@ -21,7 +21,7 @@ const receiveUsers = (users) => {
 
 
 export const fetchAllUsers = () => dispatch => {
-    return APIUtil.fetchAllUsers(userId)
+    return APIUtil.fetchAllUsers()
     .then(res => dispatch(receiveUsers(res.data)),
     errors => dispatch(receiveErrors(errors.response.data)))
 }

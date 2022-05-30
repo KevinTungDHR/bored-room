@@ -28,20 +28,34 @@ router.post('/', passport.authenticate("jwt", { session: false }),
       codeExists = await Room.exists({ code: roomCode })
     }
 
-    const newRoom = new Room({
-      name: req.body.name,
-      game: req.body.game,
-      gameId: req.body.gameId,
-      seatedUsers: [{
-        _id: req.user._id
-      }],
-      redTeam: [{
-        _id: req.user._id
-      }],
-      blueTeam: [],
-      code: roomCode
-    });
+    let newRoom;
 
+    if (req.body.teamGame) {
+      newRoom = new Room({
+        name: req.body.name,
+        game: req.body.game,
+        teamGame: req.body.teamGame,
+        gameId: req.body.gameId,
+        redTeam: [{
+          _id: req.user._id
+        }],
+        blueTeam: [],
+        code: roomCode
+      });
+    } else {
+      newRoom = new Room({
+        name: req.body.name,
+        game: req.body.game,
+        teamGame: req.body.teamGame,
+        gameId: req.body.gameId,
+        seatedUsers: [{
+          _id: req.user._id
+        }],
+        blueTeam: [],
+        code: roomCode
+      });
+    }
+    
     const room = await newRoom.save()
     await room.populate("seatedUsers", ["handle", "eloRating", "avatar"])
     await room.populate("redTeam")

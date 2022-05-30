@@ -40,7 +40,7 @@ class Lobby extends React.Component {
     handleSubmit(e){
         e.preventDefault();
         if(this.state.roomName !== "" && this.state.game !== ""){
-            RoomAPIUtil.createRoom(this.state.roomName, this.state.game, this.camelize(this.state.game))
+            RoomAPIUtil.createRoom(this.state, this.camelize(this.state.game))
         }
 
         this.setState({ roomName: ""});
@@ -68,19 +68,19 @@ class Lobby extends React.Component {
         if (prevSelection.length > 0) {
             prevSelection[0].classList.remove("selected");
         }
-        
         if (!e.target.getAttribute("value") && (!e.target.getAttribute("d"))) {
             const gameTile = e.target.parentElement;
-            this.setState({ game: gameTile.getAttribute("value")})
+            this.setState({ game: gameTile.getAttribute("value"), teamGame: e.currentTarget.dataset.teamgame === 'true' })
             gameTile.classList.add("selected");
         } else if (e.currentTarget.classList[0] === "freq-game-logo") {
             const div = document.getElementsByClassName("freq-game-logo");
-            this.setState({ game: "Frequency" })
+            this.setState({ game: "Frequency", teamGame: e.currentTarget.dataset.teamgame === 'true' })
             div[0].classList.add("selected");
         } else {
             e.target.classList.add("selected");
             this.setState({ game: e.target.getAttribute("value")})
         }
+
     }
 
     renderUsers(room) {
@@ -142,7 +142,7 @@ class Lobby extends React.Component {
                         <div className='flex'>
                             <div className='select-game-wrapper'>
                                 <h1>1. Choose a Game: </h1>
-                                <div className='six-game-logo' value="Taking Six" onClick={this.handleGameChange} >
+                                <div className='six-game-logo' data-teamgame={false} value="Taking Six" onClick={this.handleGameChange} >
                                     <GiBull height="160px" width="160px" className='gi-bull-top-left' />
                                     <GiBull height="160px" width="160px" className='gi-bull-top-right' />
                                     <GiBull height="160px" width="160px" className='gi-bull-bot-left' />
@@ -151,7 +151,7 @@ class Lobby extends React.Component {
                                     <h1 className='six-title-tile'>Taking Six</h1>
                                 </div>
 
-                                <div className='freq-game-logo' value="Frequency" onClick={this.handleGameChange}>
+                                <div className='freq-game-logo' data-teamgame={true} value="Frequency" onClick={this.handleGameChange}>
                                     <h1 className='freq-title-tile'>Frequency</h1>
                                     <GiSundial size={150} color="turquoise" style={{
                                         position: "absolute",

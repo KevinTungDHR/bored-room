@@ -13,6 +13,7 @@ import '../stylesheets/app.scss';
 import Room from './rooms/room';
 import { ProfileMotion } from './profile/profile_motion';
 import AboutDevelopers from './about/about';
+import UsersViewPage from './users/users';
 
 const App = () => (
     <div>
@@ -23,6 +24,7 @@ const App = () => (
             <AuthRoute exact path="/register" component={SignupFormContainer} />
             <ProtectedRoute path="/rooms/:code" component={Room} />
             <ProtectedRoute path="/profile/:_id" component={ProfileContainer} />
+            <ProtectedRoute path="/users" component={UsersViewPage} />
             <ProtectedRoute path="/lobby" component={LobbyContainer} />
             <Route exact path="/about" component={AboutDevelopers} />
             <AuthRoute path="/" component={MainPage} />

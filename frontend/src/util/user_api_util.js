@@ -13,5 +13,5 @@ export const fetchUser = (userId) => {
 }
 
 export const fetchAllUsers = () => {
-    return axios.get(`/api/users/profile`)
+    return axios.get(`/api/users/`)
 }

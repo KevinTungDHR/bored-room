@@ -23,6 +23,7 @@ router.post('/createDemo', async (req, res) => {
       const gameModel = TakingSixModel({
         code: req.body.code,
         name: g.name,
+        teamGame: g.teamGame,
         deck: g.deck,
         players: g.players,
         playedCards: g.playedCards,
@@ -59,6 +60,7 @@ router.post('/create', (req, res) => {
       const gameModel = TakingSixModel({
         code: req.body.code,
         name: g.name,
+        teamGame: g.teamGame,
         deck: g.deck,
         players: g.players,
         playedCards: g.playedCards,
