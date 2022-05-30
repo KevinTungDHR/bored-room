@@ -123,18 +123,23 @@ router.post('/login', (req, res) => {
 })
 
 router.get('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  let user;
-  try {
-    if (req.body._id === req.user._id.toString()){
-      user = await User.findById(req.user._id)
-    } else {
-      user = await User.findById(req.body._id).select('-rejectedFriends -pendingFriends -requestedFriends')
-    }
+    User.findById(req.user._id)
+      .then(user => {
+        res.json(user)
+      })
+      .catch(error => {
+        res.status(422).json(error)
+      })
+})
 
-    res.json(user)
-  } catch (error) {
-    res.status(422).json(error)
-  }
+router.get('/profile/:_id', passport.authenticate('jwt', {session: false}), async (req, res) => {
+  User.findById(req.params._id).select('-rejectedFriends -pendingFriends -requestedFriends')
+    .then(user => {
+      res.json(user)
+    })
+    .catch(error => {
+      res.status(422).json(error)
+    })
 })
 
 router.patch('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {

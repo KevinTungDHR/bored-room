@@ -12,6 +12,7 @@ class Profile extends React.Component {
         super(props);
 
         this.state = {
+            user: {},
             btn: 'Edit Profile',
             background: game_table
             // currImg: 1
@@ -27,7 +28,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        this.setState({user: {...this.props.user}})
+        this.props.fetchUser(this.props.match.params._id);
         document.addEventListener("keydown", event => {
             if (event.key === 'Escape') {
                 this.props.closeModal()
@@ -36,6 +37,10 @@ class Profile extends React.Component {
     }
 
     componentDidUpdate(prevProps){
+        if (prevProps.match.params._id !== this.props.match.params._id){
+         this.props.fetchUser(this.props.match.params._id);
+        }
+
         if (prevProps.user !== this.props.user){
             this.setState({user: {...this.props.user}})  
         }
@@ -115,7 +120,6 @@ class Profile extends React.Component {
             'socrates': socrates
         };
         const { email, bio, handle, eloRating, avatar } = this.state.user;
-        
         return (
             <div className='profile-container' style={{ backgroundImage: "url(" + this.state.background + ")" }}>
                 <img className='hidden' src={space} />
@@ -128,7 +132,7 @@ class Profile extends React.Component {
                     <div className='profile-form'>
                         <div className='avatar-image'>
                             <div className='profile-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}} >
-                                <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>
+                                {this.props.user._id === this.props.sessionId && <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>}
                             </div>
                         </div>
                         <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' onKeyDown={this.adjustWidth} />
@@ -148,8 +152,9 @@ class Profile extends React.Component {
                                 )
                             })}</div>
                         </div>
+                        <div>Bio</div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
-                        <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
+                        {this.props.user._id === this.props.sessionId && <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>}
                     </div>
                     
                 </div>
@@ -157,10 +162,10 @@ class Profile extends React.Component {
         )
     }
 
-    render() {        
+    render() { 
         return (
             <div>
-                {this.state.user && this.profile()}
+                {Object.keys(this.state.user).length > 0 && this.profile()}
             </div>
 
         )

@@ -13,6 +13,12 @@ const receiveUser = (user) => {
 
 export const fetchUser = (userId) => dispatch => {
     return APIUtil.fetchUser(userId)
+    .then(res => dispatch(receiveUser(res.data)),
+    errors => dispatch(receiveErrors(errors.response.data)))
+}
+
+export const fetchCurrentUser = () => dispatch => {
+    return APIUtil.fetchCurrentUser()
         .then(res => dispatch(receiveCurrentUser(res.data)),
         errors => dispatch(receiveErrors(errors.response.data)))
 }
