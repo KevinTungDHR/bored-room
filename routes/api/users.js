@@ -263,9 +263,9 @@ router.delete('/friends', passport.authenticate('jwt', {session: false}), async 
   }
 })
 
-router.get('/friends', passport.authenticate('jwt', {session: false}), async (req, res) => {
+router.get('/friends/:_id', passport.authenticate('jwt', {session: false}), async (req, res) => {
   try{
-    const user = await User.findById({ _id: req.body._id });
+    const user = await User.findById({ _id: req.params._id });
     const friends = await User.find({ _id: { $in: user.acceptedFriends }});
     res.json(friends);
   } catch (errors){

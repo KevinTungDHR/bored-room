@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { updateUser, fetchUser } from '../../actions/user_actions';
+import { updateUser, fetchUserAndFriends } from '../../actions/user_actions';
 
 import Profile from './profile';
 import { closeModal, openModal } from '../../actions/modal_actions';
@@ -7,16 +7,18 @@ import { removeErrors } from '../../actions/session_actions';
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        users: state.entities.users,
         user: state.entities.users[ownProps.match.params._id],
         sessionId: state.session.user._id,
-        errors: state.errors.session
+        errors: state.errors.session,
+        friendsLoaded: state.ui.requests.friendsLoaded
     }
 };
 
 const mapDispatchToProps = dispatch => ({
     updateUser: user => dispatch(updateUser(user)),
     openModal: (modal) => dispatch(openModal(modal)),
-    fetchUser: (userId) => dispatch(fetchUser(userId)),
+    fetchUserAndFriends: (userId) => dispatch(fetchUserAndFriends(userId)),
     closeModal: () => dispatch(closeModal()),
     removeErrors: () => dispatch(removeErrors())
 })

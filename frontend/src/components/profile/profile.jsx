@@ -28,7 +28,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        this.props.fetchUser(this.props.match.params._id);
+        this.props.fetchUserAndFriends(this.props.match.params._id);
         document.addEventListener("keydown", event => {
             if (event.key === 'Escape') {
                 this.props.closeModal()
@@ -38,7 +38,7 @@ class Profile extends React.Component {
 
     componentDidUpdate(prevProps){
         if (prevProps.match.params._id !== this.props.match.params._id){
-         this.props.fetchUser(this.props.match.params._id);
+         this.props.fetchUserAndFriends(this.props.match.params._id);
         }
 
         if (prevProps.user !== this.props.user){
@@ -116,6 +116,16 @@ class Profile extends React.Component {
         }).replace(/\s+/g, '');
     }
 
+    renderFriends(){
+        if(this.props.friendsLoaded){
+            return (
+                <div className='friends-list'>
+                    {this.props.user.acceptedFriends.map(_id => <div>{this.props.users[_id].handle}</div>)}
+                </div>
+            )
+        }
+    }
+
     profile() {
         const avatars = {
             'noimage': user_prof,
@@ -160,6 +170,7 @@ class Profile extends React.Component {
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         {this.props.user._id === this.props.sessionId && <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>}
                     </div>
+                        {this.renderFriends()}
                 </div>}
             </div>
         )
