@@ -116,7 +116,6 @@ const GameComponent = ({ roomCode, socket }) => {
       row: chosenRow
     };
     updateGame(roomCode, payload)
-      .then(data => console.log(data))
       .catch(err => console.error(err))
   };
 

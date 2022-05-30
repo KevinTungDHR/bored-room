@@ -132,7 +132,7 @@ class Profile extends React.Component {
                     <button className='background-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
                     <button className='background-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
                 </div>
-                <div className='profile-inner-container'>
+                {Object.keys(this.state.user).length > 0 && <div className='profile-inner-container'>
                     <div className='profile-form'>
                         <div className='avatar-image'>
                             <div className='profile-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}} >
@@ -160,8 +160,7 @@ class Profile extends React.Component {
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         {this.props.user._id === this.props.sessionId && <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>}
                     </div>
-                    
-                </div>
+                </div>}
             </div>
         )
     }
@@ -169,7 +168,7 @@ class Profile extends React.Component {
     render() { 
         return (
             <div>
-                {Object.keys(this.state.user).length > 0 && this.profile()}
+                {this.profile()}
             </div>
 
         )

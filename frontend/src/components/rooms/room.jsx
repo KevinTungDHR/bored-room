@@ -33,7 +33,6 @@ const Room = () => {
   }, []);
 
   useEffect(()=> {
-      socket.on("message", (data) => console.log(data));
       socket.on("receive_message", (data) => {
         let message = `${data.user}: ${data.message}`
         setList(list => [...list, message]);

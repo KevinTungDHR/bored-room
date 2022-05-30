@@ -11,3 +11,7 @@ export const fetchCurrentUser = () => {
 export const fetchUser = (userId) => {
     return axios.get(`/api/users/profile/${userId}`)
 }
+
+export const fetchAllUsers = () => {
+    return axios.get(`/api/users/profile`)
+}

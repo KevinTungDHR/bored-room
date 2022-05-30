@@ -371,7 +371,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
     };
 
     updateGame(roomCode, payload)
-      .then(data => console.log(data))
       .catch(err => console.error(err))
   };
 
