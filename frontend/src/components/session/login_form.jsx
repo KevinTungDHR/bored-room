@@ -14,6 +14,10 @@ class LoginForm extends React.Component {
         this.renderErrors = this.renderErrors.bind(this);
         this.loginDemo = this.loginDemo.bind(this);
     }
+
+    componentWillUnmount(){
+        this.props.removeErrors();
+    }
     
     loginDemo(e){
         e.preventDefault();

@@ -46,6 +46,10 @@ class Profile extends React.Component {
         }
     }
 
+    componentWillUnmount(){
+        this.props.removeErrors();
+    }
+
     handleChangeBio(e) {
         this.setState((prevState) => ({ user: { ...prevState.user, bio: e.target.value }}))
     }

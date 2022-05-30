@@ -3,6 +3,7 @@ import { updateUser, fetchUser } from '../../actions/user_actions';
 
 import Profile from './profile';
 import { closeModal, openModal } from '../../actions/modal_actions';
+import { removeErrors } from '../../actions/session_actions';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -16,7 +17,8 @@ const mapDispatchToProps = dispatch => ({
     updateUser: user => dispatch(updateUser(user)),
     openModal: (modal) => dispatch(openModal(modal)),
     fetchUser: (userId) => dispatch(fetchUser(userId)),
-    closeModal: () => dispatch(closeModal())
+    closeModal: () => dispatch(closeModal()),
+    removeErrors: () => dispatch(removeErrors())
 })
 
 export default connect(
