@@ -7,6 +7,7 @@ import space from '../../assets/images/space.jpg';
 import earth from '../../assets/images/earth.jpg';
 import game_table from '../../assets/images/game_table.jpg';
 import UserCard from './user_card';
+import FriendsIndex from './friends_index';
 class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -117,12 +118,25 @@ class Profile extends React.Component {
         }).replace(/\s+/g, '');
     }
 
-    renderFriends(){
-        return (
-            <div className='friends-list'>
-                {this.props.user.acceptedFriends.map((_id, idx) => <UserCard user={this.props.users[_id]} key={idx}/>)}
-            </div>
-        )
+    renderFriendRequest() {
+        const {acceptedFriends, pendingFriends, requestedFriends, rejectedFriends } = this.props.currentUser;
+        const userId = this.props.match.params._id;
+
+        if (userId === this.props.currentUser._id){
+            return
+        }
+
+        if(acceptedFriends.includes(userId)){
+            return <div className='profile-addFriend friendship-green'>Your Friend</div>
+        } else if(pendingFriends.includes(userId)){
+            return <div className='profile-addFriend friendship-green'>Accept Request</div>
+        } else if(requestedFriends.includes(userId)){
+            return <div className='profile-addFriend friendship-blue'>Request Pending</div>
+        } else if(rejectedFriends.includes(userId)) {
+            return <div className='profile-addFriend friendship-red'>Unblock</div>
+        } else {
+            return <div className='profile-addFriend'>Add Friend</div>
+        }
     }
 
     profile() {
@@ -143,6 +157,7 @@ class Profile extends React.Component {
                 </div>
                 {Object.keys(this.state.user).length > 0 && <div className='profile-inner-container'>
                     <div className='profile-form'>
+                        {this.renderFriendRequest()}
                         <div className='avatar-image'>
                             <div className='profile-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}} >
                                 {this.props.user._id === this.props.sessionId && <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>}
@@ -169,7 +184,7 @@ class Profile extends React.Component {
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
                         {this.props.user._id === this.props.sessionId && <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>}
                     </div>
-                        {this.renderFriends()}
+                     <FriendsIndex user={this.state.user} users={this.props.users} />
                 </div>}
             </div>
         )

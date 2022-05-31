@@ -142,13 +142,25 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), async (re
 })
 
 router.get('/profile/:_id', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  User.findById(req.params._id).select('-rejectedFriends -pendingFriends -requestedFriends')
+  if(mongoose.Types.ObjectId(req.params._id).equals(req.user._id)){
+    User.findById(req.user._id)
     .then(user => {
       res.json(user)
     })
     .catch(error => {
       res.status(422).json(error)
     })
+  } else {
+    User.findById(req.params._id).select('-rejectedFriends -pendingFriends -requestedFriends')
+    .then(user => {
+      res.json(user)
+    })
+    .catch(error => {
+      res.status(422).json(error)
+    })
+  }
+  
+
 })
 
 router.patch('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
@@ -266,7 +278,16 @@ router.delete('/friends', passport.authenticate('jwt', {session: false}), async 
 router.get('/friends/:_id', passport.authenticate('jwt', {session: false}), async (req, res) => {
   try{
     const user = await User.findById({ _id: req.params._id });
-    const friends = await User.find({ _id: { $in: user.acceptedFriends }});
+    let friends
+    if(user._id.equals(req.user._id)){
+      allFriends = user.acceptedFriends
+        .concat(user.rejectedFriends)
+        .concat(user.pendingFriends)
+        .concat(user.requestedFriends)
+      friends = await User.find({ _id: { $in: allFriends }});
+    } else {
+      friends = await User.find({ _id: { $in: user.acceptedFriends }});
+    }
     res.json(friends);
   } catch (errors){
     res.status(422).json(errors);
