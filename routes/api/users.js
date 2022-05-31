@@ -65,6 +65,10 @@ router.post('/register', async (req, res) => {
             avatar: user.avatar,
             eloRating: user.eloRating,
             bio: user.bio,
+            acceptedFriends: user.acceptedFriends,
+            requestedFriends: user.requestedFriends,
+            pendingFriends: user.pendingFriends,
+            rejectedFriends: user.rejectedFriends,
           }
 
           jwt.sign(
@@ -111,6 +115,10 @@ router.post('/login', (req, res) => {
               avatar: user.avatar,
               eloRating: user.eloRating,
               bio: user.bio,
+              acceptedFriends: user.acceptedFriends,
+              requestedFriends: user.requestedFriends,
+              pendingFriends: user.pendingFriends,
+              rejectedFriends: user.rejectedFriends,
             };
 
             jwt.sign(

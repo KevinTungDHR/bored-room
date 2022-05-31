@@ -136,7 +136,14 @@ class Lobby extends React.Component {
 
         return (
             <div className='lobby-background'>
-                <h1 className='lobby-head'>Welcome to the <span id='logo'>Bored Room</span></h1>          
+                <navbar className='lobby-navbar'>
+                    <ul className='lobby-navlist'>
+                        <li>Game Lobby</li>
+                        <li>Players</li>
+                        <li>View My Profile</li>
+                    </ul>
+                </navbar>
+                {/* <h1 className='lobby-head'>Welcome to the <span id='logo'>Bored Room</span></h1>           */}
                 <div className='search-container'>
                     <form className='create-room' onSubmit={this.handleSubmit}>
                         <div className='flex'>
