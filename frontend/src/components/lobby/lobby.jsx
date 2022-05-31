@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { io } from 'socket.io-client';
 import * as RoomAPIUtil from '../../util/rooms_util';
 import bull_logo from '../../assets/images/bull_logo.png';
 import { GiBull } from 'react-icons/gi';
 import { GiSundial } from 'react-icons/gi';
+import RoomCard from './room_card';
 
 const socket = io();
 class Lobby extends React.Component {
@@ -40,7 +41,7 @@ class Lobby extends React.Component {
     handleSubmit(e){
         e.preventDefault();
         if(this.state.roomName !== "" && this.state.game !== ""){
-            RoomAPIUtil.createRoom(this.state, this.camelize(this.state.game))
+            RoomAPIUtil.createRoom({ ...this.state, creator: this.props.currentUser._id }, this.camelize(this.state.game))
         }
 
         this.setState({ roomName: ""});
@@ -130,7 +131,7 @@ class Lobby extends React.Component {
     }
 
     render() {
-        const { rooms } = this.props;
+        const { rooms, currentUser } = this.props;
         let count = 0;
         let sign = 2000;
 
@@ -138,17 +139,16 @@ class Lobby extends React.Component {
             <div className='lobby-background'>
                 <navbar className='lobby-navbar'>
                     <ul className='lobby-navlist'>
-                        <li>Game Lobby</li>
-                        <li>Players</li>
-                        <li>View My Profile</li>
+                        <NavLink to='/lobby'>Game Lobby</NavLink>
+                        <NavLink to='/users'>Players</NavLink>
+                        <NavLink to={`/profile/${currentUser._id}`}>View My Profile</NavLink>
                     </ul>
                 </navbar>
                 {/* <h1 className='lobby-head'>Welcome to the <span id='logo'>Bored Room</span></h1>           */}
-                <div className='search-container'>
                     <form className='create-room' onSubmit={this.handleSubmit}>
                         <div className='flex'>
+                            <h1>1. Choose a Game: </h1>
                             <div className='select-game-wrapper'>
-                                <h1>1. Choose a Game: </h1>
                                 <div className='six-game-logo' data-teamgame={false} value="Taking Six" onClick={this.handleGameChange} >
                                     <GiBull height="160px" width="160px" className='gi-bull-top-left' />
                                     <GiBull height="160px" width="160px" className='gi-bull-top-right' />
@@ -165,24 +165,42 @@ class Lobby extends React.Component {
                                         right: "15%"
                                     }}/>
                                 </div>
-
+                                <div className='six-game-logo' data-teamgame={false} value="Taking Six" onClick={this.handleGameChange} >
+                                    <GiBull height="160px" width="160px" className='gi-bull-top-left' />
+                                    <GiBull height="160px" width="160px" className='gi-bull-top-right' />
+                                    <GiBull height="160px" width="160px" className='gi-bull-bot-left' />
+                                    <GiBull height="160px" width="160px" className='gi-bull-bot-right' />
+                                    <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
+                                    <h1 className='six-title-tile'>Taking Six</h1>
+                                </div>
                             </div>
+                        </div>
+                        <div className='flex'>
                             <h1>2. Create a Room</h1>
                             <div>
                                 <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} placeholder="Enter a room name" />
                                 <input className='create-btn' type="submit" value="Create" />
                             </div>
+                            <div>Or</div>
+                            <form className='search-rooms'>
+                                <div className='flex'>
+                                    <div className='search-title'>Search for a Room</div>
+                                    <div>
+                                        <input className='search-room-input' value={this.state.search} onChange={this.updateSearch} />
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </form>
 
-                    <form className='search-rooms'>
-                        <div className='flex'>
-                            <div className='search-title'>Search for a Room</div>
-                            <div>
-                                <input className='search-room-input' value={this.state.search} onChange={this.updateSearch} />
-                            </div>
-                        </div>
-                    </form>
+                <div className='new-lobby-rooms'>
+                    <ul className='new-rooms-list'>
+                    {rooms.slice().reverse().map((room, idx) => {
+                        if(room.name.toLowerCase().startsWith(this.state.search.toLowerCase())){
+                            return <RoomCard key={idx} room={room} handleRoomDelete={this.handleRoomDelete}/>
+                        }
+                    })}
+                    </ul>
                 </div>
 
                 <ul className='lobby-rooms'>
@@ -207,13 +225,6 @@ class Lobby extends React.Component {
                         }
                     })}
                 </ul>
-                <div className='lobby-game-1'>
-
-                </div>
-                
-                <div className="lobby-game-2">
-                    
-                </div>
             </div>
         );
     }

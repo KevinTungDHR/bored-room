@@ -34,6 +34,7 @@ router.post('/', passport.authenticate("jwt", { session: false }),
       newRoom = new Room({
         name: req.body.name,
         game: req.body.game,
+        creator: req.body.creator,
         teamGame: req.body.teamGame,
         gameId: req.body.gameId,
         redTeam: [{
@@ -45,6 +46,7 @@ router.post('/', passport.authenticate("jwt", { session: false }),
     } else {
       newRoom = new Room({
         name: req.body.name,
+        creator: req.body.creator,
         game: req.body.game,
         teamGame: req.body.teamGame,
         gameId: req.body.gameId,
@@ -57,18 +59,20 @@ router.post('/', passport.authenticate("jwt", { session: false }),
     }
     
     const room = await newRoom.save()
-    await room.populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    await room.populate("redTeam")
-    await room.populate("blueTeam")
+    await room.populate('creator', ['handle'])
+    await room.populate("seatedUsers", ["handle", "eloRating", "elo", "avatar"])
+    await room.populate("redTeam", ["handle", "eloRating",  "elo", "avatar"])
+    await room.populate("blueTeam", ["handle", "eloRating",  "elo", "avatar"])
     io.to('lobby').emit("room_created", room)
 });
 
 router.get('/', (req, res) => {
 
   Room.find()
+    .populate("creator", ["handle"])
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .populate("redTeam")
-    .populate("blueTeam")
+    .populate("redTeam", ["handle", "eloRating",  "elo", "avatar"])
+    .populate("blueTeam", ["handle", "eloRating",  "elo", "avatar"])
     .then(rooms => {
 
       const objRooms = rooms.reduce((acc, curr) => (acc[curr.code] = curr, acc), {});
@@ -138,8 +142,8 @@ router.patch('/:code/joinTeam', passport.authenticate('jwt', {session: false}), 
     { $addToSet: { [req.body.team]: { _id: req.user._id }}},
     { new: true })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .populate("redTeam")
-    .populate("blueTeam")
+    .populate("redTeam", ["handle", "eloRating",  "elo", "avatar"])
+    .populate("blueTeam", ["handle", "eloRating",  "elo", "avatar"])
     .then(room => {
       if (req.body.team === 'redTeam'){
         room.blueTeam.pull(req.user._id);
@@ -161,8 +165,8 @@ router.patch('/:code/leaveTeam', passport.authenticate('jwt', {session: false}),
 
   Room.findOne({ code: req.params.code })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .populate("redTeam")
-    .populate("blueTeam")
+    .populate("redTeam", ["handle", "eloRating",  "elo", "avatar"])
+    .populate("blueTeam", ["handle", "eloRating",  "elo", "avatar"])
     .then(room => {
       if(!room) {
         return res.status(404).json("No room");
@@ -185,8 +189,8 @@ router.get('/:code', (req, res) => {
   // populate will join the associated ref for their name.
   Room.findOne({ code: req.params.code })
     .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-    .populate("redTeam")
-    .populate("blueTeam")
+    .populate("redTeam", ["handle", "eloRating",  "elo", "avatar"])
+    .populate("blueTeam", ["handle", "eloRating",  "elo", "avatar"])
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
     );

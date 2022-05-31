@@ -6,6 +6,10 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   teamGame: {
     type: Boolean,
     required: true
