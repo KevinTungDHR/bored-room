@@ -16,7 +16,6 @@ class Profile extends React.Component {
             user: {},
             btn: 'Edit Profile',
             background: game_table
-            // currImg: 1
         }
 
         this.toggleBtn = this.toggleBtn.bind(this);

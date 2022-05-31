@@ -44,6 +44,11 @@ const RoomSchema = new Schema({
     type: Boolean,
     required: true,
     default: false
+  },
+  gameOver: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, {
   timestamps: true

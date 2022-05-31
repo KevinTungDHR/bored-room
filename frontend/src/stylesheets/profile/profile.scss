@@ -301,6 +301,7 @@
     height: 60px;
     padding: .5em;
     display: grid;
+    border-radius: 3px;
     grid-template-columns: 60px 1fr auto;
     column-gap: .5rem;
     background-color: $champ;

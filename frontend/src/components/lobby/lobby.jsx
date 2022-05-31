@@ -12,12 +12,13 @@ const socket = io();
 class Lobby extends React.Component {
     constructor(props){
         super(props)
-        this.state = { roomName: "", search: "", game: "" };
+        this.state = { roomName: "", search: "", game: "", errors: "", roomType: 0 };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleGameChange = this.handleGameChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
+        this.selectRoomType = this.selectRoomType.bind(this);
     }
 
     camelize = (str) => {
@@ -40,11 +41,19 @@ class Lobby extends React.Component {
 
     handleSubmit(e){
         e.preventDefault();
-        if(this.state.roomName !== "" && this.state.game !== ""){
-            RoomAPIUtil.createRoom({ ...this.state, creator: this.props.currentUser._id }, this.camelize(this.state.game))
+        if(this.state.game === ""){
+            this.setState({ errors: "Please select a game"})
+            return;
         }
 
-        this.setState({ roomName: ""});
+        if(this.state.roomName === ""){
+            this.setState({ errors: "Room name can't be blank"})
+            return;
+        }
+
+        RoomAPIUtil.createRoom({ ...this.state, creator: this.props.currentUser._id }, this.camelize(this.state.game))
+
+        this.setState({ roomName: "", errors: "" });
     }
 
     handleRoomDelete(roomCode) {
@@ -82,56 +91,41 @@ class Lobby extends React.Component {
             this.setState({ game: e.target.getAttribute("value")})
         }
 
+        this.setState({errors: ""})
     }
 
-    renderUsers(room) {
-        if (room.gameId === 'takingSix'){
-            return (
-                <ul>
-                    {room.seatedUsers.map((user, i) => {
-                        if (user.handle) {
-                            return (
-                                <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
-                            )
-                        }
-                    })}
-                </ul>
-            )
+    selectRoomType(e){
+        e.preventDefault()
+        this.setState({ roomType: e.currentTarget.value })
+    }
+
+    renderRooms(){
+        const { rooms, currentUser } = this.props;
+
+        let filteredRooms;
+        if(this.state.roomType === 0){
+            filteredRooms = rooms.filter(room => !room.gameStarted)
+        } else if (this.state.roomType === 1){
+            filteredRooms = rooms.filter(room => room.gameStarted && !room.gameOver)
+        } else if (this.state.roomType === 2) {
+            filteredRooms = rooms.filter(room => room.gameOver);
         } else {
-            return (
-                <div className='freq-teams'>
-                    <div>
-                        <ul>
-                            <div className='red'>Red Team</div>
-                            {room.redTeam.map((user, i) => {
-                                if (user.handle) {
-                                    return (
-                                        <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
-                                    )
-                                }
-                            })}
-                        </ul>
-                    </div>
-                    <div>
-                        <ul>
-                            <div className='blue'>Blue Team</div>
-                            {room.blueTeam.map((user, i) => {
-                                if (user.handle) {
-                                    return (
-                                        <li key={i}>{user.handle + " " + user.eloRating[room.gameId]}</li>
-                                    )
-                                }
-                            })}
-                        </ul>
-                    </div>
-                   
-                </div>
-            )
+            return
         }
+
+        filteredRooms = filteredRooms.filter(room => room.name.toLowerCase().startsWith(this.state.search.toLowerCase()))
+
+        if (filteredRooms.length === 0) {
+            return <div>No rooms found</div>
+        }
+
+        return filteredRooms.slice().reverse().map((room, idx) => {
+            return <RoomCard key={idx} room={room} handleRoomDelete={this.handleRoomDelete}/>
+        })
     }
 
     render() {
-        const { rooms, currentUser } = this.props;
+        const { currentUser } = this.props;
         let count = 0;
         let sign = 2000;
 
@@ -139,7 +133,7 @@ class Lobby extends React.Component {
             <div className='lobby-background'>
                 <navbar className='lobby-navbar'>
                     <ul className='lobby-navlist'>
-                        <NavLink to='/lobby'>Game Lobby</NavLink>
+                        <NavLink className='navlink-selected' to='/lobby'>Game Lobby</NavLink>
                         <NavLink to='/users'>Players</NavLink>
                         <NavLink to={`/profile/${currentUser._id}`}>View My Profile</NavLink>
                     </ul>
@@ -175,13 +169,15 @@ class Lobby extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex'>
-                            <h1>2. Create a Room</h1>
-                            <div>
-                                <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} placeholder="Enter a room name" />
-                                <input className='create-btn' type="submit" value="Create" />
+                        <div className='right-side-flex'>
+                            <div className='create-room-input-container'>
+                                <h1>2. Create a Room</h1>
+                                <div>
+                                    <input className='create-room-input' value={this.state.roomName} onChange={this.handleChange} placeholder="Enter a room name" />
+                                    <input className='create-btn' type="submit" value="Create" />
+                                </div>
                             </div>
-                            <div>Or</div>
+                            {this.state.errors !== "" ? <div className='create-room-errors'>{this.state.errors}</div> : null}
                             <form className='search-rooms'>
                                 <div className='flex'>
                                     <div className='search-title'>Search for a Room</div>
@@ -193,17 +189,20 @@ class Lobby extends React.Component {
                         </div>
                     </form>
 
+                <navbar className='room-status-navbar'>
+                    <ul className='room-status-navlist'>
+                        <li className='room-status-navlist-item' value={0} onClick={this.selectRoomType}>New Rooms</li>
+                        <li className='room-status-navlist-item' value={1} onClick={this.selectRoomType}>Ongoing</li>
+                        <li className='room-status-navlist-item' value={2} onClick={this.selectRoomType}>Finished</li>
+                    </ul>
+                </navbar>
                 <div className='new-lobby-rooms'>
                     <ul className='new-rooms-list'>
-                    {rooms.slice().reverse().map((room, idx) => {
-                        if(room.name.toLowerCase().startsWith(this.state.search.toLowerCase())){
-                            return <RoomCard key={idx} room={room} handleRoomDelete={this.handleRoomDelete}/>
-                        }
-                    })}
+                     {this.renderRooms()}
                     </ul>
                 </div>
 
-                <ul className='lobby-rooms'>
+                {/* <ul className='lobby-rooms'>
                     {rooms.slice().reverse().map((room, idx) => {
                         
                         if (room.name.toLowerCase().startsWith(this.state.search.toLowerCase())) {
@@ -224,7 +223,7 @@ class Lobby extends React.Component {
                         </motion.li>
                         }
                     })}
-                </ul>
+                </ul> */}
             </div>
         );
     }

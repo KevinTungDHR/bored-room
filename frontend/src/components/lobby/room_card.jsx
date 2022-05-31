@@ -6,9 +6,11 @@ import user_prof from '../../assets/images/user_prof.png';
 import { NavLink } from 'react-router-dom';
 import { GiBull, GiSundial } from 'react-icons/gi';
 import bull_logo from '../../assets/images/bull_logo.png';
+import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const RoomCard = ({ room, handleRoomDelete }) => {
-
+  const currentUser = useSelector(state => state.session.user)
   const avatars = {
     'noimage': user_prof,
     'yoda': yoda,
@@ -44,43 +46,39 @@ const RoomCard = ({ room, handleRoomDelete }) => {
     }
   }
   const renderUsers = () => {
-    if (room.teamGame){
-      const players = room.redTeam.concat(room.blueTeam);
-      return(
-        players.map((user, idx) => {
-          return (
-          <div className='roomCard-user-item'>
-            <div className='roomCard-user-avatar' style={{ backgroundImage: "url(" + avatars[user.avatar] + ")"}}></div>
-            <div key={idx}>{user.handle}</div>
-          </div>
-          )
-        })
-      )
+    let players;
+    if(room.teamGame){
+      players = room.redTeam.concat(room.blueTeam);
     } else {
-      return(
-        room.seatedUsers.map((user, idx) => {
-          return (
-          <div className='roomCard-user-item'>
-            <div className='roomCard-user-avatar' style={{ backgroundImage: "url(" + avatars[user.avatar] + ")"}}></div>
-            <div key={idx}>{user.handle}</div>
-          </div>
-          )
-        })
-      )
+      players = room.seatedUsers
     }
+
+    return(
+      players.map((user, idx) => {
+        return (
+        <div className='roomCard-user-item'>
+          <div className='roomCard-user-avatar' style={{ backgroundImage: "url(" + avatars[user.avatar] + ")"}}></div>
+          <div>
+            <NavLink to={`/profile/${user._id}`} className='roomCard-user-handle'>{user.handle}</NavLink>
+            <div className='roomCard-user-rating'>Rating {user.eloRating[room.gameId]}</div>
+          </div>
+        </div>
+        )
+      })
+    )
   } 
 
 
   return(
     <div className='roomCard-item'>
       <div className='roomCard-icon'>{renderIcon()}</div>
-      <div className='roomCard-description'>{`${room.name} - Created by: ${room.creator.handle}`}</div>
-      <div className='roomCard-users-list'>
+      <div className='roomCard-description ellipsis'>{`${room.name} - `}<span className='roomCard-description-subtext'>{`Created by: ${room.creator.handle} - ${moment(room.createdAt).fromNow()}`}</span></div>
+      <div className='roomCard-users-list ellipsis'>
         {renderUsers()}
       </div>
       <div className="roomCard-links">
-        <NavLink  to={`/rooms/${room.code}`}>Join Room</NavLink>
-        <button onClick={() => handleRoomDelete(room.code)}>Delete Room</button>
+        <NavLink className='join-room-button' to={`/rooms/${room.code}`}>Join Room</NavLink>
+        {(currentUser._id === room.creator._id  || currentUser.isAdmin) && <div className='delete-room-button' onClick={() => handleRoomDelete(room.code)}>Delete</div>}
       </div>
     </div>
    

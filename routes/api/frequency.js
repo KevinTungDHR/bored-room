@@ -166,6 +166,10 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     let assets = await game.save()
     const gameState = frequencyState[assets.currentState];
 
+    if(gameState.name === 'GAME_END'){
+      await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+    }
+
     io.to(req.params.code).emit("game_updated", { assets, gameState });
   } catch (err) {
     return res.status(402).json(err);
@@ -182,6 +186,11 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       let assets = await game.save()
 
       const gameState = frequencyState[assets.currentState];
+
+      if(gameState.name === 'GAME_END'){
+        await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+      }
+
       io.to(req.params.code).emit("game_updated", { assets, gameState });
     } catch (err) {
       return res.status(402).json(err);
@@ -199,6 +208,12 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       game.markModified('deck');
       let assets = await game.save()
       const gameState = frequencyState[assets.currentState];
+
+      if(gameState.name === 'GAME_END'){
+        await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+        // Why do you need await?
+      }
+
       io.to(req.params.code).emit("game_updated", { assets, gameState, botTurn: true });
     } catch (err) {
       return res.status(402).json(err);
