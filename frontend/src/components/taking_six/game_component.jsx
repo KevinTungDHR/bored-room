@@ -50,7 +50,7 @@ const GameComponent = ({ roomCode, socket }) => {
           dispatch(receiveGame(nextUpdate))
           setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
-        }, 1000);
+        }, 500);
 
         setTimers(oldState => [...oldState, timer]);
         // Need to clearTimeout but it's being called on every rerender
@@ -208,14 +208,19 @@ const GameComponent = ({ roomCode, socket }) => {
                   </div>
                 </div>
 
-                <div className='taking-six-instructions'>
+               
+              </div>
+
+           
+            </div>
+            <div className='taking-six-instructions'>
                   <div>
                     <h1>Taking Six Rules:</h1>
-                    <span><h2>Setup:</h2> Every player starts with 66 points and a hand of 10 cards, ranging from 1 to 104. There are four rows starting with a single card in each row. Each row can take up to 5 cards.</span>
-                    <span><h2>Objective:</h2> Have the most points remaining at the end of the game.</span>
                   </div>
+                  <span><h2>Setup:</h2> Every player starts with 66 points and a hand of 10 cards, ranging from 1 to 104. There are four rows starting with a single card in each row. Each row can take up to 5 cards.</span>
+                  <span><h2>Objective:</h2> Have the most points remaining at the end of the game.</span>
                   <div>
-                    <ol>
+                    <ol className='taking-six-instructions-list'>
                       <h2>Game Play:</h2>
                       <li type="1">Each turn players simultaneously choose a card. Each card, in ascending order, is then placed in one of the four rows.</li>
                       <li type="1">The card added to a row must be higher than the last card in that row.</li>
@@ -224,12 +229,9 @@ const GameComponent = ({ roomCode, socket }) => {
                       <li type="1">The player who takes a row loses points based off the number of bull symbols on each card</li>
                       <li type="1">If a player plays a card that is so low that it cannot be placed in a row, that player must take all cards in a row of their choice.</li>
                     </ol>
-                    <span><h2>Game End:</h2> A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</span>
                   </div>
-                  
+                  <span><h2>Game End:</h2> A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</span>
                 </div>
-              </div>
-            </div>
           </div>
         </div>
     )
