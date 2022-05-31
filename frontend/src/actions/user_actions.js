@@ -1,6 +1,5 @@
 import { receiveErrors, receiveCurrentUser } from './session_actions';
 import * as APIUtil from '../util/user_api_util';
-import { finishRequest, startRequest } from './request_actions';
 
 export const UPDATE_AVATAR = 'UPDATE_AVATAR';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
@@ -56,7 +55,6 @@ export const fetchFriends = (userId) => dispatch => {
     return APIUtil.fetchFriends(userId)
         .then(res => {
             dispatch(receiveUsers(res.data))
-            dispatch(finishRequest('friendsLoaded'))
         })
         .catch(errors => dispatch(receiveErrors(errors.response.data)))
 }
@@ -64,7 +62,6 @@ export const fetchFriends = (userId) => dispatch => {
 export const fetchUserAndFriends = (userId) => dispatch => {
     return APIUtil.fetchUser(userId)
         .then(res => {
-            dispatch(startRequest('friendsLoaded'))
             dispatch(receiveUser(res.data))
             dispatch(fetchFriends(userId));
         })

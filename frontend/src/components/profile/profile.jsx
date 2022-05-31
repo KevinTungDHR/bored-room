@@ -6,7 +6,7 @@ import user_prof from '../../assets/images/user_prof.png';
 import space from '../../assets/images/space.jpg';
 import earth from '../../assets/images/earth.jpg';
 import game_table from '../../assets/images/game_table.jpg';
-
+import UserCard from './user_card';
 class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -29,6 +29,7 @@ class Profile extends React.Component {
 
     componentDidMount(){
         this.props.fetchUserAndFriends(this.props.match.params._id);
+
         document.addEventListener("keydown", event => {
             if (event.key === 'Escape') {
                 this.props.closeModal()
@@ -117,13 +118,11 @@ class Profile extends React.Component {
     }
 
     renderFriends(){
-        if(this.props.friendsLoaded){
-            return (
-                <div className='friends-list'>
-                    {this.props.user.acceptedFriends.map(_id => <div>{this.props.users[_id].handle}</div>)}
-                </div>
-            )
-        }
+        return (
+            <div className='friends-list'>
+                {this.props.user.acceptedFriends.map((_id, idx) => <UserCard user={this.props.users[_id]} key={idx}/>)}
+            </div>
+        )
     }
 
     profile() {

@@ -11,7 +11,6 @@ const mapStateToProps = (state, ownProps) => {
         user: state.entities.users[ownProps.match.params._id],
         sessionId: state.session.user._id,
         errors: state.errors.session,
-        friendsLoaded: state.ui.requests.friendsLoaded
     }
 };
 
