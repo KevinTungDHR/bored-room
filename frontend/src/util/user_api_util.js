@@ -17,5 +17,5 @@ export const fetchAllUsers = () => {
 }
 
 export const fetchFriends = (userId) => {
-    return axios.get(`/api/users/friends/${userId}`)
+    return axios.get(`/api/friends/${userId}`)
 }

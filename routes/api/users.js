@@ -9,8 +9,6 @@ const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 const validateUpdatePassword = require('../../validation/update/update_password');
 const validateUpdateProfile = require('../../validation/update/update_profile');
-const { db } = require("../../models/User");
-const { json } = require("express/lib/response");
 const mongoose = require('mongoose');
 
 
@@ -204,101 +202,6 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), async (
     res.json(savedUser)
   } catch (errors) {
     res.status(400).json(errors)
-  }
-})
-
-router.post('/friends/request', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  try {
-    const requester = await User.findOneAndUpdate(
-      { _id: req.user._id, acceptedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) } },
-      { $addToSet: { requestedFriends: mongoose.Types.ObjectId(req.body.friendId) }},
-      { new: true })
-  
-    const requestee = await User.findOneAndUpdate(
-      { _id: req.body.friendId, acceptedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) }, rejectedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) } },
-      { $addToSet: { pendingFriends: req.user._id }},
-      { new: true })
-  
-    res.json(requester || req.user)
-  } catch (error) {
-    res.status(422).json(error)
-  }
-})
-
-
-router.delete('/friends/request', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  try {
-    const user = await User.findOneAndUpdate({ _id: req.user._id },
-      { $pull: { pendingFriends: mongoose.Types.ObjectId(req.body.friendId) }},
-      { new: true })
-
-      res.json(user)
-  } catch (error) {
-    res.status(422).json(error)
-  }
-})
-
-router.post('/friends/accept', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  try {
-    const user = await User.findOneAndUpdate({ _id: req.user._id },
-      { $addToSet: { acceptedFriends: req.body.friendId  },
-        $pull: { pendingFriends: mongoose.Types.ObjectId(req.body.friendId) }},
-      { new: true })
-
-    const friend = await User.findOneAndUpdate({ _id: req.body.friendId },
-      { $addToSet: { acceptedFriends: req.user._id },
-        $pull: { requestedFriends: req.user._id }},
-      { new: true })
-
-      res.json(user)
-  } catch (error) {
-    res.status(422).json(error)
-  }
-
-})
-
-router.post('/friends/reject', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  try {
-    const user = await User.findOneAndUpdate(
-      { _id: req.user._id, acceptedFriends: { $ne: mongoose.Types.ObjectId(req.body.friendId) } },
-      { $addToSet: { rejectedFriends: mongoose.Types.ObjectId(req.body.friendId) },
-        $pull: { pendingFriends: mongoose.Types.ObjectId(req.body.friendId) }},
-      { new: true })
-
-      res.json(user)
-  } catch (error) {
-    res.status(422).json(error)
-  }
-})
-
-router.delete('/friends', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  try {
-    const user = await User.findOneAndUpdate({ _id: req.user._id },
-      { $pull: { acceptedFriends: mongoose.Types.ObjectId(req.body.friendId) }},
-      { new: true })
-
-      res.json(user)
-  } catch (error) {
-    res.status(422).json(error)
-  }
-})
-
-router.get('/friends/:_id', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  try{
-    const user = await User.findById({ _id: req.params._id });
-    let friends
-    if(user._id.equals(req.user._id)){
-      allFriends = user.acceptedFriends
-        .concat(user.rejectedFriends)
-        .concat(user.pendingFriends)
-        .concat(user.requestedFriends)
-      friends = await User.find({ _id: { $in: allFriends }});
-    } else {
-      friends = await User.find({ _id: { $in: user.acceptedFriends }});
-    }
-    res.json(friends);
-  } catch (errors){
-    res.status(422).json(errors);
   }
 })
 

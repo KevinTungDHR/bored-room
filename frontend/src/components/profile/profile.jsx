@@ -8,6 +8,7 @@ import earth from '../../assets/images/earth.jpg';
 import game_table from '../../assets/images/game_table.jpg';
 import UserCard from './user_card';
 import FriendsIndex from './friends_index';
+import UnfriendModal from './unfriend_modal';
 class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -15,7 +16,8 @@ class Profile extends React.Component {
         this.state = {
             user: {},
             btn: 'Edit Profile',
-            background: game_table
+            background: game_table,
+            unfriendModalOpen: false
         }
 
         this.toggleBtn = this.toggleBtn.bind(this);
@@ -25,6 +27,14 @@ class Profile extends React.Component {
         this.profile = this.profile.bind(this);
         this.changeBackground = this.changeBackground.bind(this);
         this.adjustWidth = this.adjustWidth.bind(this);
+        this.addFriend = this.addFriend.bind(this);
+        this.cancelRequest = this.cancelRequest.bind(this);
+        this.unblockUser = this.unblockUser.bind(this);
+        this.acceptRequest = this.acceptRequest.bind(this);
+        this.rejectRequest = this.rejectRequest.bind(this);
+        this.removeFriend = this.removeFriend.bind(this);
+        this.openFriendModal = this.openFriendModal.bind(this);
+        this.closeFriendModal = this.closeFriendModal.bind(this);
     }
 
     componentDidMount(){
@@ -117,6 +127,38 @@ class Profile extends React.Component {
         }).replace(/\s+/g, '');
     }
 
+    addFriend(e){
+        this.props.addFriend(this.state.user._id);
+    }
+
+    acceptRequest(e){
+        this.props.acceptRequest(this.state.user._id);
+    }
+
+    rejectRequest(e){
+        this.props.rejectRequest(this.state.user._id);
+    }
+
+    cancelRequest(e){
+        this.props.cancelRequest(this.state.user._id);
+    }
+
+    unblockUser(e){
+        this.props.unblockUser(this.state.user._id);
+    }
+
+    removeFriend(e){
+        this.props.removeFriend(this.state.user._id);
+    }
+
+    openFriendModal(e) {
+        this.setState({ unfriendModalOpen: true })
+    }
+
+    closeFriendModal(e) {
+        this.setState({ unfriendModalOpen: false })
+    }
+
     renderFriendRequest() {
         const {acceptedFriends, pendingFriends, requestedFriends, rejectedFriends } = this.props.currentUser;
         const userId = this.props.match.params._id;
@@ -126,15 +168,30 @@ class Profile extends React.Component {
         }
 
         if(acceptedFriends.includes(userId)){
-            return <div className='profile-addFriend friendship-green'>Your Friend</div>
+            return (
+                <>
+                    <div className='profile-addFriend friendship-green'>Your Friend</div>
+                    <div className='profile-removeFriend friendship-red hover-click' onClick={this.openFriendModal}>Unfriend</div>
+                    {this.state.unfriendModalOpen && 
+                        <UnfriendModal user={this.state.user} 
+                            closeModal={this.closeFriendModal}
+                            unfriend={this.removeFriend}/>}
+                </>
+            ) 
         } else if(pendingFriends.includes(userId)){
-            return <div className='profile-addFriend friendship-green'>Accept Request</div>
+            return <div className='profile-addFriend' >
+                        <div className='friendship-green hover-click' onClick={this.acceptRequest}>Accept Request</div>
+                        <div className='hover-click friendship-red friendship-small-text' onClick={this.rejectRequest}>Block</div>
+                </div>
         } else if(requestedFriends.includes(userId)){
-            return <div className='profile-addFriend friendship-blue'>Request Pending</div>
+            return <div className='profile-addFriend'>
+                        <div className='friendship-blue'>Request Pending</div>
+                        <div className='hover-click friendship-red friendship-small-text' onClick={this.cancelRequest}>cancel</div>
+                    </div>
         } else if(rejectedFriends.includes(userId)) {
-            return <div className='profile-addFriend friendship-red'>Unblock</div>
+            return <div className='profile-addFriend friendship-red hover-click' onClick={this.unblockUser}>Unblock</div>
         } else {
-            return <div className='profile-addFriend'>Add Friend</div>
+            return <div className='profile-addFriend friendship-green hover-click' onClick={this.addFriend}>Add Friend</div>
         }
     }
 
