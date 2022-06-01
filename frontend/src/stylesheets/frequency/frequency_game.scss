@@ -26,6 +26,17 @@
     flex-direction: column;
 }
 
+.clue-form{
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+}
+
+.clue-error {
+    color: rgb(224, 32, 32);
+    font-size: 16px;
+}
+
 .curr-game-action {
     font-size: 28px;
     color: $title;

@@ -32,7 +32,8 @@ const FrequencyGameSchema = new Schema({
       ref: 'users',
     },
     activePlayer: Boolean,
-    isPsychic: Boolean
+    isPsychic: Boolean,
+    endingElo: Number
   }],
   blueTeam: [{
     userId: {
@@ -40,12 +41,14 @@ const FrequencyGameSchema = new Schema({
       ref: 'users',
     },
     activePlayer: Boolean,
-    isPsychic: Boolean
+    isPsychic: Boolean,
   }],
   redPsychic: Number,
   bluePsychic: Number,
   redPoints: Number,
   bluePoints: Number,
+  redGainedPts: Number,
+  blueGainedPts: Number,
   guess: Number,
   clue: String,
   dial: Number,
@@ -55,6 +58,7 @@ const FrequencyGameSchema = new Schema({
   demoTurnCounter: Number,
   gameOver: Boolean,
   currentState: Number,
+  winner: String
 },  {
     timestamps: true
 })

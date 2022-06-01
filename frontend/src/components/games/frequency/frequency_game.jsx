@@ -15,6 +15,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
   const [isDelayed, setIsDelayed] = useState(false);
   const [stateQueue, setStateQueue] = useState([]);
   const [timers, setTimers] = useState([]);
+  const [errors, setErrors] = useState("");
   const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
@@ -129,6 +130,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
             <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
             <button className='submit-clue' onClick={handleUpdate}>Submit</button>
           </div>
+          {errors !== "" && <div className='clue-error'>{errors}</div>}
         </form>
       )
     }
@@ -300,7 +302,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
             {bobbingArrow("blue")}
             <div className='team-container'>
               <h1 className='blue'>Blue Team</h1>
-              <span>{assets.bluePoints}</span>
+              <span>{assets.bluePoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.blueGainedPts})`}</span>
               <ul>
                 {blueUsers.map(player => <li className='handle-li'>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
@@ -314,7 +316,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
             {bobbingArrow("red")}
             <div className='team-container'>
               <h1 className='red'>Red Team</h1>
-              <span>{assets.redPoints}</span>
+              <span>{assets.redPoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.redGainedPts})`}</span>
               <ul>
                 {redUsers.map(player => <li className='handle-li'>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
@@ -383,6 +385,13 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
       leftOrRight: leftOrRight
     };
 
+    if (gameState.name === 'PSYCHIC_PHASE' && clue.trim() === ''){
+      setErrors("Clue cannot be blank")
+      return;
+    } else if (gameState.name === 'PSYCHIC_PHASE'){
+      setErrors("")
+    }
+
     updateGame(roomCode, payload)
       .catch(err => console.error(err))
   };
@@ -407,9 +416,13 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
             <div className='game-background'>
               <div className='frequency-main'>
                 <div className='frequency-left-container'>
-                  <h1 className='curr-game-action'>
+                  {gameState.name !== "GAME_END" && <h1 className='curr-game-action'>
                     Current Move:<span> {actionDescriptions[gameState.actions[0]]}</span>
-                  </h1>
+                  </h1>}
+
+                  {gameState.name === "GAME_END" && <h1 className='curr-game-action'>
+                    Game Over:<span>{assets.winner} wins!</span>
+                  </h1>}
                   {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
                   <div className='dial-container'>
                     <div className='left-card'>{assets.currentCard.left}</div>

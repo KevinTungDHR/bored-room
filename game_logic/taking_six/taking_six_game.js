@@ -373,7 +373,7 @@ class TakingSixGame {
       .then((user) => {
         let originalElo = user.eloRating.takingSix;
 
-        if(winners.some(winner => winner._id.equals(user._id))){
+        if(winners.some(winner => mongoose.Types.ObjectId(winner._id).equals(user._id))){
           const increasedElo = {eloRating: { takingSix: (originalElo + eloWon) }};
           player.endingElo = originalElo + eloWon;
           user.set(increasedElo)
@@ -385,7 +385,6 @@ class TakingSixGame {
         user.save()
       })
     });
-
   }
 
   checkTurnEnd() {
