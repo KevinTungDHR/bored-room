@@ -27,21 +27,24 @@
 }
 
 .profile-inner-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: flex-start;
-    width: 95%;
+    display: grid;
+    grid-template-columns: 1fr minmax(320px, 1180px);
+    column-gap: 30px;
+    margin: auto;
+    margin-top: 10px;
+    width: 90%;
     height: 90%;
 }
 
 .profile-form {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    box-sizing: border-box;
     height: 550px;
     min-width: 500px;
-    margin-right: 20px;
     padding-bottom: 10px;
     background-color: $tan;
     font-family: 'Really-Free';
@@ -235,3 +238,189 @@
 .hidden {
     display: none;
 }
+
+.profile-addFriend {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    top: 5px;
+    right: 20px;
+    font-size: 32px;
+}
+
+.profile-removeFriend {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    top: 8px;
+    left: 15px;
+    font-size: 26px;
+}
+
+.friendship-small-text {
+    font-size: 26px;
+}
+
+.hover-click:hover {
+    cursor: pointer;
+}
+
+.friends-container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 550px;
+}
+
+.friendship-headers {
+    display: flex;
+}
+
+.friendship-header-tab {
+    padding: .2rem 1rem .5rem 1rem;
+    color: $coral;
+    font-family: 'Really-Free';
+    font-size: 38px;
+    font-weight: 700;
+    background-color: $tan;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.friendship-header-tab:hover {
+    cursor: pointer;
+}
+
+.friendship-header-notselected {
+    background-color: rgb(233, 214, 186);
+}
+
+.no-hover:hover {
+    cursor: default;
+}
+
+.friends-list {
+    box-sizing: border-box;
+    padding: 1rem 2rem;
+    height: 100%;
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.5);
+    background-color: $tan;
+}
+
+.friends-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+    row-gap: 1rem;
+}
+
+.userCard-container {
+    font-family: 'Really-Free';
+    width: 250px;
+    height: 60px;
+    padding: .5em;
+    display: grid;
+    border-radius: 3px;
+    grid-template-columns: 60px 1fr auto;
+    column-gap: .5rem;
+    background-color: $champ;
+    box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+.userCard-container:hover {
+    cursor: pointer;
+    box-shadow: 0px 1px 8px 2px rgba(52, 152, 219, 0.796);
+}
+
+.userCard-avatar {
+    height: 60px;
+    width: 60px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: $seaweed;
+    border: none;
+    border-radius: 50%; 
+}
+
+.userCard-info {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.userCard-bio {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.friendship-status {
+    font-size: 22px;
+    border-radius: .2rem;
+    padding: .2rem;
+    height: 20px;
+}
+
+.friendship-red {
+    color: rgb(247, 43, 43);
+} 
+
+.friendship-green {
+    color: $seaweed;
+} 
+
+.friendship-blue {
+    color: #3498db;
+} 
+
+.friendship-status:hover {
+    background-color: rgba(65, 65, 65, 0.2);
+}
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    animation: spin 2s linear infinite;
+  }
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+ .unfriend-modal{
+    position:fixed;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(228, 228, 228, 0.336);
+ }
+
+ .unfriend-modal-content {
+    position: relative;
+    padding: 2rem;
+    background-color: $tan;
+    font-size: 36px;
+    width: 350px;
+    margin: 180px 8%;
+    box-shadow: 2px 2px 5px black;
+ }
+
+ .unfriend-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 1rem;
+    font-size: 32px;
+ }
+
+ .friendship-modal-button:hover {
+     cursor: pointer;
+     text-shadow: 1px 1px .5px rgba(185, 211, 216, 0.836);
+ }
+
+ 

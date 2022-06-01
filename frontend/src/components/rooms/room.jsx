@@ -21,7 +21,7 @@ const Room = () => {
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
   const rooms = useSelector(state => state.entities.rooms);
-  const currentUserHandle = useSelector(state => state.session.user.handle);
+  const currentUser = useSelector(state => state.session.user);
   
   useEffect(() => {
     socket.emit("join_room", roomCode);
@@ -33,9 +33,7 @@ const Room = () => {
   }, []);
 
   useEffect(()=> {
-      socket.on("message", (data) => console.log(data));
-      socket.on("receive_message", (data) => {
-        let message = `${data.user}: ${data.message}`
+      socket.on("receive_message", (message) => {
         setList(list => [...list, message]);
       });
       socket.on("user_sits", (room) => dispatch(receiveRoom(room)));
@@ -77,7 +75,7 @@ const Room = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.emit('send_message', { user: currentUserHandle, message: message, roomCode: roomCode });
+    socket.emit('send_message', { user: currentUser, body: message, roomCode: roomCode });
     setMessage("");
   };
   
@@ -102,9 +100,9 @@ const Room = () => {
   const renderGameComponent = () =>{
     switch(rooms[roomCode].game){
       case 'Taking Six':
-        return <GameComponent socket={socket} roomCode={roomCode} />
+        return <GameComponent socket={socket} room={rooms[roomCode]} roomCode={roomCode} list={list} setMessage={setMessage} sendMessage={sendMessage} message={message}/>
       case 'Frequency':
-        return <FrequencyGame socket={socket} roomCode={roomCode} />
+        return <FrequencyGame socket={socket} room={rooms[roomCode]} roomCode={roomCode} list={list} setMessage={setMessage} sendMessage={sendMessage} message={message}/>
       default:
         return null;
     }
@@ -184,10 +182,9 @@ const Room = () => {
           </form>
 
           <ul className='chat-area'>
-            {list.map((item, idx) => <li key={idx}>{item}</li>)}
+            {list.map((message, idx) => <li key={idx}>{`${message.user.handle}: ${message.body}`}</li>)}
           </ul>
         </div>
-
       </div>
     </div>
   )

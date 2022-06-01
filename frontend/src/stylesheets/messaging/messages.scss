@@ -1,0 +1,75 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+.game-component-chat-container {
+  min-height: 0;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: #fefefc;
+  border: 2px solid $coral;
+  border-radius: 5px;
+}
+
+.game-component-chat-header {
+  font-family: 'Really-Free';
+  display: flex;
+  justify-content: space-between;
+
+  padding: .5rem 1rem;
+  font-size: 36px;
+  height: 32px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.game-component-messages-container{
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto';
+  height: 360px;
+  padding: 0 0.5rem;
+  overflow: scroll;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.game-component-message-input{
+  padding: 0.5rem;
+  box-sizing: border-box;
+  width: 100%; 
+  height: 50px;
+  overflow: scroll;
+  resize: none;
+  border: none;
+}
+
+
+.message-item-container-left, .message-item-container-right {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.2rem;
+  padding: 0.3rem;
+}
+
+.message-item-body-left{
+  align-self: flex-start;
+  align-items: flex-start;
+
+}
+.message-item-container-right{
+  align-self: flex-end;
+  align-items: flex-end;
+}
+ 
+.message-item-handle {
+  font-size: 13px;
+}
+
+.message-item-body-left, .message-item-body-right {
+  font-family: 'Roboto-Light';
+  font-size: 16px;
+}
+
+.game-component-messages-container::-webkit-scrollbar, .game-component-message-input::-webkit-scrollbar {
+  display: none;
+}

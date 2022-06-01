@@ -9,12 +9,21 @@ const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 const validateUpdatePassword = require('../../validation/update/update_password');
 const validateUpdateProfile = require('../../validation/update/update_profile');
-const { db } = require("../../models/User");
-const { json } = require("express/lib/response");
+const mongoose = require('mongoose');
+
 
 router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
 module.exports = router;
+
+router.get('/', (req, res) => {
+  User.find()
+    .select('-requestedFriends -rejectedFriends -pendingFriends')
+    .then(users =>{
+      res.json(users);
+    })
+    .catch(error => res.status(422).json(error))
+})
 
 router.post('/register', async (req, res) => {
   const {errors, isValid} = validateRegisterInput(req.body);
@@ -48,13 +57,16 @@ router.post('/register', async (req, res) => {
       newUser.save()
         .then(user => {
           const payload = { 
-            id: user.id, 
+            _id: user._id, 
             handle: user.handle, 
             email: user.email,
             avatar: user.avatar,
             eloRating: user.eloRating,
             bio: user.bio,
-            friends: user.friends
+            acceptedFriends: user.acceptedFriends,
+            requestedFriends: user.requestedFriends,
+            pendingFriends: user.pendingFriends,
+            rejectedFriends: user.rejectedFriends,
           }
 
           jwt.sign(
@@ -95,13 +107,16 @@ router.post('/login', (req, res) => {
         .then(isMatch => {
           if (isMatch) {
             const payload = {
-              id: user.id, 
+              _id: user._id, 
               handle: user.handle, 
               email: user.email,
               avatar: user.avatar,
               eloRating: user.eloRating,
               bio: user.bio,
-              friends: user.friends
+              acceptedFriends: user.acceptedFriends,
+              requestedFriends: user.requestedFriends,
+              pendingFriends: user.pendingFriends,
+              rejectedFriends: user.rejectedFriends,
             };
 
             jwt.sign(
@@ -122,56 +137,36 @@ router.post('/login', (req, res) => {
     })
 })
 
-router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
-  res.json({
-    id: req.user.id,
-    handle: req.user.handle,
-    email: req.user.email,
-    avatar: req.user.avatar,
-    eloRating: req.user.eloRating,
-    bio: req.user.bio,
-    friends: req.user.friends
-  });
-  
-})
-
-router.post('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const friendHandle = {handle: req.body.friendHandle}
-
-  User.findOneAndUpdate(friendHandle)
-    .then(friend => {
-      const friendInfo = new Object();
-        friendInfo.handle = friend.handle 
-        friendInfo.eloRating = friend.eloRating
-        friendInfo.bio = friend.bio
-      req.user.friends[friend.id] = friendInfo
-      req.user.save()
-      res.json(req.user)
-    })
-})
-
-router.delete('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const friendHandle = {handle: req.body.friendHandle}
-  User.findOneAndUpdate(friendHandle)
-    .then(friend => {
-      req.user.friends.deleteOne(friend.id)
-      req.user.save()
-      res.json(req.user)
-    })
-})
-
-router.get('/friend', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const friendHandle = {handle: req.body.friendHandle}
-
-  User.findOne(friendHandle)
-    .then(friend => {
-      res.json({
-        handle: friend.handle,
-        avatar: friend.avatar,
-        eloRating: friend.eloRating,
-        bio: friend.bio
+router.get('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
+    User.findById(req.user._id)
+      .then(user => {
+        res.json(user)
       })
+      .catch(error => {
+        res.status(422).json(error)
+      })
+})
+
+router.get('/profile/:_id', passport.authenticate('jwt', {session: false}), async (req, res) => {
+  if(mongoose.Types.ObjectId(req.params._id).equals(req.user._id)){
+    User.findById(req.user._id)
+    .then(user => {
+      res.json(user)
     })
+    .catch(error => {
+      res.status(422).json(error)
+    })
+  } else {
+    User.findById(req.params._id).select('-rejectedFriends -pendingFriends -requestedFriends')
+    .then(user => {
+      res.json(user)
+    })
+    .catch(error => {
+      res.status(422).json(error)
+    })
+  }
+  
+
 })
 
 router.patch('/profile', passport.authenticate('jwt', {session: false}), async (req, res) => {
@@ -182,7 +177,7 @@ router.patch('/profile', passport.authenticate('jwt', {session: false}), async (
   }
 
   try {
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user._id)
 
     const userWithEmail = await User.findOne({ email: req.body.email })
     
@@ -218,7 +213,7 @@ router.patch('/update-password', passport.authenticate('jwt', {session: false}),
   }
 
   if (req.body.password === req.body.password2){
-    User.findById(req.user.id)
+    User.findById(req.user._id)
       .then((user) => {
         user.password = req.body.password;
         const updatedUser = {user};

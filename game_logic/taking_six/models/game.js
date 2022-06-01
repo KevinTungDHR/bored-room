@@ -4,11 +4,17 @@ const Schema = mongoose.Schema;
 const TakingSixGameSchema = new Schema({
   code: {
     type: String,
+    index: true,
+    unique: true,
     required: true
   },
   name: {
     type: String,
     required: true
+  },
+  teamGame: {
+    type: Boolean,
+    required: true,
   },
   deck: [{
     value: Number,

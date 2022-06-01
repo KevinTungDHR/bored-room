@@ -19,6 +19,8 @@
 @import './taking_six/end_game.scss';
 @import './frequency/frequency_game.scss';
 @import './about/about.scss';
+@import './players/players.scss';
+@import './messaging/messages.scss';
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -159,4 +161,9 @@ table {
 html, body {
     min-height: 100vh;
     min-width: 740px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
 }

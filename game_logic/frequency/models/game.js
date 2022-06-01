@@ -4,10 +4,16 @@ const Schema = mongoose.Schema;
 const FrequencyGameSchema = new Schema({
   code: {
     type: String,
+    index: true,
+    unique: true,
     required: true
   },
   name: {
     type: String,
+    required: true,
+  },
+  teamGame: {
+    type: Boolean,
     required: true,
   },
   deck: [{

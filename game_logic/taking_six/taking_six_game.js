@@ -16,6 +16,7 @@ class TakingSixGame {
       this.deck = data.deck;
       this.players = data.players;
       this.rows = data.rows;
+      this.teamGame = data.teamGame;
       this.gameOver = data.gameOver;
       this.playedCards = data.playedCards;
       this.currentState = data.currentState;
@@ -25,6 +26,7 @@ class TakingSixGame {
 
   async setupNewGame(players) {
     this.name = "Taking Six";
+    this.teamGame = false;
     this.playedCards = [];
     this.rows = [];
     this.players = [];
@@ -59,6 +61,7 @@ class TakingSixGame {
   
   async setupDemoGame(players, bots){
     this.name = "Taking Six";
+    this.teamGame = false;
     this.playedCards = [];
     this.rows = [];
     this.players = [];

@@ -6,8 +6,9 @@ import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import MessageItem from '../../taking_six/message_item';
 
-const FrequencyGame = ({ roomCode, socket }) => {
+const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, message }) => {
   const [leftOrRight, setLeftOrRight] = useState("");
   const [clue, setClue] = useState("");
   const [guess, setGuess] = useState(90);
@@ -17,12 +18,14 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
-  const sessionId = useSelector(state => state.session.user.id);
+  const currentUser = useSelector(state => state.session.user);
+  const sessionId = useSelector(state => state.session.user._id);
   const room = useSelector(state => state.entities.rooms[roomCode])
   const blueUsers = useSelector(state => state.entities.rooms[roomCode].blueTeam)
   const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
   const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam) 
+  const chatEndRef = useRef();
 
   let selectionMade = false;
   const dispatch = useDispatch();
@@ -186,7 +189,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, Math.PI, 0);
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#eae6da'
+    ctx.fillStyle = '#f2efe8'
     ctx.fill();
 
     const allPlayers = blueTeam.concat(redTeam);
@@ -205,7 +208,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.lineTo(0 - length * Math.cos(Math.PI * theta/180), 0 - length * Math.sin(Math.PI * theta/180))
     ctx.closePath()
     ctx.lineWidth = 5;
-    ctx.strokeStyle = '#8f0113';
+    ctx.strokeStyle = '#ac0117';
     ctx.stroke();
 
     ctx.beginPath();
@@ -213,12 +216,12 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 50, Math.PI, 0);
     ctx.closePath()
     ctx.lineWidth = 15;
-    ctx.fillStyle = '#8f0113';
+    ctx.fillStyle = '#ac0117';
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(0, 0, 300, Math.PI, 0);
-    ctx.strokeStyle = '#003452';
+    ctx.strokeStyle = '#004b77';
     ctx.stroke();
 
   }
@@ -242,7 +245,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, outerArc.start, outerArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#c88d20';
+    ctx.fillStyle = '#dea02f';
     ctx.fill();
 
     ctx.beginPath()
@@ -250,7 +253,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, innerArc.start, innerArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#9bc79a';
+    ctx.fillStyle = '#abd0ab';
     ctx.fill();
 
     ctx.beginPath()
@@ -258,7 +261,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, targetArc.start, targetArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#dc5d3d';
+    ctx.fillStyle = '#e07155';
     ctx.fill();
   }
 
@@ -328,7 +331,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderInstructions = () => {
     return (
       <div className='frequency-instructions'>
-        <h1>Frequency Rules: </h1>
+        <h1>Frequency Rules</h1>
         <div>
           <h2>Overview: </h2>
           <p>Frequency is a team-based social guessing game that tests how well you understand your teammates --- and how well they understand you.</p>
@@ -341,7 +344,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
         <div>
           <h2>Game Play:</h2>
-          <ol>
+          <ol className='frequency-instructions-list'>
             <li type="1">Each turn a member of a team will take the role of Psychic. </li>
             <li type="1">The active team draws a card and places it in front of the dial.The card will have two opposing ideas, one that represents the leftmost part of the dial and one that represents the rightmost part (such as smells good vs smells bad).</li>
             <li type="1">A target zone on the dial will get randomly chosen and is only visible to the Psychic. </li>
@@ -360,6 +363,16 @@ const FrequencyGame = ({ roomCode, socket }) => {
       </div>
     )
   }
+
+  const handleMessageSubmit = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+
+    if(e.keyCode === 13){
+      sendMessage(e)
+    }
+  }
  
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -371,7 +384,6 @@ const FrequencyGame = ({ roomCode, socket }) => {
     };
 
     updateGame(roomCode, payload)
-      .then(data => console.log(data))
       .catch(err => console.error(err))
   };
 
@@ -392,64 +404,54 @@ const FrequencyGame = ({ roomCode, socket }) => {
   
       return (
           <div className='frequency-outer-div'>
-            <div className='room-code'>In Room: {roomCode}</div>
-            <h1 className='curr-game-action'>
-              Current Move:<span> {actionDescriptions[gameState.actions[0]]}</span>
-            </h1>
-            {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
-            <div className='dial-container'>
-              <div className='left-card'>{assets.currentCard.left}</div>
-              <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
-              <div className='right-card'>{assets.currentCard.right}</div>
+            <div className='game-background'>
+              <div className='frequency-main'>
+                <div className='frequency-left-container'>
+                  <h1 className='curr-game-action'>
+                    Current Move:<span> {actionDescriptions[gameState.actions[0]]}</span>
+                  </h1>
+                  {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
+                  <div className='dial-container'>
+                    <div className='left-card'>{assets.currentCard.left}</div>
+                    <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
+                    <div className='right-card'>{assets.currentCard.right}</div>
+                  </div>
+
+                  {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
+
+                  <div className='forms-container'>
+                    {renderClueForm()} 
+                    {renderSliderAndConfirm()}
+                    {renderLeftOrRight()}
+                    {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
+                    {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
+                    {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
+                  </div>
+                </div>
+
+                <div className='frequency-right-container'>
+                  {assets && blueUsers && renderScoreboard()}
+
+                  <div className='game-component-chat-container'>
+                    <header className='game-component-chat-header'>
+                      <div>Room: {room.name}</div>
+                      <div>Code: {roomCode}</div>
+                    </header>
+                    <div className='game-component-messages-container'>
+                      {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
+                      <div ref={chatEndRef}></div>
+                    </div>
+                    <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                  </div>
+                </div>
+              </div>
+              
+
+              
+
+              {renderInstructions()}
+
             </div>
-
-            {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
-
-            <div className='forms-container'>
-              {renderClueForm()} 
-              {renderSliderAndConfirm()}
-              {renderLeftOrRight()}
-              {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
-              {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
-              {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
-            </div>
-
-          <div className='frequency-header'>
-            {renderInstructions()}
-            {assets && blueUsers && renderScoreboard()}
-          </div>
-
-            {/* <div className='temporary'>
-              <div>Game Assets</div>
-              <ul>
-                <li>Active Team: {assets.activeTeam}</li>
-                <li>Blue Points: {assets.bluePoints}</li>
-                <li>Red Points: {assets.redPoints}</li>
-                <li>Current Card: Left: {assets.currentCard.left} | Right: {assets.currentCard.right} </li>
-                <li>clue: {assets.clue}</li>
-                <li>dial: {assets.dial}</li>
-                <li>local guess: {guess}</li>
-                <li>db guess: {assets.guess}</li>
-                <li>leftOrRight: {assets.leftOrRight}</li>
-              </ul>
-              <div>Game State</div>
-              <ul>
-                <li>{gameState.name}</li>
-                <li>{gameState.type}</li>
-                {gameState.actions.map((action, idx) => <li key={idx}>action: {action}</li>)}
-                {Object.keys(gameState.transitions).map((transition, idx) => <li key={idx}>transition: {transition}</li>)}
-              </ul>
-
-              <ul>
-                <li>Red Team</li>
-                {room && room.redTeam.map(player => <li>{player.handle}</li>)}
-              </ul>
-
-              <ul>
-                <li>Blue Team</li>
-                {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
-              </ul>              
-            </div> */}
           </div>
       );
   }

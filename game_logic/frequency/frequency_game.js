@@ -13,8 +13,10 @@ mongoose
 class FrequencyGame {
   constructor(data){
     this.name = "Frequency";
+    this.teamGame = true;
     if(data){
       this.demoGame = data.demoGame;
+      this.teamGame = true;
       this.deck = data.deck;
       this.currentCard = data.currentCard;
       this.discard = data.discard;
@@ -42,6 +44,7 @@ class FrequencyGame {
 
   async setupNewGame({redTeam, blueTeam}){
     this.name = "Frequency";
+    this.teamGame = true;
     this.demoGame = false;
     this.discard = [];
     this.redTeam = [];
@@ -90,6 +93,7 @@ class FrequencyGame {
 
   async setupDemoGame({redTeam, blueTeam}, redStart){
     this.name = "Frequency";
+    this.teamGame = true;
     this.demoGame = true;
     this.discard = [];
     this.redTeam = [];

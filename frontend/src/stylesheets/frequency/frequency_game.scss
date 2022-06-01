@@ -7,9 +7,23 @@
     min-height: 100vh;
 }
 
-.frequency-header {
+.frequency-main {
     display: flex;
     justify-content: space-between;
+    column-gap: 2rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.frequency-left-container {
+    width: 100%;
+    max-width: 1500px;
+    padding: 1rem 3rem;
+}
+
+.frequency-right-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .curr-game-action {
@@ -34,30 +48,36 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-size: 24px;
-    font-family: 'Really-Free';
-    color: $text;
-    margin: 18px 18px;
-    max-width: 50%;
-    margin-left: 24px;
-
+    font-size: 18px;
+    font-family: 'Roboto';
+    row-gap: 1rem;
+    color: rgb(59, 57, 55);
+    background-color: $champ;
+    padding: 1rem;
+    margin: auto;
+    width: 95%;
+  
     h1 {
-        font-size: 30px;
-        color: $title;
-    }
+        font-size: 22px;
+        font-weight: 500;
+        color: $bronze;
+        background-color: #fff;
+        text-align: center;
+        border-radius: 10px;
+      }
 
     h2 {
         text-decoration: underline;
         color: $bronze;
-        font-size: 24px;
+        font-size: 20px;
     }
 }
 
-.scoreboard-outermost-div {
-    position: absolute;
-    top: 100px;
-    right: 10px;
+.frequency-instructions-list li{
+    list-style: decimal inside none;
+    margin: 10px 0;
 }
+
 
 .freq-scoreboard-container {
     display: flex;
@@ -78,8 +98,7 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    background-color: $seaweed;
-    opacity: 0.4;
+    background-color: #cbe9d8;
 }
 
 .team-scores-container {
@@ -103,8 +122,9 @@
 
 .dial-container {
     display: flex;
+    font-size: 26px;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     margin: auto;
     margin-top: 12px;
     text-align: center;
@@ -154,7 +174,7 @@
         border: none;
         outline: none;
         left: 50%;
-        background-color: $champ;
+        background-color: #fefefc;
         border-radius: 10px;
         text-align: center;
 

@@ -6,15 +6,18 @@ import user_prof from '../../assets/images/user_prof.png';
 import space from '../../assets/images/space.jpg';
 import earth from '../../assets/images/earth.jpg';
 import game_table from '../../assets/images/game_table.jpg';
-
+import UserCard from './user_card';
+import FriendsIndex from './friends_index';
+import UnfriendModal from './unfriend_modal';
 class Profile extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            user: {},
             btn: 'Edit Profile',
-            background: game_table
-            // currImg: 1
+            background: game_table,
+            unfriendModalOpen: false
         }
 
         this.toggleBtn = this.toggleBtn.bind(this);
@@ -24,10 +27,19 @@ class Profile extends React.Component {
         this.profile = this.profile.bind(this);
         this.changeBackground = this.changeBackground.bind(this);
         this.adjustWidth = this.adjustWidth.bind(this);
+        this.addFriend = this.addFriend.bind(this);
+        this.cancelRequest = this.cancelRequest.bind(this);
+        this.unblockUser = this.unblockUser.bind(this);
+        this.acceptRequest = this.acceptRequest.bind(this);
+        this.rejectRequest = this.rejectRequest.bind(this);
+        this.removeFriend = this.removeFriend.bind(this);
+        this.openFriendModal = this.openFriendModal.bind(this);
+        this.closeFriendModal = this.closeFriendModal.bind(this);
     }
 
     componentDidMount(){
-        this.setState({user: {...this.props.user}})
+        this.props.fetchUserAndFriends(this.props.match.params._id);
+
         document.addEventListener("keydown", event => {
             if (event.key === 'Escape') {
                 this.props.closeModal()
@@ -36,9 +48,17 @@ class Profile extends React.Component {
     }
 
     componentDidUpdate(prevProps){
+        if (prevProps.match.params._id !== this.props.match.params._id){
+         this.props.fetchUserAndFriends(this.props.match.params._id);
+        }
+
         if (prevProps.user !== this.props.user){
             this.setState({user: {...this.props.user}})  
         }
+    }
+
+    componentWillUnmount(){
+        this.props.removeErrors();
     }
 
     handleChangeBio(e) {
@@ -107,6 +127,74 @@ class Profile extends React.Component {
         }).replace(/\s+/g, '');
     }
 
+    addFriend(e){
+        this.props.addFriend(this.state.user._id);
+    }
+
+    acceptRequest(e){
+        this.props.acceptRequest(this.state.user._id);
+    }
+
+    rejectRequest(e){
+        this.props.rejectRequest(this.state.user._id);
+    }
+
+    cancelRequest(e){
+        this.props.cancelRequest(this.state.user._id);
+    }
+
+    unblockUser(e){
+        this.props.unblockUser(this.state.user._id);
+    }
+
+    removeFriend(e){
+        this.props.removeFriend(this.state.user._id);
+    }
+
+    openFriendModal(e) {
+        this.setState({ unfriendModalOpen: true })
+    }
+
+    closeFriendModal(e) {
+        this.setState({ unfriendModalOpen: false })
+    }
+
+    renderFriendRequest() {
+        const {acceptedFriends, pendingFriends, requestedFriends, rejectedFriends } = this.props.currentUser;
+        const userId = this.props.match.params._id;
+
+        if (userId === this.props.currentUser._id){
+            return
+        }
+
+        if(acceptedFriends.includes(userId)){
+            return (
+                <>
+                    <div className='profile-addFriend friendship-green'>Your Friend</div>
+                    <div className='profile-removeFriend friendship-red hover-click' onClick={this.openFriendModal}>Unfriend</div>
+                    {this.state.unfriendModalOpen && 
+                        <UnfriendModal user={this.state.user} 
+                            closeModal={this.closeFriendModal}
+                            unfriend={this.removeFriend}/>}
+                </>
+            ) 
+        } else if(pendingFriends.includes(userId)){
+            return <div className='profile-addFriend' >
+                        <div className='friendship-green hover-click' onClick={this.acceptRequest}>Accept Request</div>
+                        <div className='hover-click friendship-red friendship-small-text' onClick={this.rejectRequest}>Block</div>
+                </div>
+        } else if(requestedFriends.includes(userId)){
+            return <div className='profile-addFriend'>
+                        <div className='friendship-blue'>Request Pending</div>
+                        <div className='hover-click friendship-red friendship-small-text' onClick={this.cancelRequest}>cancel</div>
+                    </div>
+        } else if(rejectedFriends.includes(userId)) {
+            return <div className='profile-addFriend friendship-red hover-click' onClick={this.unblockUser}>Unblock</div>
+        } else {
+            return <div className='profile-addFriend friendship-green hover-click' onClick={this.addFriend}>Add Friend</div>
+        }
+    }
+
     profile() {
         const avatars = {
             'noimage': user_prof,
@@ -115,7 +203,6 @@ class Profile extends React.Component {
             'socrates': socrates
         };
         const { email, bio, handle, eloRating, avatar } = this.state.user;
-        
         return (
             <div className='profile-container' style={{ backgroundImage: "url(" + this.state.background + ")" }}>
                 <img className='hidden' src={space} />
@@ -124,11 +211,12 @@ class Profile extends React.Component {
                     <button className='background-btn' onClick={this.changeBackground} value="space" >Go to Space</button>
                     <button className='background-btn' onClick={this.changeBackground} value="earth" >Stay on Earth</button>
                 </div>
-                <div className='profile-inner-container'>
+                {Object.keys(this.state.user).length > 0 && <div className='profile-inner-container'>
                     <div className='profile-form'>
+                        {this.renderFriendRequest()}
                         <div className='avatar-image'>
                             <div className='profile-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}} >
-                                <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>
+                                {this.props.user._id === this.props.sessionId && <button onClick={() => this.props.openModal({ formType: 'avatar' })} className='edit-avatar-btn'>Edit Avatar</button>}
                             </div>
                         </div>
                         <input onChange={this.handleChangeHandle} disabled id='profile-handle' type="text" value={handle} maxLength='30' onKeyDown={this.adjustWidth} />
@@ -148,19 +236,20 @@ class Profile extends React.Component {
                                 )
                             })}</div>
                         </div>
+                        <div>Bio</div>
                         <textarea onChange={this.handleChangeBio} disabled id='profile-description' value={bio} rows="14" cols="50" />
-                        <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>
+                        {this.props.user._id === this.props.sessionId && <button className='profile-edit-btn' id='profile-btn' onClick={this.toggleBtn}>{this.state.btn}</button>}
                     </div>
-                    
-                </div>
+                     <FriendsIndex user={this.state.user} users={this.props.users} />
+                </div>}
             </div>
         )
     }
 
-    render() {        
+    render() { 
         return (
             <div>
-                {this.state.user && this.profile()}
+                {this.profile()}
             </div>
 
         )

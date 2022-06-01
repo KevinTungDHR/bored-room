@@ -9,8 +9,9 @@ import { AiFillStar } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import GameEnd from './game_end';
 import { motion } from 'framer-motion';
+import MessageItem from './message_item';
 
-const GameComponent = ({ roomCode, socket }) => {
+const GameComponent = ({ roomCode, socket, room, setMessage, sendMessage, list, message }) => {
   const [chosenCard, setChosenCard] = useState();
   const [chosenRow, setChosenRow] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
@@ -19,14 +20,16 @@ const GameComponent = ({ roomCode, socket }) => {
   const [timers, setTimers] = useState([]);
   const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
+  const currentUser = useSelector(state => state.session.user);
   const assets = useSelector(state => state.games[roomCode]?.assets);
-  const sessionId = useSelector(state => state.session.user.id);
+  const sessionId = useSelector(state => state.session.user._id);
   const player = useSelector(state => state.games[roomCode]?.assets?.players?.filter(p => p._id === sessionId)[0])
   const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
   // const userHandles = useSelector(state => state.entities.rooms[roomCode].seatedUsers?.map(user => user.handle))
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
+  const chatEndRef = useRef();
   
   useEffect(() => {
     dispatch(fetchGame(roomCode));
@@ -50,7 +53,7 @@ const GameComponent = ({ roomCode, socket }) => {
           dispatch(receiveGame(nextUpdate))
           setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
-        }, 1000);
+        }, 800);
 
         setTimers(oldState => [...oldState, timer]);
         // Need to clearTimeout but it's being called on every rerender
@@ -85,6 +88,13 @@ const GameComponent = ({ roomCode, socket }) => {
 
   const firstUpdate = useRef(true)
   const firstUpdateRow = useRef(true)
+  
+  useEffect(() => {
+    if(!chatEndRef.current){
+      return;
+    }
+    chatEndRef.current.scrollIntoView({block: 'nearest'})
+  }, [list])
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -108,6 +118,16 @@ const GameComponent = ({ roomCode, socket }) => {
     handleUpdate();
   }, [chosenRow])
 
+  const handleMessageSubmit = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+
+    if(e.keyCode === 13){
+      sendMessage(e)
+    }
+  }
+
   const handleUpdate = (e) => {
     // e.preventDefault();
     const payload = {
@@ -116,7 +136,6 @@ const GameComponent = ({ roomCode, socket }) => {
       row: chosenRow
     };
     updateGame(roomCode, payload)
-      .then(data => console.log(data))
       .catch(err => console.error(err))
   };
 
@@ -145,7 +164,7 @@ const GameComponent = ({ roomCode, socket }) => {
                   <div className="card-container">
                     {player?.hand.map((c, idx) => {
                       return (
-                      <div className='card-overlay'  onClick={(e) => setChoiceAndUpdate(c, e)} >
+                      <div key={`overlay-${idx}`} className='card-overlay'  onClick={(e) => setChoiceAndUpdate(c, e)} >
                         <Card card={c} type={{value: 'hand'}} key={idx} />
                       </div>)
                     })}
@@ -156,9 +175,9 @@ const GameComponent = ({ roomCode, socket }) => {
                     <div className='game-grid'>
                       {assets.rows.map((row, idx) => {
                         return (
-                          <div onClick={() => setRowAndUpdate(idx)} className={gameState.actions[0] === 'playCard' ? 'row-container-disabled' : 'row-container'} >
-                            {[0, 1, 2, 3, 4, 5].map((i) => {
-                              return <Card card={row[i]} type={{ value: 'row' }} index={i} key={i} />
+                          <div  key={`row-${idx}`} onClick={() => setRowAndUpdate(idx)} className={gameState.actions[0] === 'playCard' ? 'row-container-disabled' : 'row-container'} >
+                            {[0, 1, 2, 3, 4, 5].map((i, idx) => {
+                              return <Card card={row[i]} type={{ value: 'row' }} index={i} key={idx} />
                             })}
                           </div>
                         )
@@ -182,7 +201,7 @@ const GameComponent = ({ roomCode, socket }) => {
                     <h1>Players</h1>
                     <div className='player-container'>
                       <div>
-                        {allUsers.map((user) => {
+                        {allUsers.map((user, idx) => {
                           let playedCard;
                           {allPlayers.forEach((player) => {
                               if (player._id === user._id) {
@@ -190,7 +209,7 @@ const GameComponent = ({ roomCode, socket }) => {
                               }
                           })}
                           return (
-                            <div className='player-handles'>
+                            <div key={idx} className='player-handles'>
                               {playedCard ? <AiOutlineCheckCircle className='chosen-indicator' /> : <span></span> }
                               {user.handle}
                             </div>
@@ -198,8 +217,8 @@ const GameComponent = ({ roomCode, socket }) => {
                         })}
                       </div>
                       <div className='player-scores'>
-                        {assets.players.map((player) => {
-                          return <div className='player-stats'>
+                        {assets.players.map((player, idx) => {
+                          return <div key={idx} className='player-stats'>
                               <div>{player.score}</div>
                               <AiFillStar className="ai-star-icon" />
                             </div>
@@ -208,15 +227,36 @@ const GameComponent = ({ roomCode, socket }) => {
                     </div>
                   </div>
                 </div>
+                <div className='game-component-chat-container'>
+                  <header className='game-component-chat-header'>
+                    <div>Room: {room.name}</div>
+                    <div>Code: {roomCode}</div>
+                  </header>
+                  <div className='game-component-messages-container'>
+                    {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
+                    <div ref={chatEndRef}></div>
+                  </div>
+                  <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                </div>
+               
+              </div>
 
-                <div className='taking-six-instructions'>
+           
+            </div>
+            <div className='taking-six-instructions'>
                   <div>
-                    <h1>Taking Six Rules:</h1>
-                    <span><h2>Setup:</h2> Every player starts with 66 points and a hand of 10 cards, ranging from 1 to 104. There are four rows starting with a single card in each row. Each row can take up to 5 cards.</span>
-                    <span><h2>Objective:</h2> Have the most points remaining at the end of the game.</span>
+                    <h1>Taking Six Rules</h1>
+                  </div>
+                  <div className='taking-six-instructions-setup'>
+                    <h2>Setup:</h2>
+                    <p>Every player starts with 66 points and a hand of 10 cards, ranging from 1 to 104. There are four rows starting with a single card in each row. Each row can take up to 5 cards.</p>
                   </div>
                   <div>
-                    <ol>
+                    <h2>Objective:</h2>
+                    <p>Have the most points remaining at the end of the game.</p>
+                  </div>
+                  <div>
+                    <ol className='taking-six-instructions-list'>
                       <h2>Game Play:</h2>
                       <li type="1">Each turn players simultaneously choose a card. Each card, in ascending order, is then placed in one of the four rows.</li>
                       <li type="1">The card added to a row must be higher than the last card in that row.</li>
@@ -225,12 +265,12 @@ const GameComponent = ({ roomCode, socket }) => {
                       <li type="1">The player who takes a row loses points based off the number of bull symbols on each card</li>
                       <li type="1">If a player plays a card that is so low that it cannot be placed in a row, that player must take all cards in a row of their choice.</li>
                     </ol>
-                    <span><h2>Game End:</h2> A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</span>
                   </div>
-                  
+                  <div>
+                    <h2>Game End:</h2>
+                    <p>A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</p>
+                  </div>
                 </div>
-              </div>
-            </div>
           </div>
         </div>
     )

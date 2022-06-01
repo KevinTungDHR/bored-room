@@ -23,6 +23,7 @@ router.post('/createDemo', async (req, res) => {
       const gameModel = TakingSixModel({
         code: req.body.code,
         name: g.name,
+        teamGame: g.teamGame,
         deck: g.deck,
         players: g.players,
         playedCards: g.playedCards,
@@ -59,6 +60,7 @@ router.post('/create', (req, res) => {
       const gameModel = TakingSixModel({
         code: req.body.code,
         name: g.name,
+        teamGame: g.teamGame,
         deck: g.deck,
         players: g.players,
         playedCards: g.playedCards,
@@ -126,6 +128,10 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       gameState.description = gameState.description(user.handle);
     }
 
+    if(gameState.name === 'GAME_END'){
+      await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+    }
+
     io.to(req.params.code).emit("game_updated", { assets, gameState });
   } catch (err) {
     return res.status(402).json(err);
@@ -140,6 +146,10 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       if(gameState.description instanceof Function){
         const user = await User.findById(g.getActivePlayer()._id)
         gameState.description = gameState.description(user.handle);
+      }
+
+      if(gameState.name === 'GAME_END'){
+        await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
       }
       
       io.to(req.params.code).emit("game_updated", { assets, gameState });
@@ -163,6 +173,10 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
           const user = await User.findById(g.getActivePlayer()._id)
           gameState.description = gameState.description(user.handle);
         }
+
+        if(gameState.name === 'GAME_END'){
+          await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+        }
         
         io.to(req.params.code).emit("game_updated", { assets, gameState });
       } catch (err) {
@@ -179,6 +193,11 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
           const user = await User.findById(g.getActivePlayer()._id)
           gameState.description = gameState.description(user.handle);
         }
+
+        if(gameState.name === 'GAME_END'){
+          await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+        }
+    
         io.to(req.params.code).emit("game_updated", { assets, gameState });
       } catch (err){
         res.status(422).json(err)

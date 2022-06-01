@@ -6,9 +6,19 @@ const RoomSchema = new Schema({
     type: String,
     required: true
   },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  teamGame: {
+    type: Boolean,
+    required: true
+  },
   code: {
     type: String,
-    required: true
+    required: true,
+    index: true,
+    unique: true,
   },
   game: {
     type: String,
@@ -31,6 +41,11 @@ const RoomSchema = new Schema({
     ref: 'User',
   }],
   gameStarted: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  gameOver: {
     type: Boolean,
     required: true,
     default: false

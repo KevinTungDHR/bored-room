@@ -3,6 +3,7 @@ import { removeRoom, fetchAllRooms, receiveRoom } from '../../actions/room_actio
 import Lobby from './lobby';
 
 const mapState = state => ({
+    currentUser: state.session.user,
     rooms: Object.values(state.entities.rooms)
 });
 
