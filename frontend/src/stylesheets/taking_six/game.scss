@@ -14,6 +14,9 @@
 }
 
 .game-background {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
   background-image: url('../../assets/images/game_table.jpg');
   background-repeat: repeat-y;
   min-height: 100vh;

@@ -55,9 +55,15 @@
 }
 
 @font-face {
-    font-family: "Roboto-Thin";
+    font-family: "Roboto-Light";
     src: url("../assets/fonts/Roboto-Light.ttf");
     font-weight: 200;
     font-style: normal;
 }
 
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("../assets/fonts/Roboto-Bold.ttf");
+    font-weight: 700;
+    font-style: normal;
+}

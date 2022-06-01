@@ -20,8 +20,8 @@ export const Card = ({card, setChosenCard, index, type}) => {
           <div className="top-card">
             <p>{card.value}</p>
             <div className="small-bulls-container">
-              {[...Array(card.bulls)].map((i) => {
-                return <img key={i} className="small-bull" src={bull_purp} height="10px" width="10px" />
+              {[...Array(card.bulls)].map((i, idx) => {
+                return <img key={idx} className="small-bull" src={bull_purp} height="10px" width="10px" />
               })}
             </div>
             <p>{card.value}</p>
@@ -31,8 +31,8 @@ export const Card = ({card, setChosenCard, index, type}) => {
           <div className="card-bottom">
               <p>{card.value}</p>
               <div className="small-bulls-container">
-                {[...Array(card.bulls)].map((i) => {
-                  return <img key={i} className="small-bull" src={bull_purp} height="10px" width="10px" />
+                {[...Array(card.bulls)].map((i, idx) => {
+                  return <img key={idx} className="small-bull" src={bull_purp} height="10px" width="10px" />
                 })}
               </div>
               <p>{card.value}</p>

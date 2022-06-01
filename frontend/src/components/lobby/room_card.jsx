@@ -56,7 +56,7 @@ const RoomCard = ({ room, handleRoomDelete }) => {
     return(
       players.map((user, idx) => {
         return (
-        <div className='roomCard-user-item'>
+        <div key={idx} className='roomCard-user-item'>
           <div className='roomCard-user-avatar' style={{ backgroundImage: "url(" + avatars[user.avatar] + ")"}}></div>
           <div>
             <NavLink to={`/profile/${user._id}`} className='roomCard-user-handle'>{user.handle}</NavLink>
@@ -78,7 +78,7 @@ const RoomCard = ({ room, handleRoomDelete }) => {
       </div>
       <div className="roomCard-links">
         <NavLink className='join-room-button' to={`/rooms/${room.code}`}>Join Room</NavLink>
-        {(currentUser._id === room.creator._id  || currentUser.isAdmin) && <div className='delete-room-button' onClick={() => handleRoomDelete(room.code)}>Delete</div>}
+        {((currentUser._id === room.creator._id && !room.gameOver) || currentUser.isAdmin) && <div className='delete-room-button' onClick={() => handleRoomDelete(room.code)}>Delete</div>}
       </div>
     </div>
    

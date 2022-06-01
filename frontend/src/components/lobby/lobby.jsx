@@ -131,13 +131,13 @@ class Lobby extends React.Component {
 
         return (
             <div className='lobby-background'>
-                <navbar className='lobby-navbar'>
+                <nav className='lobby-navbar'>
                     <ul className='lobby-navlist'>
                         <NavLink className='navlink-selected' to='/lobby'>Game Lobby</NavLink>
                         <NavLink to='/users'>Players</NavLink>
                         <NavLink to={`/profile/${currentUser._id}`}>View My Profile</NavLink>
                     </ul>
-                </navbar>
+                </nav>
                 {/* <h1 className='lobby-head'>Welcome to the <span id='logo'>Bored Room</span></h1>           */}
                     <form className='create-room' onSubmit={this.handleSubmit}>
                         <div className='flex'>
@@ -178,24 +178,24 @@ class Lobby extends React.Component {
                                 </div>
                             </div>
                             {this.state.errors !== "" ? <div className='create-room-errors'>{this.state.errors}</div> : null}
-                            <form className='search-rooms'>
+                            <div className='search-rooms'>
                                 <div className='flex'>
                                     <div className='search-title'>Search for a Room</div>
                                     <div>
                                         <input className='search-room-input' value={this.state.search} onChange={this.updateSearch} />
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </form>
 
-                <navbar className='room-status-navbar'>
+                <nav className='room-status-navbar'>
                     <ul className='room-status-navlist'>
                         <li className='room-status-navlist-item' value={0} onClick={this.selectRoomType}>New Rooms</li>
                         <li className='room-status-navlist-item' value={1} onClick={this.selectRoomType}>Ongoing</li>
                         <li className='room-status-navlist-item' value={2} onClick={this.selectRoomType}>Finished</li>
                     </ul>
-                </navbar>
+                </nav>
                 <div className='new-lobby-rooms'>
                     <ul className='new-rooms-list'>
                      {this.renderRooms()}

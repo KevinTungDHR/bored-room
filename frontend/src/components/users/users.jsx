@@ -15,13 +15,13 @@ const UsersViewPage = (props) => {
 
   return(
     <div className='lobby-background'>
-      <navbar className='lobby-navbar'>
+      <nav className='lobby-navbar'>
           <ul className='lobby-navlist'>
               <NavLink to='/lobby'>Game Lobby</NavLink>
               <NavLink className='navlink-selected' to='/users'>Players</NavLink>
               <NavLink to={`/profile/${currentUser._id}`}>View My Profile</NavLink>
           </ul>
-      </navbar>
+      </nav>
       <div className='users-page-container'>
         {Object.values(users).map((user, idx) => <UserPageItem key={idx} user={user} />)}
       </div>
