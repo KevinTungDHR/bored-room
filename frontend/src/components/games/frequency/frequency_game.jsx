@@ -6,8 +6,9 @@ import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import MessageItem from '../../taking_six/message_item';
 
-const FrequencyGame = ({ roomCode, socket }) => {
+const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, message }) => {
   const [leftOrRight, setLeftOrRight] = useState("");
   const [clue, setClue] = useState("");
   const [guess, setGuess] = useState(90);
@@ -17,12 +18,14 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const timerRef = useRef(timers);
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
   const assets = useSelector(state => state.games[roomCode]?.assets);
+  const currentUser = useSelector(state => state.session.user);
   const sessionId = useSelector(state => state.session.user._id);
   const room = useSelector(state => state.entities.rooms[roomCode])
   const blueUsers = useSelector(state => state.entities.rooms[roomCode].blueTeam)
   const redUsers = useSelector(state => state.entities.rooms[roomCode].redTeam)
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
   const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam) 
+  const chatEndRef = useRef();
 
   let selectionMade = false;
   const dispatch = useDispatch();
@@ -186,7 +189,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, Math.PI, 0);
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#eae6da'
+    ctx.fillStyle = '#f2efe8'
     ctx.fill();
 
     const allPlayers = blueTeam.concat(redTeam);
@@ -205,7 +208,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.lineTo(0 - length * Math.cos(Math.PI * theta/180), 0 - length * Math.sin(Math.PI * theta/180))
     ctx.closePath()
     ctx.lineWidth = 5;
-    ctx.strokeStyle = '#8f0113';
+    ctx.strokeStyle = '#ac0117';
     ctx.stroke();
 
     ctx.beginPath();
@@ -213,12 +216,12 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 50, Math.PI, 0);
     ctx.closePath()
     ctx.lineWidth = 15;
-    ctx.fillStyle = '#8f0113';
+    ctx.fillStyle = '#ac0117';
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(0, 0, 300, Math.PI, 0);
-    ctx.strokeStyle = '#003452';
+    ctx.strokeStyle = '#004b77';
     ctx.stroke();
 
   }
@@ -242,7 +245,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, outerArc.start, outerArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#c88d20';
+    ctx.fillStyle = '#dea02f';
     ctx.fill();
 
     ctx.beginPath()
@@ -250,7 +253,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, innerArc.start, innerArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#9bc79a';
+    ctx.fillStyle = '#abd0ab';
     ctx.fill();
 
     ctx.beginPath()
@@ -258,7 +261,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
     ctx.arc(0, 0, 300, targetArc.start, targetArc.end)
     ctx.lineTo(0, 0);
     ctx.closePath()
-    ctx.fillStyle = '#dc5d3d';
+    ctx.fillStyle = '#e07155';
     ctx.fill();
   }
 
@@ -328,7 +331,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
   const renderInstructions = () => {
     return (
       <div className='frequency-instructions'>
-        <h1>Frequency Rules: </h1>
+        <h1>Frequency Rules</h1>
         <div>
           <h2>Overview: </h2>
           <p>Frequency is a team-based social guessing game that tests how well you understand your teammates --- and how well they understand you.</p>
@@ -359,6 +362,16 @@ const FrequencyGame = ({ roomCode, socket }) => {
         </div>
       </div>
     )
+  }
+
+  const handleMessageSubmit = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+
+    if(e.keyCode === 13){
+      sendMessage(e)
+    }
   }
  
   const handleUpdate = (e) => {
@@ -417,8 +430,18 @@ const FrequencyGame = ({ roomCode, socket }) => {
                 </div>
 
                 <div className='frequency-right-container'>
-                  <div className='frequency-header'>
-                    {assets && blueUsers && renderScoreboard()}
+                  {assets && blueUsers && renderScoreboard()}
+
+                  <div className='game-component-chat-container'>
+                    <header className='game-component-chat-header'>
+                      <div>Room: {room.name}</div>
+                      <div>Code: {roomCode}</div>
+                    </header>
+                    <div className='game-component-messages-container'>
+                      {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
+                      <div ref={chatEndRef}></div>
+                    </div>
+                    <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
                   </div>
                 </div>
               </div>
