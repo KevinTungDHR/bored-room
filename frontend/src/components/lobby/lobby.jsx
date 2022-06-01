@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import { io } from 'socket.io-client';
 import * as RoomAPIUtil from '../../util/rooms_util';
 import bull_logo from '../../assets/images/bull_logo.png';
-import { GiBull } from 'react-icons/gi';
-import { GiSundial } from 'react-icons/gi';
+import { GiBull, GiSundial, GiPeaks } from 'react-icons/gi';
 import RoomCard from './room_card';
 
 const socket = io();
@@ -159,13 +158,11 @@ class Lobby extends React.Component {
                                         right: "15%"
                                     }}/>
                                 </div>
-                                <div className='six-game-logo' data-teamgame={false} value="Taking Six" onClick={this.handleGameChange} >
-                                    <GiBull height="160px" width="160px" className='gi-bull-top-left' />
-                                    <GiBull height="160px" width="160px" className='gi-bull-top-right' />
-                                    <GiBull height="160px" width="160px" className='gi-bull-bot-left' />
-                                    <GiBull height="160px" width="160px" className='gi-bull-bot-right' />
-                                    <img className='tile-logo' src={bull_logo} height="160px" width="160px" />
-                                    <h1 className='six-title-tile'>Taking Six</h1>
+
+                                <div className='dont-stop-game-tile' data-teamgame={true} value="Don't Stop">
+                                    <GiPeaks className='dont-stop-icon' size={150} />
+                                    <h1 className='dont-stop-tile-title'>Don't Stop</h1>
+                                    <h1 className='game-tile-coming-soon'>Coming Soon</h1>
                                 </div>
                             </div>
                         </div>

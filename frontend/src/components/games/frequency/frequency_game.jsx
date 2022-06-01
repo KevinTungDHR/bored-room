@@ -341,7 +341,7 @@ const FrequencyGame = ({ roomCode, socket }) => {
 
         <div>
           <h2>Game Play:</h2>
-          <ol>
+          <ol className='frequency-instructions-list'>
             <li type="1">Each turn a member of a team will take the role of Psychic. </li>
             <li type="1">The active team draws a card and places it in front of the dial.The card will have two opposing ideas, one that represents the leftmost part of the dial and one that represents the rightmost part (such as smells good vs smells bad).</li>
             <li type="1">A target zone on the dial will get randomly chosen and is only visible to the Psychic. </li>
@@ -391,64 +391,44 @@ const FrequencyGame = ({ roomCode, socket }) => {
   
       return (
           <div className='frequency-outer-div'>
-            <div className='room-code'>In Room: {roomCode}</div>
-            <h1 className='curr-game-action'>
-              Current Move:<span> {actionDescriptions[gameState.actions[0]]}</span>
-            </h1>
-            {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
-            <div className='dial-container'>
-              <div className='left-card'>{assets.currentCard.left}</div>
-              <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
-              <div className='right-card'>{assets.currentCard.right}</div>
+            <div className='game-background'>
+              <div className='frequency-main'>
+                <div className='frequency-left-container'>
+                  <h1 className='curr-game-action'>
+                    Current Move:<span> {actionDescriptions[gameState.actions[0]]}</span>
+                  </h1>
+                  {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
+                  <div className='dial-container'>
+                    <div className='left-card'>{assets.currentCard.left}</div>
+                    <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
+                    <div className='right-card'>{assets.currentCard.right}</div>
+                  </div>
+
+                  {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
+
+                  <div className='forms-container'>
+                    {renderClueForm()} 
+                    {renderSliderAndConfirm()}
+                    {renderLeftOrRight()}
+                    {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
+                    {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
+                    {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
+                  </div>
+                </div>
+
+                <div className='frequency-right-container'>
+                  <div className='frequency-header'>
+                    {assets && blueUsers && renderScoreboard()}
+                  </div>
+                </div>
+              </div>
+              
+
+              
+
+              {renderInstructions()}
+
             </div>
-
-            {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
-
-            <div className='forms-container'>
-              {renderClueForm()} 
-              {renderSliderAndConfirm()}
-              {renderLeftOrRight()}
-              {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
-              {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
-              {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
-            </div>
-
-          <div className='frequency-header'>
-            {renderInstructions()}
-            {assets && blueUsers && renderScoreboard()}
-          </div>
-
-            {/* <div className='temporary'>
-              <div>Game Assets</div>
-              <ul>
-                <li>Active Team: {assets.activeTeam}</li>
-                <li>Blue Points: {assets.bluePoints}</li>
-                <li>Red Points: {assets.redPoints}</li>
-                <li>Current Card: Left: {assets.currentCard.left} | Right: {assets.currentCard.right} </li>
-                <li>clue: {assets.clue}</li>
-                <li>dial: {assets.dial}</li>
-                <li>local guess: {guess}</li>
-                <li>db guess: {assets.guess}</li>
-                <li>leftOrRight: {assets.leftOrRight}</li>
-              </ul>
-              <div>Game State</div>
-              <ul>
-                <li>{gameState.name}</li>
-                <li>{gameState.type}</li>
-                {gameState.actions.map((action, idx) => <li key={idx}>action: {action}</li>)}
-                {Object.keys(gameState.transitions).map((transition, idx) => <li key={idx}>transition: {transition}</li>)}
-              </ul>
-
-              <ul>
-                <li>Red Team</li>
-                {room && room.redTeam.map(player => <li>{player.handle}</li>)}
-              </ul>
-
-              <ul>
-                <li>Blue Team</li>
-                {room && room.blueTeam.map(player => <li>{player.handle}</li>)}
-              </ul>              
-            </div> */}
           </div>
       );
   }

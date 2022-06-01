@@ -12,6 +12,12 @@
     justify-content: space-between;
 }
 
+.frequency-main {
+    display: flex;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
 .curr-game-action {
     font-size: 28px;
     color: $title;
@@ -35,8 +41,10 @@
     flex-direction: column;
     justify-content: space-between;
     font-size: 24px;
-    font-family: 'Really-Free';
-    color: $text;
+    font-family: 'Roboto';
+    row-gap: 1rem;
+    color: rgb(59, 57, 55);
+    background-color: $champ;
     margin: 18px 18px;
     max-width: 50%;
     margin-left: 24px;
@@ -51,6 +59,11 @@
         color: $bronze;
         font-size: 24px;
     }
+}
+
+.frequency-instructions-list li{
+    list-style: decimal inside none;
+    margin: 10px 0;
 }
 
 .scoreboard-outermost-div {
