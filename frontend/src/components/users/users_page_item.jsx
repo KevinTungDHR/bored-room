@@ -6,6 +6,16 @@ import socrates from '../../assets/images/socrates.png';
 import user_prof from '../../assets/images/user_prof.png';
 
 const UserPageItem = ({ user }) => {
+  if(!user){
+    return (
+      <div className="userCard-container">
+        <div className="loader"></div>
+        <div className='userCard-info'>
+        </div>
+      </div>
+    )
+  }
+
   const avatars = {
     'noimage': user_prof,
     'yoda': yoda,
