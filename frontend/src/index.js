@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode';
 import { setAuthToken } from './util/session_api_util';
 import { logout } from './actions/session_actions';
 import { createGame, fetchGame, updateGame } from './actions/game_actions';
+import DontStopGame from './components/dont_stop/dont_stop_game';
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Testing Start
     window.getState = store.getState;
 
-
+    window.dontstop = DontStopGame;
 
     window.dispatch = store.dispatch;
     window.fetchGame = fetchGame;
