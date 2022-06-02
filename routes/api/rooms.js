@@ -191,6 +191,7 @@ router.get('/:code', (req, res) => {
     .populate("seatedUsers", ["handle", "eloRating", "avatar", "bio"])
     .populate("redTeam", ["handle", "eloRating",  "elo", "avatar", "bio"])
     .populate("blueTeam", ["handle", "eloRating",  "elo", "avatar", "bio"])
+    .populate("creator", ["handle"])
     .then(room => res.json(room))
     .catch(err => res.status(404).json({ roomNotFound: "No room with that code exists" })
     );
