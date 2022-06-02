@@ -53,18 +53,29 @@ const RoomCard = ({ room, handleRoomDelete }) => {
       players = room.seatedUsers
     }
 
-    return(
-      players.map((user, idx) => {
-        return (
-        <div key={idx} className='roomCard-user-item'>
-          <div className='roomCard-user-avatar' style={{ backgroundImage: "url(" + avatars[user.avatar] + ")"}}></div>
-          <div>
-            <NavLink to={`/profile/${user._id}`} className='roomCard-user-handle'>{user.handle}</NavLink>
-            <div className='roomCard-user-rating'>Rating {user.eloRating[room.gameId]}</div>
-          </div>
+    let lobbyCards;
+    if (players.length > 6){
+      lobbyCards = players.slice(0,5)
+    } else {
+      lobbyCards = players;
+    }
+
+    const cards = lobbyCards.map((user, idx) => {
+      return (
+      <div key={idx} className='roomCard-user-item'>
+        <div className='roomCard-user-avatar' style={{ backgroundImage: "url(" + avatars[user.avatar] + ")"}}></div>
+        <div>
+          <NavLink to={`/profile/${user._id}`} className='roomCard-user-handle'>{user.handle}</NavLink>
+          <div className='roomCard-user-rating'>Rating {user.eloRating[room.gameId]}</div>
         </div>
-        )
-      })
+      </div>
+      )
+    })
+    return(
+      <>
+        {cards}
+        {players.length > 6 && <div className='roomCard-user-item'>{`+${players.length - 5} others`}</div>}
+      </>
     )
   } 
 
