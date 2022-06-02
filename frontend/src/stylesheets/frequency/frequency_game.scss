@@ -10,6 +10,9 @@
 .frequency-main {
     display: flex;
     justify-content: space-between;
+    margin: auto;
+    width: 100%;
+    max-width: 2000px;
     column-gap: 2rem;
     padding: 1rem;
     box-sizing: border-box;
@@ -61,6 +64,7 @@
     justify-content: space-between;
     font-size: 18px;
     font-family: 'Roboto';
+    max-width: 2000px;
     row-gap: 1rem;
     color: rgb(59, 57, 55);
     background-color: $champ;

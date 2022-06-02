@@ -304,7 +304,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
               <h1 className='blue'>Blue Team</h1>
               <span>{assets.bluePoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.blueGainedPts})`}</span>
               <ul>
-                {blueUsers.map(player => <li className='handle-li'>
+                {blueUsers.map((player, idx) => <li key={idx} className='handle-li'>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />
                   {player.handle}</li>)}
@@ -318,7 +318,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
               <h1 className='red'>Red Team</h1>
               <span>{assets.redPoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.redGainedPts})`}</span>
               <ul>
-                {redUsers.map(player => <li className='handle-li'>
+                {redUsers.map((player, idx) => <li key={idx} className='handle-li'>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />{player.handle}</li>)}
               </ul>
