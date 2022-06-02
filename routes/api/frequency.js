@@ -7,7 +7,6 @@ const FrequencyGame = require('../../game_logic/frequency/frequency_game');
 const FrequencyModel = require('../../game_logic/frequency/models/game');
 const frequencyState = require('../../game_logic/frequency/frequency_state');
 
-
 router.post('/createDemo', async (req, res) => {
   let io = req.app.get("io");
 

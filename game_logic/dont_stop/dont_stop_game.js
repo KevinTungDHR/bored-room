@@ -10,17 +10,19 @@ class DontStopGame {
 
     if(data){
       this.demoGame = data.demoGame;
-      this.currentPlayer = data.currentPlayer;
+      this.dice = data.dice;
+      this.pairs = data.pairs
+      this.players = data.players;
+      this.routes = data.routes;
+      this.currentRun = data.currentRun;
       this.turnCounter = data.turnCounter;
       this.turnOrder = data.turnOrder;
       
-      this.dice = data.dice;
-      this.pairs = data.pairs
+      
 
-      this.players = data.players;
-      this.currentRun = data.currentRun;
       this.board = data.board;
       this.winner = data.winner;
+      this.currentPlayer = data.currentPlayer;
       this.currentState = data.currentState;
       this.gameOver = data.gameOVer;
     }
@@ -29,26 +31,27 @@ class DontStopGame {
   }
 
   setupNewGame(players){
-    this.name = "Don't Stop";
+    this.demoGame = false;
     this.dice = [];
     this.pairs = {};
-    this.players = {};
+    this.players = [];
     this.routes = {};
     this.currentRun = {};
     this.turnCounter = 0;
-    this.winner = null;
 
     this.colors = ['red', 'green', 'blue', 'yellow'];
     this.shuffleColors();
     this.turnOrder = [];
+    this.winner = null;
 
     players.forEach((player) => {
       const color = this.colors.pop()
       this.turnOrder.push(color);
-      this.players[color] = {
+      this.players.push({
         _id: player._id,
-        bot: false,
-      }
+        color: color,
+        bot: false
+      })
     })
 
     this.shuffleTurnOrder()
@@ -71,7 +74,7 @@ class DontStopGame {
       11: { max: 5, start: 0, completed: false, color: null, players: {} },
       12: { max: 3, start: 0, completed: false, color: null, players: {} },
     }
-    const colors = Object.keys(this.players);
+    const colors = this.players.map(player => player.color);
     for (let i = 2; i <= 12; i++){
       for(let j = 0; j < colors.length; j++){
         this.board[i].players[colors[j]] = 0;
@@ -177,6 +180,7 @@ class DontStopGame {
     for(let color in completedRoutes){
       if(completedRoutes[color] >= 3){
         this.winner = color;
+        this.gameOver = true;
         return true
       }
     }
