@@ -5,7 +5,7 @@ const DialCanvas = props => {
 
   const currPlayer = props.allPlayers.filter(player => player._id === props.sessionId)
 
-  let { draw, setGuess, updateGuess, ...rest } = props;
+  let { draw, setGuess, updateGuess, width, height, ...rest } = props;
   let [isDragging, setIsDragging] = useState(false)
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -15,6 +15,9 @@ const DialCanvas = props => {
   }, [draw])
 
   const startDrag = (e) => {
+    if(!currPlayer){
+      return
+    }
     if (currPlayer[0].activePlayer && props.gameState.actions[0] === 'makeGuess') {
       setIsDragging(true)
     }
@@ -45,7 +48,7 @@ const DialCanvas = props => {
     return Math.acos((bc*bc+ab*ab-ac*ac) / (2*bc*ab)) * (180 / Math.PI); 
   }
 
-  return <canvas ref={canvasRef} {...rest} onMouseMove={handleMouseMove} onMouseDown={startDrag} onMouseUp={endDrag} onMouseLeave={endDrag}/>
+  return <canvas ref={canvasRef} width={width} height={height} onMouseMove={handleMouseMove} onMouseDown={startDrag} onMouseUp={endDrag} onMouseLeave={endDrag}/>
 }
 
 export default DialCanvas;

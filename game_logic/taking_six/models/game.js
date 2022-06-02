@@ -48,7 +48,8 @@ const TakingSixGameSchema = new Schema({
     chosenCard: {
       value: Number,
       bulls: Number,
-    }
+    },
+    endingElo: Number
   }],
   playedCards: [[]],
   rows: [[{

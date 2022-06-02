@@ -6,7 +6,6 @@ import user_prof from '../../assets/images/user_prof.png';
 import space from '../../assets/images/space.jpg';
 import earth from '../../assets/images/earth.jpg';
 import game_table from '../../assets/images/game_table.jpg';
-import UserCard from './user_card';
 import FriendsIndex from './friends_index';
 import UnfriendModal from './unfriend_modal';
 class Profile extends React.Component {

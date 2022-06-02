@@ -1,5 +1,6 @@
 const frequencyState = require('./frequency_state');
 const Card = require('./models/card');
+const User = require('../../models/User');
 const mongoose = require('mongoose');
 const db = require('../../config/keys').mongoURI;
 const { demo_cards } = require('./demo_cards')
@@ -31,9 +32,12 @@ class FrequencyGame {
       this.clue = data.clue;
       this.redPoints = data.redPoints;
       this.bluePoints = data.bluePoints;
+      this.redGainedPts = data.redGainedPts;
+      this.blueGainedPts = data.blueGainedPts;
       this.leftOrRight = data.leftOrRight;
       this.dialRevealed = data.dialRevealed;
       this.demoTurnCounter = data.demoTurnCounter;
+      this.winner = data.winner;
 
       this.currentState = data.currentState;
       this.gameOver = data.gameOver;
@@ -53,12 +57,15 @@ class FrequencyGame {
     this.bluePsychic = 0;
     this.redPoints = 0;
     this.bluePoints = 0;
+    this.redGainedPts = 0;
+    this.blueGainedPts = 0;
     this.guess = 90;
     this.clue = null;
     this.dial = null;
     this.leftOrRight = null;
     this.dialRevealed = false;
     this.demoTurnCounter = 0;
+    this.winner = null;
 
 
     await Card.find()
@@ -69,7 +76,8 @@ class FrequencyGame {
       this.redTeam.push({
         _id: player._id,
         activePlayer: false,
-        isPsychic: false
+        isPsychic: false,
+        endingElo: 0
       })
     })
 
@@ -77,7 +85,8 @@ class FrequencyGame {
       this.blueTeam.push({
         _id: player._id,
         activePlayer: false,
-        isPsychic: false
+        isPsychic: false,
+        endingElo: 0
       })
     })
     this.shuffleTeam(this.redTeam);
@@ -102,20 +111,24 @@ class FrequencyGame {
     this.bluePsychic = 0;
     this.redPoints = 0;
     this.bluePoints = 0;
+    this.redGainedPts = 0;
+    this.blueGainedPts = 0;
     this.guess = 90;
     this.clue = null;
     this.dial = null;
     this.leftOrRight = null;
     this.dialRevealed = false;
     this.demoTurnCounter = 0;
+    this.winner = null;
 
-    this.deck = demo_cards.reverse();
+    this.deck = demo_cards.slice(0).reverse();
 
     redTeam.forEach((player) => {
       this.redTeam.push({
         _id: player._id,
         activePlayer: false,
-        isPsychic: false
+        isPsychic: false,
+        endingElo: 0
       })
     })
 
@@ -123,7 +136,8 @@ class FrequencyGame {
       this.blueTeam.push({
         _id: player._id,
         activePlayer: false,
-        isPsychic: false
+        isPsychic: false,
+        endingElo: 0
       })
     })
 
@@ -225,7 +239,7 @@ class FrequencyGame {
   }
 
   isGameOver(){
-    return (this.redPoints >= 10 || this.bluePoints >= 10)
+    return ((this.redPoints >= 10 || this.bluePoints >= 10) && this.redPoints !== this.bluePoints)
   }
 
   newTurnSetup(){
@@ -235,6 +249,8 @@ class FrequencyGame {
     this.leftOrRight = null;
     this.guess = 90;
     this.dialRevealed = false;
+    this.redGainedPts = 0;
+    this.blueGainedPts = 0;
 
     if(this.demoGame){
       this.demoTurnCounter += 1;
@@ -344,7 +360,6 @@ class FrequencyGame {
     if(data.botTurn){
       this.randomGuess()
     } else {
-      console.log("not bot guess")
 
       this.guess = data.guess;
     }
@@ -379,13 +394,18 @@ class FrequencyGame {
     if(this.activeTeam === 'red'){
       this.redPoints += points;
       this.bluePoints += this.checkLeftOrRight();
+      this.redGainedPts = points;
+      this.blueGainedPts = this.checkLeftOrRight();
     } else {
       this.bluePoints += points;
       this.redPoints += this.checkLeftOrRight();
+      this.blueGainedPts = points;
+      this.redGainedPts = this.checkLeftOrRight();
     }
 
     if(this.isGameOver()){
       this.gameOver = true;
+      this.changeElo();
       const nextState = this.getState().transitions.GAME_END;
       this.setState(nextState);
     } else {
@@ -407,6 +427,45 @@ class FrequencyGame {
     const nextState = this.getState().transitions.PSYCHIC_PHASE;
     this.setState(nextState);
   }
+
+  changeElo() {
+    let winners;
+    let losers;
+    if (this.redPoints > this.bluePoints){
+      winners = this.redTeam;
+      losers = this.blueTeam;
+      this.winner = 'Red Team'
+    } else {
+      winners = this.blueTeam;
+      losers = this.redTeam;
+      this.winner = 'Blue Team'
+    }
+
+    const eloForWinners = losers.length * 5;
+    const eloWon = eloForWinners / winners.length;
+
+    const players  = this.blueTeam.concat(this.redTeam);
+    players.forEach((player) => {
+      User.findById(player._id)
+        .then(user => {
+          const originalElo = user.eloRating.frequency;
+
+          if(winners.some(winner => mongoose.Types.ObjectId(winner._id).equals(user._id))){
+            const increasedElo = originalElo + eloWon;
+            player.endingElo = increasedElo;
+            user.set({ eloRating: { frequency: increasedElo }})
+          } else {
+            const decreasedElo = originalElo - 5;
+            player.endingElo = decreasedElo;
+            user.set({ eloRating: { frequency: decreasedElo }})
+
+          }
+
+          user.save();
+        })
+    })
+  }
+
 };
 
 module.exports = FrequencyGame;

@@ -17,6 +17,7 @@ const socket = io();
 const Room = () => {
   const [message, setMessage] = useState("");
   const [list, setList] = useState([]);
+  const [roomError, setRoomError] = useState('');
 
   const { code: roomCode } = useParams();
   const dispatch = useDispatch();
@@ -44,22 +45,43 @@ const Room = () => {
   },[]);
 
   const handleCreate = (e) =>{
+    if (rooms[roomCode].creator._id !== currentUser._id){
+      setRoomError("Only the host can start the game")
+      return;
+    }
+
     switch(rooms[roomCode].game){
       case 'Taking Six':
+        if (rooms[roomCode]?.seatedUsers.length < 2){
+          setRoomError("This game requires at least two players. Please try our demo instead.")
+          return;
+        }
+
         TakingSixUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers);
         break;
       case 'Frequency':
         const { redTeam, blueTeam } = rooms[roomCode]
+        if (redTeam.length < 2 || blueTeam.length < 2){
+          setRoomError("This game requires at least two players on each team. Please try our demo instead.")
+          return;
+        }
+
         FrequencyUtil.createGame(roomCode, { redTeam, blueTeam })
         break;
       default:
         return null;
     }
-    // if (rooms[roomCode]?.seatedUsers.length > 1){
-    // }
+ 
+    setRoomError("")
   }
 
   const handleCreateDemo = (e) => {
+    debugger
+    if (rooms[roomCode].creator._id !== currentUser._id){
+      setRoomError("Only the host can start the game")
+      return;
+    }
+
     switch(rooms[roomCode].game){
       case 'Taking Six':
         TakingSixUtil.createDemo(roomCode, rooms[roomCode]?.seatedUsers);
@@ -71,6 +93,8 @@ const Room = () => {
       default:
         return null;
     }
+
+    setRoomError("")
   }
 
   const sendMessage = (e) => {
@@ -169,6 +193,7 @@ const Room = () => {
         </div>
         <button className='start-game-btn' onClick={handleCreate}>Start Game</button>
         <button className='start-game-btn' onClick={handleCreateDemo}>Start Demo</button>
+        {roomError !== "" && <div className='room-errors'>{roomError}</div>}
       </div>
 
       <div className='chat-wrapper'>

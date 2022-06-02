@@ -89,8 +89,8 @@ router.post('/create', (req, res) => {
 router.get('/:code', async (req, res) => {
   try {
     const assets = await TakingSixModel.findOne({ code: req.params.code })
-    const gameState = takingSixState[assets.currentState];
-  
+    const gameState = Object.assign({}, takingSixState[assets.currentState]);
+
     if(gameState.description instanceof Function){
       const g = new games.TakingSixGame(assets);
       const user = await User.findById(g.getActivePlayer()._id)
@@ -121,7 +121,7 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     g.handleEvent(req.body.action, { ...req.body, player } );
     game.set(g);
     let assets = await game.save()
-    const gameState = takingSixState[assets.currentState];
+    const gameState = Object.assign({}, takingSixState[assets.currentState]);
 
     if(gameState.description instanceof Function){
       const user = await User.findById(g.getActivePlayer()._id)
@@ -142,7 +142,7 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       g.botsChooseRandomCards();
       game.set(g);
       let assets = await game.save()
-      const gameState = takingSixState[assets.currentState];
+      const gameState = Object.assign({}, takingSixState[assets.currentState]);
       if(gameState.description instanceof Function){
         const user = await User.findById(g.getActivePlayer()._id)
         gameState.description = gameState.description(user.handle);
@@ -168,7 +168,8 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
         g.handleEvent(action);
         game.set(g);
         let assets = await game.save()
-        const gameState = takingSixState[assets.currentState];
+        const gameState = Object.assign({}, takingSixState[assets.currentState]);
+
         if(gameState.description instanceof Function){
           const user = await User.findById(g.getActivePlayer()._id)
           gameState.description = gameState.description(user.handle);
@@ -187,7 +188,7 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
         g.botTakesRow();
         game.set(g);
         let assets = await game.save()
-        const gameState = takingSixState[assets.currentState];
+        const gameState = Object.assign({}, takingSixState[assets.currentState]);
   
         if(gameState.description instanceof Function){
           const user = await User.findById(g.getActivePlayer()._id)
