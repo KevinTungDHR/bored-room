@@ -5,7 +5,7 @@ const dontStopState = require('./dont_stop_state');
 
 class DontStopGame {
   constructor(data){
-    this.name = "Don't Stop";
+    this.name = "Dont Stop";
     this.teamGame = false;
 
     if(data){
@@ -30,7 +30,7 @@ class DontStopGame {
     this.getState = this.getState.bind(this);
   }
 
-  setupNewGame(players){
+  async setupNewGame(players){
     this.demoGame = false;
     this.dice = [];
     this.pairs = {};
@@ -57,6 +57,7 @@ class DontStopGame {
     this.shuffleTurnOrder()
     this.currentPlayer = this.turnOrder[this.turnCounter];
     this.setupBoard();
+    this.setupRolls()
     this.currentState = 2;
   }
 
@@ -102,6 +103,13 @@ class DontStopGame {
       let randomIdx = Math.floor(Math.random() * i);
       [this.turnOrder[i], this.turnOrder[randomIdx]] = [this.turnOrder[randomIdx], this.turnOrder[i]];
     }
+  }
+
+  setupRolls(){
+    this.rollDice();
+    this.generatePairs();
+    const possibleRoutes = this.possibleRoutes()
+    this.generateRoutes(possibleRoutes);
   }
 
   rollDice(){
@@ -188,25 +196,43 @@ class DontStopGame {
     return false;
   }
 
-  chooseDice(routes){
+  handleEvent(action, args) {
+    console.log(args)
+    console.log(this.getState())
+    if (this.getState().type === 'automated') {
+      return this[action](args);
+    }
+
+    if(this.getState().type === 'activePlayer'){
+      // Check activePlayer
+    }
+
+    return this[action](args);
+  }
+
+
+  chooseDice(data){
     // comes in as an array of routes
-    routes.forEach(route => {
+    data.routes.forEach(route => {
       if(route === null){
         return
       }
+    
+
       if(!this.currentRun[route]){
         this.currentRun[route] = this.board[route].players[this.currentPlayer] + 1;
       } else {
+
         this.currentRun[route] += 1
       }
     })
+
+    const nextState = this.getState().transitions.CLIMB_PHASE;
+    this.setState(nextState);
   }
 
   continue(){
-    this.rollDice();
-    this.generatePairs();
-    const possibleRoutes = this.possibleRoutes()
-    this.generateRoutes(possibleRoutes);
+    this.setupRolls()
 
     if(this.climbImpossible()){
       const nextState = this.getState().transitions.FAIL_CLIMB;
@@ -246,10 +272,11 @@ class DontStopGame {
     this.currentRun = {}
     this.currentPlayer = this.turnOrder[this.turnCounter % this.turnOrder.length];
 
+    this.setupRolls()
+
     const nextState = this.getState().transitions.DICE_REVEAL;
     this.setState(nextState);
   }
 }
 
-export default DontStopGame;
-
+module.exports = DontStopGame;

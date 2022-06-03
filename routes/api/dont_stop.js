@@ -7,82 +7,6 @@ const DontStopGame = require('../../game_logic/dont_stop/dont_stop_game');
 const DontStopModel = require('../../game_logic/dont_stop/models/game');
 const dontStopState = require('../../game_logic/dont_stop/dont_stop_state')
 
-// router.post('/createDemo', async (req, res) => {
-//   let io = req.app.get("io");
-
-//   const g = new FrequencyGame();
-//   const bots = await User.find({handle: /DemoBot/ });
-//   const teams = req.body.teams;
-
-//   let redStart;
-//   if(Object.values(teams.redTeam).length === 0){
-//     await Room.findOneAndUpdate({ code: req.body.code }, 
-//       { $push: { blueTeam: bots[0] }})
-//     await Room.findOneAndUpdate({ code: req.body.code }, 
-//       { $push: { redTeam: { $each: bots.slice(1) }}})
-//     teams.blueTeam.push(bots[0]);
-//     teams.redTeam.push(bots.slice(1));
-//     redStart = false;
-//   } else {
-//     await Room.findOneAndUpdate({ code: req.body.code }, 
-//       { $push: { redTeam: bots[0] }})
-//     await Room.findOneAndUpdate({ code: req.body.code }, 
-//       { $push: { blueTeam: { $each: bots.slice(1) }}})
-//     redStart = true;
-//     teams.redTeam.push(bots[0]);
-//     teams.blueTeam.push(...bots.slice(1));
-//   }
-
-//   g.setupDemoGame(teams, redStart)
-//     .then(() => {
-//       const gameModel = FrequencyModel({
-//         code: req.body.code,
-//         name: g.name,
-//         teamGame: g.teamGame,
-//         deck: g.deck,
-//         currentCard: g.currentCard,
-//         discard: g.discard,
-//         activeTeam: g.activeTeam,
-//         redTeam: g.redTeam,
-//         blueTeam: g.blueTeam,
-//         redPsychic: g.redPsychic,
-//         bluePsychic: g.bluePsychic,
-//         bluePoints: g.bluePoints,
-//         redPoints: g.redPoints,
-//         redGainedPts: g.redGainedPts,
-//         blueGainedPts: g.blueGainedPts,
-//         guess: g.guess,
-//         clue: g.clue,
-//         dial: g.dial,
-//         dialRevealed: g.dialRevealed,
-//         demoGame: g.demoGame,
-//         demoTurnCounter: g.demoTurnCounter,
-//         leftOrRight: g.leftOrRight,
-//         gameOver: g.gameOver,
-//         currentState: g.currentState,
-//       });
-
-//       const gameState = frequencyState[gameModel.currentState];
-
-//       gameModel.save()
-//         .then(assets => {
-
-//           io.to(req.body.code).emit("game_created", { assets, gameState });
-//           Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
-//             new: true
-//           })
-//           .populate("seatedUsers", ["handle", "eloRating", "avatar"])
-//           .populate("redTeam")
-//           .populate("blueTeam")
-//           .then(room => io.to(req.body.code).emit("game_started", room));
-            
-//           res.json("success");
-//         })
-//         .catch(err => res.status(422).json(err));
-//     });
-// });
-
-
 router.post('/create', (req, res) => {
   let io = req.app.get("io");
 
@@ -101,6 +25,7 @@ router.post('/create', (req, res) => {
         dice: g.dice,
         pairs: g.pairs,
         players: g.players,
+        routes: g.routes,
         currentRun: g.currentRun,
         board: g.board,
         winner: g.winner,
@@ -123,7 +48,8 @@ router.post('/create', (req, res) => {
           res.json("success");
         })
         .catch(err => res.status(422).json(err));
-    });
+    })
+    .catch(err => res.status(401).json(err));
 });
 
 router.get('/:code', (req, res) => {
@@ -140,9 +66,8 @@ router.get('/:code', (req, res) => {
 
 router.patch('/:code', passport.authenticate("jwt", { session: false }), async (req, res) => {
   let io = req.app.get("io");
-
   let game = await DontStopModel.findOne({ code: req.params.code })
-  
+
   if(!game){
     return res.status(404).json(["No game found"]);
   }
@@ -151,7 +76,8 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
   const player = req.user;
 
   try {
-    g.handleEvent(req.body.action, { ...req.body, player } );
+
+    g.handleEvent(req.body.action, { ...req.body } );
     
     game.set(g);
 

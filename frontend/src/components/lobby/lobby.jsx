@@ -85,9 +85,10 @@ class Lobby extends React.Component {
             const div = document.getElementsByClassName("freq-game-logo");
             this.setState({ game: "Frequency", teamGame: e.currentTarget.dataset.teamgame === 'true' })
             div[0].classList.add("selected");
-        } else {
-            e.target.classList.add("selected");
-            this.setState({ game: e.target.getAttribute("value")})
+        } else if (e.currentTarget.classList[0] === 'dont-stop-game-tile') {
+            const div = document.getElementsByClassName("dont-stop-game-tile");
+            div[0].classList.add("selected");
+            this.setState({ game: e.target.getAttribute("value"), teamGame: e.currentTarget.dataset.teamgame === 'true' })
         }
 
         this.setState({errors: ""})
@@ -159,7 +160,7 @@ class Lobby extends React.Component {
                                     }}/>
                                 </div>
 
-                                <div className='dont-stop-game-tile' data-teamgame={true} value="Don't Stop">
+                                <div className='dont-stop-game-tile' data-teamgame={false} value="Dont Stop" onClick={this.handleGameChange}>
                                     <GiPeaks className='dont-stop-icon' size={150} />
                                     <h1 className='dont-stop-tile-title'>Don't Stop</h1>
                                     <h1 className='game-tile-coming-soon'>Coming Soon</h1>

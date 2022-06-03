@@ -37,10 +37,13 @@ const DontStopGameSchema = new Schema({
     11: { max: Number, start: Number, completed: Boolean, color: String, players: Schema.Types.Mixed },
     12: { max: Number, start: Number, completed: Boolean, color: String, players: Schema.Types.Mixed }
   },
-  routes: Schema.Types.Mixed,
+  routes: { 
+    type: Schema.Types.Mixed, 
+    default: {} 
+  },
   turnOrder: [String],
   dice: [Number],
-  pairs: [[]],
+  pairs: Schema.Types.Mixed,
   players: [{
     userId: {
       type: Schema.Types.ObjectId,
@@ -49,13 +52,16 @@ const DontStopGameSchema = new Schema({
     bot: Boolean,
     color: String
   }],
-  currentRun: Schema.Types.Mixed,
+  currentRun: {
+    type: Schema.Types.Mixed, 
+    default: {},
+  },
   demoGame: Boolean,
   gameOver: Boolean,
   currentState: Number,
   winner: String
 },  {
     timestamps: true
-})
+}, { minimize: false })
 
 module.exports = DontStopGame = mongoose.model("DontStopGame", DontStopGameSchema);
