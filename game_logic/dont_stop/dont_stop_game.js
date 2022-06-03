@@ -157,7 +157,9 @@ class DontStopGame {
       }
 
       for(let key in this.currentRun){
-        if(key === i && this.currentRun[key] >= this.board[key].max){
+        let routeNum = parseInt(key)
+        console.log(routeNum, i, routeNum === i)
+        if(routeNum === i && this.currentRun[routeNum] >= this.board[routeNum].max){
           continue routeLoop
         }
 
@@ -173,7 +175,7 @@ class DontStopGame {
   }
 
   climbImpossible(){
-    Object.values(this.routes).flat(2).every(val => val === null) 
+    return Object.values(this.routes).flat(2).every(val => val === null) 
   }
 
   isGameOver(){
@@ -197,8 +199,6 @@ class DontStopGame {
   }
 
   handleEvent(action, args) {
-    console.log(args)
-    console.log(this.getState())
     if (this.getState().type === 'automated') {
       return this[action](args);
     }
@@ -221,8 +221,7 @@ class DontStopGame {
 
       if(!this.currentRun[route]){
         this.currentRun[route] = this.board[route].players[this.currentPlayer] + 1;
-      } else {
-
+      } else if (this.board[route].max > this.currentRun[route]) {
         this.currentRun[route] += 1
       }
     })
@@ -252,8 +251,6 @@ class DontStopGame {
         this.board[routeNum].color = this.currentPlayer;
       }
     }
-
-
 
     if(this.isGameOver()){
       const nextState = this.getState().transitions.GAME_END;

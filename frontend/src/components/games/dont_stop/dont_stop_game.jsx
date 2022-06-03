@@ -32,15 +32,16 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
   useEffect(() => {
     if(!isDelayed && stateQueue.length > 0){
       let nextUpdate = stateQueue[0];
-      if(false) {
+      if(nextUpdate.gameState.type === 'automated') {
         setIsDelayed(true)
+
 
         const timer = setTimeout(() => {
           setStateQueue(oldState => oldState.slice(1));
           dispatch(receiveGame(nextUpdate))
           setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
-        }, 800);
+        }, 2000);
 
         setTimers(oldState => [...oldState, timer]);
 
@@ -73,6 +74,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
         <ul>
           Assets:
           <li>Dice: {assets.dice}</li>
+          <li>Turn Count: {assets.turnCounter}</li>
           <li>Routes: {JSON.stringify(assets.routes)}</li>
           <li>pairs: {JSON.stringify(assets.pairs)}</li>
           <li>currentRun: {JSON.stringify(assets.currentRun)}</li>
