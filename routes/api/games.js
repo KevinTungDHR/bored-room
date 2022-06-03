@@ -40,7 +40,7 @@ router.post('/createDemo', async (req, res) => {
           Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
             new: true
           })
-          .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+          .populate("seatedUsers", ["handle", "eloRating", "avatar", "bio"])
           .then(room => io.to(req.body.code).emit("game_started", room));
             
           res.json("success");
@@ -77,7 +77,7 @@ router.post('/create', (req, res) => {
           Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
             new: true
           })
-          .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+          .populate("seatedUsers", ["handle", "eloRating", "avatar", "bio"])
           .then(room => io.to(req.body.code).emit("game_started", room));
             
           res.json("success");
