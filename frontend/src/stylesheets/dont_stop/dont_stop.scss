@@ -1,0 +1,75 @@
+.mountain-background {
+  position: relative;
+  background-image: url(../../assets/images/mountain2.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  min-height: 800px;
+  width: 1200px;
+}
+.rope-container{
+  position: absolute;
+  bottom: 100px;
+  left: 255px;
+  display: flex;
+  align-items: flex-end;
+  column-gap: 3.5rem;
+}
+
+.rope {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(../../assets/images/rope5.svg);
+  background-size: contain;
+  background-repeat:repeat-y;
+  row-gap: 35px;
+  width: 7px;
+}
+
+.rope3 {
+  height: 130px;
+}
+.rope5{
+  height: 240px;
+}
+.rope7 {
+  height: 350px;
+}
+.rope9 {
+  height: 460px;
+}.rope11 {
+  height: 570px;
+}.rope13 {
+  height: 680px;
+}
+
+.rope-top {
+  font-family: 'Really-Free';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  color: white;
+  background-color: rgb(10, 99, 134);
+  border: 2px solid rgb(248, 248, 248);
+  height: 28px;
+  width: 28px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  padding-bottom: 5px;
+}
+.marker {
+  font-family: 'Really-Free';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  background-color: rgb(248, 245, 204);
+  border: 1px solid rgb(10, 99, 134);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding-bottom: 5px;
+}

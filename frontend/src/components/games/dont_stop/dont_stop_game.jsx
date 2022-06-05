@@ -67,6 +67,118 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
     return(
       <div>
         <h2>Board</h2>
+        <div className='dont-stop-board-container'>
+          <div className='mountain-background'>
+            <div className='rope-container'>
+              <div className='rope rope3'>
+                <div className='rope-top'>2</div>
+                <div className='marker'>2</div>
+                <div className='marker'>2</div>
+              </div>
+              <div className='rope rope5'>
+                <div className='rope-top'>3</div>
+                <div className='marker'>3</div>
+                <div className='marker'>3</div>
+                <div className='marker'>3</div>
+                <div className='marker'>3</div>
+              </div>
+              <div className='rope rope7'>
+                <div className='rope-top'>4</div>
+                <div className='marker'>4</div>
+                <div className='marker'>4</div>
+                <div className='marker'>4</div>
+                <div className='marker'>4</div>
+                <div className='marker'>4</div>
+                <div className='marker'>4</div>
+              </div>
+              <div className='rope rope9'>
+                <div className='rope-top'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+                <div className='marker'>5</div>
+              </div>
+              <div className='rope rope11'>
+                <div className='rope-top'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+                <div className='marker'>6</div>
+              </div>
+              <div className='rope rope13'>
+                <div className='rope-top'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+                <div className='marker'>7</div>
+              </div>
+              <div className='rope rope11'>
+                <div className='rope-top'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+                <div className='marker'>8</div>
+              </div>
+              <div className='rope rope9'>
+                <div className='rope-top'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+                <div className='marker'>9</div>
+              </div>
+              <div className='rope rope7'>
+                <div className='rope-top'>10</div>
+                <div className='marker'>10</div>
+                <div className='marker'>10</div>
+                <div className='marker'>10</div>
+                <div className='marker'>10</div>
+                <div className='marker'>10</div>
+                <div className='marker'>10</div>
+              </div>
+              <div className='rope rope5'>
+                <div className='rope-top'>11</div>
+                <div className='marker'>11</div>
+                <div className='marker'>11</div>
+                <div className='marker'>11</div>
+                <div className='marker'>11</div>
+              </div>
+              <div className='rope rope3'>
+                <div className='rope-top'>12</div>
+                <div className='marker'>12</div>
+                <div className='marker'>12</div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
         <ul>
           {Object.entries(assets.board).map((route) => <li>{Object.keys(route[1].players).map(color => <div>{route[0]} - {color}: {route[1].players[color]}</div>)}</li> )}
         </ul>
