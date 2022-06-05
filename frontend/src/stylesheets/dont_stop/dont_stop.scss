@@ -27,20 +27,22 @@
   width: 7px;
 }
 
-.rope3 {
+.rope-size-3 {
   height: 130px;
 }
-.rope5{
+.rope-size-5{
   height: 240px;
 }
-.rope7 {
+.rope-size-7 {
   height: 350px;
 }
-.rope9 {
+.rope-size-9 {
   height: 460px;
-}.rope11 {
+}
+.rope-size-11 {
   height: 570px;
-}.rope13 {
+}
+.rope-size-13 {
   height: 680px;
 }
 
@@ -67,6 +69,17 @@
   font-size: 28px;
   background-color: rgb(248, 245, 204);
   border: 1px solid rgb(10, 99, 134);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding-bottom: 5px;
+}
+
+.player-marker {
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.521);
   height: 20px;
   width: 20px;
   border-radius: 50%;

@@ -158,7 +158,6 @@ class DontStopGame {
 
       for(let key in this.currentRun){
         let routeNum = parseInt(key)
-        console.log(routeNum, i, routeNum === i)
         if(routeNum === i && this.currentRun[routeNum] >= this.board[routeNum].max){
           continue routeLoop
         }

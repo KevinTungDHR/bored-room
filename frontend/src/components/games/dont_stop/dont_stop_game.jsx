@@ -66,23 +66,44 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
   if(gameState && assets){
     return(
       <div>
-        <h2>Board</h2>
         <div className='dont-stop-board-container'>
           <div className='mountain-background'>
             <div className='rope-container'>
-              <div className='rope rope3'>
+              <div className='rope rope-size-3'>
+              {Object.keys(assets.board[2].players).map((color, idx) => (
+                  assets.board[2].players[color] === 0 ? null : <div className='player-marker' style={{
+                      backgroundColor: `${color}`,
+                      bottom: `${((assets.board[2].players[color] - 1) * 53) - 5}px`,
+                      right: `${-10 - (4 * idx)}px`
+                    }}></div>)
+                )}
+
+            {/* {Object.keys(assets.currentRun).map((color, idx) => (
+                  assets.board[2].players[color] === 0 ? null : <div className='player-marker' style={{
+                      backgroundColor: `${color}`,
+                      bottom: `${((assets.board[2].players[color] - 1) * 53) - 5}px`,
+                      right: `${-10 - (4 * idx)}px`
+                    }}></div>)
+                )} */}
                 <div className='rope-top'>2</div>
                 <div className='marker'>2</div>
                 <div className='marker'>2</div>
               </div>
-              <div className='rope rope5'>
+              <div className='rope rope-size-5'>
+                {Object.keys(assets.board[3].players).map((color, idx) => (
+                  assets.board[3].players[color] === 0 ? null : <div className='player-marker' style={{
+                      backgroundColor: `${color}`,
+                      bottom: `${((assets.board[3].players[color] - 1) * 53) - 5}px`,
+                      right: `${-10 - (4 * idx)}px`
+                    }}></div>)
+                )}
                 <div className='rope-top'>3</div>
                 <div className='marker'>3</div>
                 <div className='marker'>3</div>
                 <div className='marker'>3</div>
                 <div className='marker'>3</div>
               </div>
-              <div className='rope rope7'>
+              <div className='rope rope-size-7'>
                 <div className='rope-top'>4</div>
                 <div className='marker'>4</div>
                 <div className='marker'>4</div>
@@ -91,7 +112,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>4</div>
                 <div className='marker'>4</div>
               </div>
-              <div className='rope rope9'>
+              <div className='rope rope-size-9'>
                 <div className='rope-top'>5</div>
                 <div className='marker'>5</div>
                 <div className='marker'>5</div>
@@ -102,7 +123,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>5</div>
                 <div className='marker'>5</div>
               </div>
-              <div className='rope rope11'>
+              <div className='rope rope-size-11'>
                 <div className='rope-top'>6</div>
                 <div className='marker'>6</div>
                 <div className='marker'>6</div>
@@ -115,7 +136,14 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>6</div>
                 <div className='marker'>6</div>
               </div>
-              <div className='rope rope13'>
+              <div className='rope rope-size-13'>
+              {Object.keys(assets.board[7].players).map((color, idx) => (
+                  assets.board[7].players[color] === 0 ? null : <div className='player-marker' style={{
+                      backgroundColor: `${color}`,
+                      bottom: `${((assets.board[7].players[color] - 1) * 53) - 5}px`,
+                      right: `${-10 - (4 * idx)}px`
+                    }}></div>)
+                )}
                 <div className='rope-top'>7</div>
                 <div className='marker'>7</div>
                 <div className='marker'>7</div>
@@ -130,7 +158,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>7</div>
                 <div className='marker'>7</div>
               </div>
-              <div className='rope rope11'>
+              <div className='rope rope-size-11'>
                 <div className='rope-top'>8</div>
                 <div className='marker'>8</div>
                 <div className='marker'>8</div>
@@ -143,7 +171,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>8</div>
                 <div className='marker'>8</div>
               </div>
-              <div className='rope rope9'>
+              <div className='rope rope-size-9'>
                 <div className='rope-top'>9</div>
                 <div className='marker'>9</div>
                 <div className='marker'>9</div>
@@ -154,7 +182,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>9</div>
                 <div className='marker'>9</div>
               </div>
-              <div className='rope rope7'>
+              <div className='rope rope-size-7'>
                 <div className='rope-top'>10</div>
                 <div className='marker'>10</div>
                 <div className='marker'>10</div>
@@ -163,14 +191,14 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 <div className='marker'>10</div>
                 <div className='marker'>10</div>
               </div>
-              <div className='rope rope5'>
+              <div className='rope rope-size-5'>
                 <div className='rope-top'>11</div>
                 <div className='marker'>11</div>
                 <div className='marker'>11</div>
                 <div className='marker'>11</div>
                 <div className='marker'>11</div>
               </div>
-              <div className='rope rope3'>
+              <div className='rope rope-size-3'>
                 <div className='rope-top'>12</div>
                 <div className='marker'>12</div>
                 <div className='marker'>12</div>
