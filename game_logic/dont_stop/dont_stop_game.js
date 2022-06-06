@@ -28,6 +28,7 @@ class DontStopGame {
     }
 
     this.getState = this.getState.bind(this);
+    this.removeNull = this.removeNull.bind(this);
   }
 
   async setupNewGame(players){
@@ -145,6 +146,8 @@ class DontStopGame {
       if(currentRoutes.length === 2 && (this.routes[key].filter(value => currentRoutes.includes(value))).length === 0){
         this.routes[key] = [this.routes[key].slice(0,1), this.routes[key].slice(1)]
       }
+
+      this.routes[key] = this.removeNull(this.routes[key]);
     }
   }
 
@@ -171,6 +174,11 @@ class DontStopGame {
       possible.push(i);
     }
     return possible;
+  }
+
+  removeNull(array){
+    return array.filter(val => val !== null)
+          .map(val => Array.isArray(val) ? this.removeNull(val) : val);
   }
 
   climbImpossible(){
@@ -242,14 +250,20 @@ class DontStopGame {
   }
 
   stopClimb(){
+    console.log("here")
+
     for(let val in this.currentRun){
       let routeNum = parseInt(val)
       this.board[routeNum].players[this.currentPlayer] = this.currentRun[routeNum];
+    console.log("test")
+
       if (this.board[routeNum].max <= this.currentRun[routeNum]){
         this.board[routeNum].completed = true;
         this.board[routeNum].color = this.currentPlayer;
       }
     }
+
+    console.log("Hi")
 
     if(this.isGameOver()){
       const nextState = this.getState().transitions.GAME_END;

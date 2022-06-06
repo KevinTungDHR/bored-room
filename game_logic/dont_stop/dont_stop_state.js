@@ -31,6 +31,7 @@ const state = {
     transitions: {
       DICE_REVEAL: 2,
       FAIL_CLIMB: 4,
+      END_TURN: 5,
     }
   },
   4: {
