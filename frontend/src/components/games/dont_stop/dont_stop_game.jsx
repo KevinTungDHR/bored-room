@@ -5,6 +5,7 @@ import { fetchGame, receiveGame } from '../../../actions/dont_stop_actions';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import MessageItem from '../../taking_six/message_item';
+import Die from './die';
 
 const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message }) => {
   const gameState = useSelector(state => state.games[roomCode]?.gameState);
@@ -211,6 +212,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
           {Object.entries(assets.board).map((route) => <li>{Object.keys(route[1].players).map(color => <div>{route[0]} - {color}: {route[1].players[color]}</div>)}</li> )}
         </ul>
         <br />
+        <Die value={1}/>
         <ul>
           Assets:
           <li>Dice: {assets.dice}</li>
