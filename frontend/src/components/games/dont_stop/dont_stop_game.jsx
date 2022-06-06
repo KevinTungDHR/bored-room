@@ -89,10 +89,9 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
               <div>Not possible</div>
             )
           } else if(Array.isArray(route[0])){
-            route.map(single => 
+            return route.map(single => 
                 <div>
                   <button onClick={() => handleClimb([single[0]])}>{`Climb ${single[0]}`}</button>
-                  <button onClick={() => handleClimb([single[1]])} >{`Climb ${single[1]}`}</button>
                 </div>
             )
           } else if (route.length === 2){
@@ -148,7 +147,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 )}
 
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(2) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(2) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[2] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -168,7 +167,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 )}
 
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(3) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(3) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[3] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -188,7 +187,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                       }}></div>)
                   )}
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(4) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(4) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[4] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -210,7 +209,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                       }}></div>)
                 )}
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(5) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(5) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[5] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -234,7 +233,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                       }}></div>)
                 )}
 
-                {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(6) ? <div className='player-marker' style={{
+                {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(6) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[6] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -260,7 +259,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                     }}></div>)
                 )}
 
-                {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(7) ? <div className='player-marker' style={{
+                {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(7) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[7] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -290,7 +289,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                       }}></div>)
                 )}
 
-                {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(8) ? <div className='player-marker' style={{
+                {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(8) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[8] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -318,7 +317,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 )}
 
                 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(9) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(9) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[9] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -343,7 +342,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 )}
 
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(10) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(10) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[10] - 1) * 53) - 5}px`,
                         right: `-7px`
@@ -366,7 +365,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 )}
 
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(11) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(11) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[11] - 1) * 53) - 5}px`,
                         right: `-14px`
@@ -387,7 +386,7 @@ const DontStopGame = ({ roomCode, socket, setMessage, sendMessage, list, message
                 )}
 
 
-              {Object.keys(assets.currentRun).map(val => parseInt(val)).includes(12) ? <div className='player-marker' style={{
+              {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(12) ? <div className='player-marker' style={{
                         backgroundColor: `black`,
                         bottom: `${((assets.currentRun[12] - 1) * 53) - 5}px`,
                         right: `-14px`
