@@ -41,9 +41,8 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
     if(!isDelayed && stateQueue.length > 0){
       let nextUpdate = stateQueue[0];
       if((gameState.name !== 'CLIMB_PHASE' && nextUpdate.gameState.name !== 'END_TURN') 
-      && (nextUpdate.gameState.type === 'automated' || gameState.name === "END_TURN")) {
+      && (gameState.type === 'automated')) {
         setIsDelayed(true)
-        console.log("WERE HERE")
 
         const timer = setTimeout(() => {
           setStateQueue(oldState => oldState.slice(1));
@@ -109,7 +108,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   }
 
   const renderRouteButtons = () => {
-    if(gameState.name === 'DICE_REVEAL'){
+    if(gameState.name === 'DICE_REVEAL' || gameState.name === 'FAIL_CLIMB'){
       return(
         Object.values(assets.routes).map((route, idx) => {
           if(route.length === 0) {
