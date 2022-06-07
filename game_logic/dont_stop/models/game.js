@@ -58,7 +58,10 @@ const DontStopGameSchema = new Schema({
   },
   demoGame: Boolean,
   gameOver: Boolean,
-  currentState: Number,
+  currentState: {
+    type: Number,
+    required: true
+  },
   winner: String
 },  {
     timestamps: true

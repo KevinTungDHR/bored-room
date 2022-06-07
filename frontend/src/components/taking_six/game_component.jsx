@@ -53,7 +53,8 @@ const GameComponent = ({ roomCode, socket, room, setMessage, sendMessage, list, 
           dispatch(receiveGame(nextUpdate))
           setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
-        }, 800);
+        }, 1200);
+
 
         setTimers(oldState => [...oldState, timer]);
         // Need to clearTimeout but it's being called on every rerender

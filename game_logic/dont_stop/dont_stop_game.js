@@ -250,20 +250,15 @@ class DontStopGame {
   }
 
   stopClimb(){
-    console.log("here")
-
     for(let val in this.currentRun){
       let routeNum = parseInt(val)
       this.board[routeNum].players[this.currentPlayer] = this.currentRun[routeNum];
-    console.log("test")
 
       if (this.board[routeNum].max <= this.currentRun[routeNum]){
         this.board[routeNum].completed = true;
         this.board[routeNum].color = this.currentPlayer;
       }
     }
-
-    console.log("Hi")
 
     if(this.isGameOver()){
       const nextState = this.getState().transitions.GAME_END;

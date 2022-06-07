@@ -88,7 +88,7 @@ class Lobby extends React.Component {
         } else if (e.currentTarget.classList[0] === 'dont-stop-game-tile') {
             const div = document.getElementsByClassName("dont-stop-game-tile");
             div[0].classList.add("selected");
-            this.setState({ game: e.target.getAttribute("value"), teamGame: e.currentTarget.dataset.teamgame === 'true' })
+            this.setState({ game: 'Dont Stop', teamGame: e.currentTarget.dataset.teamgame === 'true' })
         }
 
         this.setState({errors: ""})
