@@ -17,8 +17,9 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   const [timers, setTimers] = useState([]);
   const timerRef = useRef(timers);
   const chatEndRef = useRef();
+  const sessionId = useSelector(state => state.session.user._id)
   const currentUser = useSelector(state => state.session.user);
-  const allPlayers = useSelector(state => state.games[roomCode]?.assets?.players)
+  const users = useSelector(state => state.entities.users)
   const allUsers = useSelector(state => state.entities.rooms[roomCode].seatedUsers);
 
   const [routes, setRoutes] = useState({});
@@ -99,9 +100,9 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   const renderClimbPhaseButtons = () => {
     if(gameState.name === "CLIMB_PHASE"){
       return(
-        <div>
-          <button onClick={() => setAction('continue')}>Continue</button>
-          <button onClick={() => setAction('stopClimb')}>End Climb</button>
+        <div className='climb-phase-button-container'>
+          <div className='dont-stop-button' onClick={() => setAction('continue')}>Continue</div>
+          <div className='dont-stop-button grey' onClick={() => setAction('stopClimb')}>End Climb</div>
         </div>
       )
     } 
@@ -113,7 +114,19 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
         Object.values(assets.routes).map((route, idx) => {
           if(route.length === 0) {
             return (
-              <div>Not possible</div>
+              <div className='climb-action-container'>
+                  <div className='dice-container'>
+                    {assets.pairs[idx].map(dicePair => {
+                        return (
+                          <div className='dice-pair'>
+                            <Die value={dicePair[0]}/>
+                            <Die value={dicePair[1]}/>
+                          </div>
+                        )
+                      })}
+                  </div>
+                <div>Not possible</div>
+              </div>
             )
           } else if(Array.isArray(route[0])){
             return (
@@ -129,7 +142,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                       })}
                   </div>
                   {route.map(single => 
-                    <button onClick={() => handleClimb([single[0]])}>{`Climb ${single[0]}`}</button>
+                    single.length === 0 ? null : <div className='dont-stop-button' onClick={() => handleClimb([single[0]])}>{`Climb on ${single[0]}`}</div>
                   )}
                 </div>
             )
@@ -146,7 +159,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                         )
                       })}
                   </div>
-                <button onClick={() => handleClimb(route)}>{`Climb on ${route[0]} and ${route[1]}`}</button>
+                <div className='dont-stop-button' onClick={() => handleClimb(route)}>{`Climb on ${route[0]} and ${route[1]}`}</div>
               </div>
             )
           } else {
@@ -162,7 +175,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                         )
                       })}
                   </div>
-                <button onClick={() => handleClimb(route)}>{`Climb on ${route[0]}`}</button>
+                <div className='dont-stop-button' onClick={() => handleClimb(route)}>{`Climb on ${route[0]}`}</div>
               </div>
             )
           }
@@ -188,6 +201,17 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   };
 
   if(gameState && assets){
+    const currentPlayerId = assets.players.filter(p => p.color === assets.currentPlayer)[0]._id
+    const winnerId = assets.gameOver ? assets.players.filter(p => p.color === assets.winner)[0]._id : null
+    const winner = winnerId ? users[winnerId] : null
+    const currentPlayer = users[currentPlayerId];
+    const moveDescription = {
+      "DICE_REVEAL": `${currentPlayer.handle} must choose which ropes to climb`,
+      "CLIMB_PHASE": `${currentPlayer.handle} must choose to continue or stop`,
+      "FAIL_CLIMB": `${currentPlayer.handle} busts! No possible moves`,
+      "END_TURN": "Calculating...",
+      "GAME_END": `Game Over: ${winner?.handle} wins`
+    }
     return(
       <div className='game-background'>
         <div className='dont-stop-game-container'>
@@ -195,18 +219,26 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
             <div className='mountain-background'>
               <div className='rope-container'>
                 <div className='rope rope-size-3'>
-                {Object.keys(assets.board[2].players).map((color, idx) => (
+                  {!assets.board[2].completed && Object.keys(assets.board[2].players).map((color, idx) => (
                     assets.board[2].players[color] === 0 ? null : <div className='player-marker' style={{
                         backgroundColor: `${color}`,
-                        bottom: `${((assets.board[2].players[color] - 1) * 53) - 5}px`,
+                        bottom: `${((assets.board[2].players[color] - 1) * 53 + ((assets.board[2].players[color] - 1) * 2)) - 5}px`,
                         right: `${-10 - (4 * idx)}px`
                       }}></div>)
+                  )}
+
+                  {assets.board[2].completed && [...Array(3)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[2].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
                   )}
 
 
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(2) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[2] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[2] - 1) * 53 + ((assets.currentRun[2] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
 
@@ -215,18 +247,26 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>2</div>
                 </div>
                 <div className='rope rope-size-5'>
-                  {Object.keys(assets.board[3].players).map((color, idx) => (
+                  {!assets.board[3].completed && Object.keys(assets.board[3].players).map((color, idx) => (
                     assets.board[3].players[color] === 0 ? null : <div className='player-marker' style={{
                         backgroundColor: `${color}`,
-                        bottom: `${((assets.board[3].players[color] - 1) * 53) - 5}px`,
+                        bottom: `${((assets.board[3].players[color] - 1) * 53 + ((assets.board[3].players[color] - 1) * 2)) - 5}px`,
                         right: `${-10 - (4 * idx)}px`
                       }}></div>)
+                  )}
+
+                  {assets.board[3].completed && [...Array(5)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[3].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
                   )}
 
 
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(3) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[3] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[3] - 1) * 53 + ((assets.currentRun[3] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
                   <div className='rope-top'>3</div>
@@ -236,17 +276,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>3</div>
                 </div>
                 <div className='rope rope-size-7'>
-                  {Object.keys(assets.board[4].players).map((color, idx) => (
+                  {!assets.board[4].completed && Object.keys(assets.board[4].players).map((color, idx) => (
                       assets.board[4].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[4].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[4].players[color] - 1) * 53 + ((assets.board[4].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
                         }}></div>)
                     )}
 
+                    {assets.board[4].completed && [...Array(7)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[4].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
+                  )}
+
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(4) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[4] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[4] - 1) * 53 + ((assets.currentRun[4] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
                   <div className='rope-top'>4</div>
@@ -258,17 +306,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>4</div>
                 </div>
                 <div className='rope rope-size-9'>
-                  {Object.keys(assets.board[5].players).map((color, idx) => (
+                  {!assets.board[5].completed && Object.keys(assets.board[5].players).map((color, idx) => (
                       assets.board[5].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[5].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[5].players[color] - 1) * 53 + ((assets.board[5].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
+                        }}></div>)
+                  )}
+
+                   {assets.board[5].completed && [...Array(9)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[5].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
                         }}></div>)
                   )}
 
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(5) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[5] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[5] - 1) * 53 + ((assets.currentRun[5] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
                   <div className='rope-top'>5</div>
@@ -282,17 +338,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>5</div>
                 </div>
                 <div className='rope rope-size-11'>
-                {Object.keys(assets.board[6].players).map((color, idx) => (
+                  {!assets.board[6].completed && Object.keys(assets.board[6].players).map((color, idx) => (
                       assets.board[6].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[6].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[6].players[color] - 1) * 53 + ((assets.board[6].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
+                        }}></div>)
+                  )}
+
+                  {assets.board[6].completed && [...Array(11)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[6].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
                         }}></div>)
                   )}
 
                   {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(6) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[6] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[6] - 1) * 53 + ((assets.currentRun[6] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
                   <div className='rope-top'>6</div>
@@ -308,17 +372,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>6</div>
                 </div>
                 <div className='rope rope-size-13'>
-                {Object.keys(assets.board[7].players).map((color, idx) => (
+                {!assets.board[7].completed && Object.keys(assets.board[7].players).map((color, idx) => (
                     assets.board[7].players[color] === 0 ? null : <div className='player-marker' style={{
                         backgroundColor: `${color}`,
-                        bottom: `${((assets.board[7].players[color] - 1) * 53) - 5}px`,
+                        bottom: `${((assets.board[7].players[color] - 1) * 53 + ((assets.board[7].players[color] - 1) * 2)) - 5}px`,
                         right: `${-10 - (4 * idx)}px`
                       }}></div>)
                   )}
 
+                {assets.board[7].completed && [...Array(13)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[7].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
+                  )}
+
                   {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(7) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[7] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[7] - 1) * 53 + ((assets.currentRun[7] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
 
@@ -338,17 +410,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>7</div>
                 </div>
                 <div className='rope rope-size-11'>
-                  {Object.keys(assets.board[8].players).map((color, idx) => (
+                  {!assets.board[8].completed && Object.keys(assets.board[8].players).map((color, idx) => (
                       assets.board[8].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[8].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[8].players[color] - 1) * 53 + ((assets.board[8].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
+                        }}></div>)
+                  )}
+
+                    {assets.board[8].completed && [...Array(11)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[8].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
                         }}></div>)
                   )}
 
                   {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(8) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[8] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[8] - 1) * 53 + ((assets.currentRun[8] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
 
@@ -365,18 +445,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>8</div>
                 </div>
                 <div className='rope rope-size-9'>
-                  {Object.keys(assets.board[9].players).map((color, idx) => (
+                  {!assets.board[9].completed && Object.keys(assets.board[9].players).map((color, idx) => (
                       assets.board[9].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[9].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[9].players[color] - 1) * 53 + ((assets.board[9].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
                         }}></div>)
                   )}
 
+                {assets.board[9].completed && [...Array(9)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[9].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
+                  )}
                   
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(9) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[9] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[9] - 1) * 53 + ((assets.currentRun[9] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
                   <div className='rope-top'>9</div>
@@ -390,7 +477,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>9</div>
                 </div>
                 <div className='rope rope-size-7'>
-                  {Object.keys(assets.board[10].players).map((color, idx) => (
+                  {!assets.board[10].completed && Object.keys(assets.board[10].players).map((color, idx) => (
                       assets.board[10].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
                           bottom: `${((assets.board[10].players[color] - 1) * 53) - 5}px`,
@@ -398,10 +485,17 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                         }}></div>)
                   )}
 
+                  {assets.board[10].completed && [...Array(7)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[10].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
+                  )}
 
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(10) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[10] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[10] - 1) * 53 + ((assets.currentRun[10] - 1) * 2)) - 5}px`,
                           right: `-7px`
                         }}></div>: null}
                   <div className='rope-top'>10</div>
@@ -413,18 +507,26 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>10</div>
                 </div>
                 <div className='rope rope-size-5'>
-                  {Object.keys(assets.board[11].players).map((color, idx) => (
+                  {!assets.board[11].completed && Object.keys(assets.board[11].players).map((color, idx) => (
                       assets.board[11].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[11].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[11].players[color] - 1) * 53 + ((assets.board[11].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
+                        }}></div>)
+                  )}
+
+                  {assets.board[11].completed && [...Array(5)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[11].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
                         }}></div>)
                   )}
 
 
                 {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(11) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[11] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[11] - 1) * 53 + ((assets.currentRun[11] - 1) * 2)) - 5}px`,
                           right: `-14px`
                         }}></div>: null}
                   <div className='rope-top'>11</div>
@@ -434,18 +536,25 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   <div className='marker'>11</div>
                 </div>
                 <div className='rope rope-size-3'>
-                  {Object.keys(assets.board[12].players).map((color, idx) => (
+                  {!assets.board[12].completed && Object.keys(assets.board[12].players).map((color, idx) => (
                       assets.board[12].players[color] === 0 ? null : <div className='player-marker' style={{
                           backgroundColor: `${color}`,
-                          bottom: `${((assets.board[12].players[color] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.board[12].players[color] - 1) * 53 + ((assets.board[12].players[color] - 1) * 2)) - 5}px`,
                           right: `${-10 - (4 * idx)}px`
                         }}></div>)
                   )}
 
+                  {assets.board[12].completed && [...Array(3)].map((_, idx) => (
+                      <div className='player-marker' style={{
+                          backgroundColor: `${assets.board[12].color}`,
+                          bottom: `${((idx) * 53) + ((idx * 2)) - 5}px`,
+                          right: `${-7}px`
+                        }}></div>)
+                  )}
 
-                {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(12) ? <div className='player-marker' style={{
+                  {assets.currentRun && Object.keys(assets.currentRun).map(val => parseInt(val)).includes(12) ? <div className='player-marker' style={{
                           backgroundColor: `black`,
-                          bottom: `${((assets.currentRun[12] - 1) * 53) - 5}px`,
+                          bottom: `${((assets.currentRun[12] - 1) * 53 + ((assets.currentRun[12] - 1) * 2)) - 5}px`,
                           right: `-14px`
                         }}></div>: null}
                   <div className='rope-top'>12</div>
@@ -458,9 +567,9 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
           </div>
 
           <div className='dont-stop-action-container'>
-            <h2>Current Move: {gameState.name}</h2>
-            {renderClimbPhaseButtons()}
-            {renderRouteButtons()}
+            <h2 className='dont-stop-move-description'>{moveDescription[gameState.name]}</h2>
+            {currentPlayerId === sessionId && renderClimbPhaseButtons()}
+            {currentPlayerId === sessionId && renderRouteButtons()}
           </div>
 
           <div className='dont-stop-right-container'>
@@ -469,12 +578,22 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                     <h1>Players</h1>
                     <div className='player-container'>
                       <div>
-                        
+                        {allUsers.map((user, idx) => {
+                          let color = assets.players.filter(player => player._id === user._id)[0].color
+                          return (
+                            <div key={idx} className='player-handles'>
+                              {color === assets.currentPlayer ? <AiOutlineCheckCircle className='chosen-indicator' /> : <span></span> }
+                              {user.handle}
+                            </div>
+                          )
+                        })}
                       </div>
                       <div className='player-scores'>
-                        {assets.players.map((player, idx) => {
+                        {allUsers.map((user, idx) => {
+                          let color = assets.players.filter(player => player._id === user._id)[0].color
+                          let score = Object.values(assets.board).filter(route => route.completed && route.color === color).length
                           return <div key={idx} className='player-stats'>
-                              <div>{player.score}</div>
+                              <div>{score}</div>
                               <AiFillStar className="ai-star-icon" />
                             </div>
                         })}
@@ -495,8 +614,8 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                 </div>
               </div>                
           </div>
-          {/* 
-        <ul>
+          
+        {/* <ul>
           {Object.entries(assets.board).map((route) => <li>{Object.keys(route[1].players).map(color => <div>{route[0]} - {color}: {route[1].players[color]}</div>)}</li> )}
         </ul>
         <br />

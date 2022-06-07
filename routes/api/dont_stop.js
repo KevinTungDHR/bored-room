@@ -78,7 +78,6 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
   try {
 
     g.handleEvent(req.body.action, { ...req.body } );
-    
     game.set(g);
     game.markModified('pairs')
     game.markModified('routes')
@@ -114,15 +113,12 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
         await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
       }
 
-      console.log(`loop ${count}`)
-
       io.to(req.params.code).emit("game_updated", { assets, gameState });
     } catch (err) {
       return res.status(402).json(err);
     }
 
   }
-  console.log("Break")
   res.json("success")
 });
 

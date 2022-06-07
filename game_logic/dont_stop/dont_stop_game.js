@@ -24,7 +24,7 @@ class DontStopGame {
       this.winner = data.winner;
       this.currentPlayer = data.currentPlayer;
       this.currentState = data.currentState;
-      this.gameOver = data.gameOVer;
+      this.gameOver = data.gameOver;
     }
 
     this.getState = this.getState.bind(this);
@@ -43,7 +43,7 @@ class DontStopGame {
     this.colors = ['red', 'green', 'blue', 'yellow'];
     this.shuffleColors();
     this.turnOrder = [];
-    this.winner = null;
+    this.winner = "";
 
     players.forEach((player) => {
       const color = this.colors.pop()
@@ -59,6 +59,7 @@ class DontStopGame {
     this.currentPlayer = this.turnOrder[this.turnCounter];
     this.setupBoard();
     this.setupRolls()
+    this.gameOver = false;
     this.currentState = 2;
   }
 
@@ -143,7 +144,8 @@ class DontStopGame {
     const currentRoutes = Object.keys(this.currentRun).map(value => parseInt(value));
 
     for(let key in this.routes){
-      if(currentRoutes.length === 2 && (this.routes[key].filter(value => currentRoutes.includes(value))).length === 0){
+      if(currentRoutes.length === 2 && (this.routes[key].filter(value => currentRoutes.includes(value))).length === 0 
+        && this.routes[key][0] !== this.routes[key][1]){
         this.routes[key] = [this.routes[key].slice(0,1), this.routes[key].slice(1)]
       }
 

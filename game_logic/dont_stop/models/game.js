@@ -57,7 +57,10 @@ const DontStopGameSchema = new Schema({
     default: {},
   },
   demoGame: Boolean,
-  gameOver: Boolean,
+  gameOver: {
+    type: Boolean,
+    required: true
+  },
   currentState: {
     type: Number,
     required: true
