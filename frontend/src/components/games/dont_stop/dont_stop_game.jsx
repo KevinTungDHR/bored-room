@@ -17,6 +17,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   const [timers, setTimers] = useState([]);
   const timerRef = useRef(timers);
   const chatEndRef = useRef();
+  const instructionsRef = useRef();
   const sessionId = useSelector(state => state.session.user._id)
   const currentUser = useSelector(state => state.session.user);
   const users = useSelector(state => state.entities.users)
@@ -73,6 +74,12 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
 
   }, [gameState])
 
+  useEffect(() => {
+    if(!chatEndRef.current){
+      return;
+    }
+    chatEndRef.current.scrollIntoView({block: 'nearest'})
+  }, [list])
 
   useEffect(() => {
     if(action === ''){
@@ -94,6 +101,10 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
     if(e.keyCode === 13){
       sendMessage(e)
     }
+  }
+
+  const handleHowToPlayer = (e) =>{
+    instructionsRef.current.scrollIntoView({behavior: "smooth", block: 'nearest'})
   }
 
   const renderClimbPhaseButtons = () => {
@@ -611,8 +622,41 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                   </div>
                   <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
                 </div>
+                <div className='howToPlay-btn-container'>
+                  <div className='howToPlay-btn' onClick={handleHowToPlayer}>How To Play</div>
+                </div>
               </div>                
           </div>
+
+          <div className='taking-six-instructions'>
+                  <div>
+                    <h1>Don't Stop Rules</h1>
+                  </div>
+                  <div className='taking-six-instructions-setup'>
+                    <h2>Overview:</h2>
+                    <p>During each turn the active player rolls 4 dice and creates 2 pairs of dice to determine which ropes they wish to climb. While you can climb any ropes you want you are only given 3 climbers per turn, so that you can only climb 3 different ropes each turn. Once a player reaches the top of a rope and end their turn that rope belongs to them and no other players can climb it.</p>
+                  </div>
+                  <div>
+                    <h2>Objective:</h2>
+                    <p>Be the first player to reach the top of 3 ropes!</p>
+                  </div>
+                  <div>
+                    <ol className='taking-six-instructions-list'>
+                      <h2>Game Play:</h2>
+                      <li type="1">The active player rolls 4 dice. There are 3 possible combinations that can be created with those four dice. The active player chooses which combination to use in order to climb up the corresponding rope number.</li>
+                      <li type="1">After choosing a rope to climb the active player places their black climber-marker on the rope starting either at the bottom or the space above where they last left off.</li>
+                      <li type="1">The active player may then choose to continue or end their climb safely. Ending their climb allows the player to replace the black climber-markers with their colored markers and save their place on the rope.</li>
+                      <li type="1">If a player continues they roll another 4 dice and repeat the above steps. However, if they continue and no ropes are climbable combinations of dice they rolled their turn ends and any progress they made with their black climber-markers is lost.</li>
+                      <li type="1">When a player reaches the top of a rope and ends their turn, they claim that rope for themselves. No players may climb that rope.</li>
+                      <li type="1">When the active player ends their climb the next player takes their turn.</li>
+                    </ol>
+                  </div>
+                  <div>
+                    <h2>Game End:</h2>
+                    <p>The game ends when one player has reached the top of 3 ropes safely.</p>
+                  </div>
+                  <div ref={instructionsRef}></div>
+                </div>
           
         {/* <ul>
           {Object.entries(assets.board).map((route) => <li>{Object.keys(route[1].players).map(color => <div>{route[0]} - {color}: {route[1].players[color]}</div>)}</li> )}

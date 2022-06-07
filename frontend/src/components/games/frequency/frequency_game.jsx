@@ -81,6 +81,13 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
   }
 
   useEffect(() => {
+    if(!chatEndRef.current){
+      return;
+    }
+    chatEndRef.current.scrollIntoView({block: 'nearest'})
+  }, [list])
+
+  useEffect(() => {
     if(!gameState){
       return;
     }

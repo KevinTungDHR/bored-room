@@ -163,7 +163,6 @@ class Lobby extends React.Component {
                                 <div className='dont-stop-game-tile' data-teamgame={false} value="Dont Stop" onClick={this.handleGameChange}>
                                     <GiPeaks className='dont-stop-icon' size={150} />
                                     <h1 className='dont-stop-tile-title'>Don't Stop</h1>
-                                    <h1 className='game-tile-coming-soon'>Coming Soon</h1>
                                 </div>
                             </div>
                         </div>

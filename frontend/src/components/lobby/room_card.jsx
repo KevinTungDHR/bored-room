@@ -4,7 +4,7 @@ import monkey from '../../assets/images/coolMonkey.png';
 import socrates from '../../assets/images/socrates.png';
 import user_prof from '../../assets/images/user_prof.png';
 import { NavLink } from 'react-router-dom';
-import { GiBull, GiSundial } from 'react-icons/gi';
+import { GiBull, GiSundial, GiPeaks } from 'react-icons/gi';
 import bull_logo from '../../assets/images/bull_logo.png';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -34,6 +34,11 @@ const RoomCard = ({ room, handleRoomDelete }) => {
                                 right: "15%"
                             }}/>
                           </div>
+              
+  const dontStopIcon =    <div className='dont-stop-game-tile-small' data-teamgame={false} value="Dont Stop">
+                            <GiPeaks className='dont-stop-icon-small' size={60} />
+                            <h1 className='dont-stop-tile-title'>Don't Stop</h1>
+                          </div>
 
   const renderIcon = () => {
     switch(room.gameId){
@@ -41,6 +46,8 @@ const RoomCard = ({ room, handleRoomDelete }) => {
         return takingSixIcon;
       case 'frequency':
         return frequencyIcon
+      case 'dontStop':
+        return dontStopIcon;
       default:
         return null;
     }

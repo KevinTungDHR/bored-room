@@ -1,7 +1,6 @@
 const dontStopState = require('./dont_stop_state');
-// const User = require('../../../../models/User');
-// const mongoose = require('mongoose');
-// const db = require('../../../../config/keys').mongoURI;
+const User = require('../../models/User');
+const mongoose = require('mongoose');
 
 class DontStopGame {
   constructor(data){
@@ -269,6 +268,29 @@ class DontStopGame {
       const nextState = this.getState().transitions.END_TURN;
       this.setState(nextState);
     }
+  }
+
+  changeElo() {
+    const winnerId = this.players.filter(player => player.color === this.winner)
+    const numPlayers = this.players.length - 1;
+    const eloForWinner = numPlayers * 5;
+    let eloWon = eloForWinner / winners.length;
+
+    this.players.forEach((player) => {
+      User.findById(player._id)
+      .then((user) => {
+        let originalElo = user.eloRating.dontStop;
+
+        if(mongoose.Types.ObjectId(winnerId).equals(user._id)){
+          const increasedElo = {eloRating: { dontStop: (originalElo + eloWon) }};
+          user.set(increasedElo)
+        } else {
+          const deductedElo = {eloRating: { dontStop: (originalElo - 5) }};
+          user.set(deductedElo)
+        }
+        user.save()
+      })
+    });
   }
 
   setupNewTurn(){

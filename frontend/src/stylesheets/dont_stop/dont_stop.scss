@@ -176,7 +176,7 @@
 	grid-area: g;
 }
 
-.dont-stop-button {
+.dont-stop-button, .howToPlay-btn {
   background-color: #0a6386;
   color: white;
   box-shadow: inset 0 2px white,
@@ -194,6 +194,17 @@
       opacity: 0.9;
       cursor: pointer;
   }
+}
+
+.howToPlay-btn-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.howToPlay-btn {
+  width: 150px;
+  justify-content: center;
 }
 
 .grey {
