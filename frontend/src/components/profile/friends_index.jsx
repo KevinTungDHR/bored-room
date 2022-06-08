@@ -9,7 +9,7 @@ const FriendsIndex = ({users, user}) => {
   const sessionId = useSelector(state => state.session.user._id);
 
   const friendshipHeaders = { 
-    acceptedFriends: 'My Friends', 
+    acceptedFriends: 'Friends', 
     requestedFriends: 'Requests', 
     pendingFriends: 'Pending', 
     rejectedFriends: 'Blocked'}

@@ -195,6 +195,11 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   }
 
   const handleClimb = (route) => {
+    const currentPlayerId = assets.players.filter(p => p.color === assets.currentPlayer)[0]._id
+
+    if(currentPlayerId !== sessionId){
+      return;
+    }
     setRoute(route);
     setAction('chooseDice')
   }
@@ -579,7 +584,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
           <div className='dont-stop-action-container'>
             <h2 className='dont-stop-move-description'>{moveDescription[gameState.name]}</h2>
             {currentPlayerId === sessionId && renderClimbPhaseButtons()}
-            {currentPlayerId === sessionId && renderRouteButtons()}
+            {renderRouteButtons()}
           </div>
 
           <div className='dont-stop-right-container'>
@@ -628,7 +633,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
               </div>                
           </div>
 
-          <div className='taking-six-instructions'>
+          <div className='instructions'>
                   <div>
                     <h1>Don't Stop Rules</h1>
                   </div>
