@@ -62,6 +62,47 @@ class DontStopGame {
     this.currentState = 2;
   }
 
+  async setupDemoGame(players, bots){
+    this.demoGame = true;
+    this.dice = [];
+    this.pairs = {};
+    this.players = [];
+    this.routes = {};
+    this.currentRun = {};
+    this.turnCounter = 0;
+
+    this.colors = ['red', 'green', 'blue', 'yellow'];
+    this.shuffleColors();
+    this.turnOrder = [];
+    this.winner = "";
+
+    players.forEach((player) => {
+      const color = this.colors.pop()
+      this.turnOrder.push(color);
+      this.players.push({
+        _id: player._id,
+        color: color,
+        bot: false
+      })
+    })
+
+    bots.forEach((bot) => {
+      const color = this.colors.pop()
+      this.turnOrder.push(color);
+      this.players.push({
+        _id: bot._id,
+        color: color,
+        bot: true
+      })
+    })
+
+    this.currentPlayer = this.turnOrder[this.turnCounter];
+    this.setupBoard();
+    this.setupRolls()
+    this.gameOver = false;
+    this.currentState = 2;
+  }
+
   setupBoard(){
     this.board = {
       2: { max: 3, start: 0, completed: false, color: null, players: {} },
@@ -206,6 +247,26 @@ class DontStopGame {
     return false;
   }
 
+  currentPlayerIsBot(){
+    return this.players.filter(p => p.color === this.currentPlayer)[0].bot;
+  }
+
+  botChooseRandomRoute(){
+    for(let subArr of Object.values(this.routes)){
+      if(Array.isArray(subArr[0])){
+        if(subArr[0][0] !== null){
+          return subArr[0]
+        }
+      } else if (subArr[0] !== null){
+        return subArr;
+      }
+    }
+  }
+
+  botChooseClimbOrStop(){
+    return Math.random() < 0.5 ? 'continue' : 'stopClimb'
+  }
+
   handleEvent(action, args) {
     if (this.getState().type === 'automated') {
       return this[action](args);
@@ -225,7 +286,6 @@ class DontStopGame {
       if(route === null){
         return
       }
-    
 
       if(!this.currentRun[route]){
         this.currentRun[route] = this.board[route].players[this.currentPlayer] + 1;
@@ -262,6 +322,7 @@ class DontStopGame {
     }
 
     if(this.isGameOver()){
+      this.changelElo();
       const nextState = this.getState().transitions.GAME_END;
       this.setState(nextState);
     } else {
@@ -303,8 +364,13 @@ class DontStopGame {
 
     this.setupRolls()
 
-    const nextState = this.getState().transitions.DICE_REVEAL;
-    this.setState(nextState);
+    if(this.climbImpossible()){
+      const nextState = this.getState().transitions.FAIL_CLIMB;
+      this.setState(nextState);
+    } else {
+      const nextState = this.getState().transitions.DICE_REVEAL;
+      this.setState(nextState);
+    }
   }
 }
 

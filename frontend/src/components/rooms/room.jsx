@@ -102,6 +102,7 @@ const Room = () => {
         FrequencyUtil.createDemo(roomCode, { redTeam, blueTeam })
         break;
       case 'Dont Stop':
+        DontStopUtil.createDemo(roomCode, rooms[roomCode]?.seatedUsers);
         break;
       default:
         return null;

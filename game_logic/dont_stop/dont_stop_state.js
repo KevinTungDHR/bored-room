@@ -50,6 +50,7 @@ const state = {
     actions: ["setupNewTurn"],
     transitions: {
       DICE_REVEAL: 2,
+      FAIL_CLIMB: 4,
       GAME_END: 99
     }
   },

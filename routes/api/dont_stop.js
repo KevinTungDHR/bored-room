@@ -7,6 +7,56 @@ const DontStopGame = require('../../game_logic/dont_stop/dont_stop_game');
 const DontStopModel = require('../../game_logic/dont_stop/models/game');
 const dontStopState = require('../../game_logic/dont_stop/dont_stop_state')
 
+router.post('/createDemo', async (req, res) => {
+  let io = req.app.get("io");
+
+  const g = new DontStopGame();
+
+  const bots = await User.find({handle: /DemoBot1/ });
+  await Room.findOneAndUpdate({ code: req.body.code }, 
+    { $push: { seatedUsers: { $each: bots }}})
+  
+  g.setupDemoGame(req.body.users, bots)
+    .then(() => {
+      const gameModel = DontStopModel({
+        code: req.body.code,
+        name: g.name,
+        demoGame: g.demoGame,
+        teamGame: g.teamGame,
+        currentPlayer: g.currentPlayer,
+        turnCounter: g.turnCounter,
+        turnOrder: g.turnOrder,
+        dice: g.dice,
+        pairs: g.pairs,
+        players: g.players,
+        routes: g.routes,
+        currentRun: g.currentRun,
+        board: g.board,
+        winner: g.winner,
+        gameOver: g.gameOver,
+        currentState: g.currentState,
+      });
+
+      const gameState = dontStopState[gameModel.currentState];
+
+      gameModel.save()
+        .then(assets => {
+
+          io.to(req.body.code).emit("game_created", { assets, gameState });
+          Room.findOneAndUpdate({ code: req.body.code }, { gameStarted: true }, {
+            new: true
+          })
+          .populate("seatedUsers", ["handle", "eloRating", "avatar"])
+          .then(room => io.to(req.body.code).emit("game_started", room));
+            
+          res.json("success");
+        })
+        .catch(err => res.status(422).json(err));
+    })
+    .catch(err => res.status(422).json(err));
+});
+
+
 router.post('/create', (req, res) => {
   let io = req.app.get("io");
 
@@ -56,8 +106,6 @@ router.get('/:code', (req, res) => {
   DontStopModel.findOne({ code: req.params.code })
     .then(assets => {
       
-      const gameState = dontStopState[assets.currentState];
-
       res.json({assets, gameState});
     })
     .catch(err => res.status(404).json(["Game Not Found"]));
@@ -94,11 +142,19 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     return res.status(402).json(err);
   }
 
-  while(g.getState()['type'] === "automated" && count < 25){
+  while(g.getState()['type'] === "automated" && count < 25 || (g.currentPlayerIsBot())){
     count += 1;
     let action = g.getState().actions[0]
     try {
-      g.handleEvent(action);
+      if(g.getState()['name'] === 'CLIMB_PHASE'){
+        action = g.botChooseClimbOrStop();
+      }
+      let routes;
+      if(g.getState()['name'] === 'DICE_REVEAL'){
+        routes = g.botChooseRandomRoute();
+      }
+
+      g.handleEvent(action, { routes: routes});
 
       game.set(g);
       game.markModified('pairs')
