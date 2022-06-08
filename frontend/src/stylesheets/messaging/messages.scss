@@ -29,7 +29,7 @@
   font-family: 'Roboto';
   height: 360px;
   padding: 0 0.5rem;
-  overflow: scroll;
+  overflow: auto;
   border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
@@ -38,7 +38,7 @@
   box-sizing: border-box;
   width: 100%; 
   height: 50px;
-  overflow: scroll;
+  overflow: auto;
   resize: none;
   border: none;
 }

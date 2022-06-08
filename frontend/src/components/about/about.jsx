@@ -8,10 +8,11 @@ import angellist from '../../assets/images/angellist.png';
 
 const AboutDevelopers = () => {
     return (
+        <div className='game-background'>
         <div className='about-outer-div'>
-            <div className='about-header'>
+            {/* <div className='about-header'>
                 <h1>About the Developers</h1>
-            </div>
+            </div> */}
 
             <div className='bios-container'>
                 {/* Peter */}
@@ -63,6 +64,7 @@ const AboutDevelopers = () => {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }
