@@ -17,7 +17,6 @@ class FrequencyGame {
     this.teamGame = true;
     if(data){
       this.demoGame = data.demoGame;
-      this.teamGame = true;
       this.deck = data.deck;
       this.currentCard = data.currentCard;
       this.discard = data.discard;

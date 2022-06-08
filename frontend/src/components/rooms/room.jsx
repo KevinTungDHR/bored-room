@@ -9,8 +9,10 @@ import { receiveRoom } from '../../actions/room_actions';
 import { receiveGame } from '../../actions/game_actions';
 import * as TakingSixUtil from '../../util/game_util';
 import * as FrequencyUtil from '../../util/frequency_util';
+import * as DontStopUtil from '../../util/dont_stop_util';
 import FrequencyGame from '../games/frequency/frequency_game';
 import GameComponent from '../taking_six/game_component';
+import DontStopGame from '../games/dont_stop/dont_stop_game';
 
 const socket = io();
 
@@ -68,6 +70,15 @@ const Room = () => {
 
         FrequencyUtil.createGame(roomCode, { redTeam, blueTeam })
         break;
+
+      case 'Dont Stop':
+        // if (rooms[roomCode]?.seatedUsers.length < 2){
+        //   setRoomError("This game requires at least two players. Please try our demo instead.")
+        //   return;
+        // }
+
+        DontStopUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers);
+        break;
       default:
         return null;
     }
@@ -89,6 +100,9 @@ const Room = () => {
       case 'Frequency':
         const { redTeam, blueTeam } = rooms[roomCode]
         FrequencyUtil.createDemo(roomCode, { redTeam, blueTeam })
+        break;
+      case 'Dont Stop':
+        DontStopUtil.createDemo(roomCode, rooms[roomCode]?.seatedUsers);
         break;
       default:
         return null;
@@ -127,6 +141,8 @@ const Room = () => {
         return <GameComponent socket={socket} room={rooms[roomCode]} roomCode={roomCode} list={list} setMessage={setMessage} sendMessage={sendMessage} message={message}/>
       case 'Frequency':
         return <FrequencyGame socket={socket} room={rooms[roomCode]} roomCode={roomCode} list={list} setMessage={setMessage} sendMessage={sendMessage} message={message}/>
+      case 'Dont Stop':
+        return <DontStopGame socket={socket} room={rooms[roomCode]} roomCode={roomCode} list={list} setMessage={setMessage} sendMessage={sendMessage} message={message}/>
       default:
         return null;
     }
@@ -184,7 +200,7 @@ const Room = () => {
       <h1 className='room-title'>In Room {roomCode}</h1>
       <div className='seat-btns'>
         <div className='sit-get-btns'>
-          {rooms[roomCode]?.game === "Taking Six" ? 
+          {!rooms[roomCode]?.teamGame ? 
           <div>
             <button className='seat-btn-1' onClick={joinSeat}>Sit</button>
             <button className='seat-btn-2' onClick={leaveSeat}>Get Up</button>
@@ -197,7 +213,7 @@ const Room = () => {
       </div>
 
       <div className='chat-wrapper'>
-        {rooms[roomCode]?.game === "Frequency" ? renderTeams() : renderSeatedUsers()}
+        {rooms[roomCode]?.teamGame ? renderTeams() : renderSeatedUsers()}
 
         <div className='chat-items'>
           <form onSubmit={sendMessage} className='chat-box'>

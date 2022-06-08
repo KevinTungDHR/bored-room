@@ -1,0 +1,231 @@
+.dont-stop-game-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 2000px;
+  column-gap: 2rem;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.mountain-background {
+  position: relative;
+  background-image: url(../../assets/images/mountain2.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  min-height: 800px;
+  width: 952px;
+  border: 6px solid brown;
+}
+.rope-container{
+  position: absolute;
+  bottom: 100px;
+  left: 165px;
+  display: flex;
+  align-items: flex-end;
+  column-gap: 3.5rem;
+}
+
+.rope {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(../../assets/images/rope5.svg);
+  background-size: contain;
+  background-repeat:repeat-y;
+  row-gap: 35px;
+  width: 7px;
+}
+
+.rope-size-3 {
+  height: 130px;
+}
+.rope-size-5{
+  height: 240px;
+}
+.rope-size-7 {
+  height: 350px;
+}
+.rope-size-9 {
+  height: 460px;
+}
+.rope-size-11 {
+  height: 570px;
+}
+.rope-size-13 {
+  height: 680px;
+}
+
+.rope-top {
+  font-family: 'Really-Free';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  color: white;
+  background-color: rgb(10, 99, 134);
+  border: 2px solid rgb(248, 248, 248);
+  height: 28px;
+  width: 28px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  padding-bottom: 5px;
+}
+.marker {
+  font-family: 'Really-Free';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  background-color: rgb(248, 245, 204);
+  border: 1px solid rgb(10, 99, 134);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding-bottom: 5px;
+}
+
+.player-marker {
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.521);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding-bottom: 5px;
+}
+
+.climb-action-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dice-container {
+  display: flex;
+  column-gap: 2rem;  
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.dice-pair {
+  display: flex;
+}
+
+.face:first-child {
+  transform: rotateZ(-20deg);
+}
+
+.face:nth-child(2) {
+  transform: rotateZ(20deg);
+}
+
+.face {
+  display: grid;
+  background-color: #efefef;
+  width: 30px;
+  height: 30px;
+  box-shadow: inset 0 2px white,
+    inset 0 -2px #bbb,
+    inset 2px 0 #d7d7d7, 
+    inset -2px 0 #d7d7d7;
+  border-radius: 10%;
+	padding: 8px;
+  grid-template-areas: 
+      "a . c"
+      "e g f"
+      "d . b";
+}
+
+.pip {
+  display: block;
+  align-self: center;
+	justify-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #333;
+  box-shadow: 1px 1px 1px #111;
+}
+
+.pip:nth-child(2) {
+  grid-area: b;
+}
+
+.pip:nth-child(3) {
+  grid-area: c;
+}
+
+.pip:nth-child(4) {
+  grid-area: d;
+}
+
+.pip:nth-child(5) {
+  grid-area: e;
+}
+
+.pip:nth-child(6) {
+  grid-area: f;
+}
+
+.pip:nth-child(odd):last-child {
+	grid-area: g;
+}
+
+.dont-stop-button, .howToPlay-btn {
+  background-color: #0a6386;
+  color: white;
+  box-shadow: inset 0 2px white,
+    inset 0 -2px #bbb,
+    inset 2px 0 #d7d7d7, 
+    inset -2px 0 #d7d7d7;
+  padding: 0.5rem 1rem;
+  font-size: 36px;
+  font-family: "Really-Free";
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  &:hover {
+      transform: scale(1.02);
+      opacity: 0.9;
+      cursor: pointer;
+  }
+}
+
+.howToPlay-btn-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.howToPlay-btn {
+  width: 150px;
+  justify-content: center;
+}
+
+.grey {
+  background-color: #bbb;
+  color: #333;
+  font-size: 32px;
+  padding: 0.2rem .8rem;
+}
+
+.dont-stop-move-description {
+  background-color: #0a6386;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 36px;
+  text-decoration: underline;
+  font-family: "Really-Free";
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+.climb-phase-button-container{
+  display: flex;
+  justify-content: center;
+  column-gap: 1rem;
+}

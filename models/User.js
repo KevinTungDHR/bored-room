@@ -34,6 +34,11 @@ const UserSchema = new Schema({
       type: Number,
       required: true,
       default: 800
+    },
+    dontStop: {
+      type: Number,
+      required: true,
+      default: 800
     }
   },
   avatar: {

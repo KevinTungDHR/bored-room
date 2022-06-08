@@ -42,8 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Testing Start
     window.getState = store.getState;
 
-
-
     window.dispatch = store.dispatch;
     window.fetchGame = fetchGame;
     window.createGame = createGame;
