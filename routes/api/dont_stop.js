@@ -105,6 +105,7 @@ router.post('/create', (req, res) => {
 router.get('/:code', (req, res) => {
   DontStopModel.findOne({ code: req.params.code })
     .then(assets => {
+      const gameState = dontStopState[assets.currentState];
       
       res.json({assets, gameState});
     })
