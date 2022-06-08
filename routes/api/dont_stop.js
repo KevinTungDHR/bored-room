@@ -142,19 +142,11 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
     return res.status(402).json(err);
   }
 
-  while(g.getState()['type'] === "automated" && count < 25 || (g.currentPlayerIsBot())){
+  while(g.getState()['type'] === "automated" && count < 25){
     count += 1;
     let action = g.getState().actions[0]
     try {
-      if(g.getState()['name'] === 'CLIMB_PHASE'){
-        action = g.botChooseClimbOrStop();
-      }
-      let routes;
-      if(g.getState()['name'] === 'DICE_REVEAL'){
-        routes = g.botChooseRandomRoute();
-      }
-
-      g.handleEvent(action, { routes: routes});
+      g.handleEvent(action);
 
       game.set(g);
       game.markModified('pairs')
@@ -170,6 +162,36 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
       }
 
       io.to(req.params.code).emit("game_updated", { assets, gameState });
+    } catch (err) {
+      return res.status(402).json(err);
+    }
+
+  }
+
+  while(g.demoGame && g.currentPlayerIsBot() && count < 25) {
+    count += 1;
+    let action = g.getState().actions[0]
+
+    if(g.getState()['name'] === 'CLIMB_PHASE'){
+      action = g.botChooseClimbOrStop();
+    }
+    let routes;
+    if(g.getState()['name'] === 'DICE_REVEAL'){
+      routes = g.botChooseRandomRoute();
+    }
+    try {
+      g.handleEvent(action, { routes: routes });
+
+      game.set(g);
+      let assets = await game.save()
+      const gameState = dontStopState[assets.currentState];
+
+
+      if(gameState.name === 'GAME_END'){
+        await Room.findOneAndUpdate({ code: req.params.code }, { gameOver: true })
+      }
+
+      io.to(req.params.code).emit("game_updated", { assets, gameState, botTurn: true });
     } catch (err) {
       return res.status(402).json(err);
     }

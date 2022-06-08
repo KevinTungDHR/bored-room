@@ -42,12 +42,12 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
     if(!isDelayed && stateQueue.length > 0){
       let nextUpdate = stateQueue[0];
       if((gameState.name !== 'CLIMB_PHASE' && nextUpdate.gameState.name !== 'END_TURN') 
-      && (gameState.type === 'automated')) {
+      && (gameState.type === 'automated') || (nextUpdate.assets.demoGame && nextUpdate.botTurn)) {
         setIsDelayed(true)
 
         const timer = setTimeout(() => {
           setStateQueue(oldState => oldState.slice(1));
-          dispatch(receiveGame(nextUpdate))
+          dispatch(receiveGame({ gameState: nextUpdate.gameState, assets: nextUpdate.assets }))
           setIsDelayed(false)
           setTimers(oldState => oldState.slice(1));
         }, 2000);
