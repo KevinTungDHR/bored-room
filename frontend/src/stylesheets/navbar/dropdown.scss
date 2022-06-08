@@ -44,6 +44,11 @@
     height: 44px;
     margin-right: 20px;
     cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: $seaweed;
+    border: none;
+    border-radius: 50%; 
 }
 
 .dropdown-content a {
