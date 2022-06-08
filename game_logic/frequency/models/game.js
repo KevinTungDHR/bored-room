@@ -58,6 +58,7 @@ const FrequencyGameSchema = new Schema({
   demoTurnCounter: Number,
   gameOver: Boolean,
   currentState: Number,
+  rerolls: Number,
   winner: String
 },  {
     timestamps: true

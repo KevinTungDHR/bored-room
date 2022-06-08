@@ -103,6 +103,14 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
     }
   }
 
+  const handleMessageSubmitButton = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+    sendMessage(e)
+  }
+
+
   const handleHowToPlayer = (e) =>{
     instructionsRef.current.scrollIntoView({behavior: "smooth", block: 'nearest'})
   }
@@ -625,7 +633,10 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                     {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
                     <div ref={chatEndRef}></div>
                   </div>
-                  <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                  <div className='game-component-input-container'>
+                    <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                    <div className='game-message-input-send' onClick={handleMessageSubmitButton}>Send</div>
+                  </div>
                 </div>
                 <div className='howToPlay-btn-container'>
                   <div className='howToPlay-btn' onClick={handleHowToPlayer}>How To Play</div>

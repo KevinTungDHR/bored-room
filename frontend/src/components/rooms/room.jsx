@@ -87,7 +87,6 @@ const Room = () => {
   }
 
   const handleCreateDemo = (e) => {
-    debugger
     if (rooms[roomCode].creator._id !== currentUser._id){
       setRoomError("Only the host can start the game")
       return;

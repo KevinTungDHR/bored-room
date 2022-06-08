@@ -33,28 +33,60 @@
   border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
+.game-component-input-container {
+  display: flex;
+}
+
 .game-component-message-input{
-  padding: 0.5rem;
   box-sizing: border-box;
+  padding: 0.5rem;
   width: 100%; 
-  height: 50px;
+  height:100%;
   overflow: auto;
   resize: none;
   border: none;
 }
 
+.game-component-message-input {
+  border: none;
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+
+  resize: none; /*remove the resize handle on the bottom right*/
+}
+
+.game-message-input-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  padding: 0.5rem 1rem;
+  border-radius: 1px;
+  font-family: 'Roboto';
+  background-color: rgb(221, 221, 221);
+}
+
+.game-message-input-send:hover {
+  cursor: pointer;
+  background-color: lightgrey;
+}
 
 .message-item-container-left, .message-item-container-right {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   row-gap: 0.2rem;
   padding: 0.3rem;
+  width: 100%;
+
 }
 
 .message-item-body-left{
   align-self: flex-start;
   align-items: flex-start;
-
 }
 .message-item-container-right{
   align-self: flex-end;
@@ -66,8 +98,16 @@
 }
 
 .message-item-body-left, .message-item-body-right {
+  overflow-wrap: anywhere;
   font-family: 'Roboto-Light';
+  width: 100%;
   font-size: 16px;
+}
+
+.message-item-body-right {
+  display: flex;
+  justify-content: flex-end;
+  text-align: justify;
 }
 
 .game-component-messages-container::-webkit-scrollbar, .game-component-message-input::-webkit-scrollbar {

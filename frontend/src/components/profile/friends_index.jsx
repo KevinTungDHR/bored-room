@@ -9,7 +9,7 @@ const FriendsIndex = ({users, user}) => {
   const sessionId = useSelector(state => state.session.user._id);
 
   const friendshipHeaders = { 
-    acceptedFriends: 'Friends', 
+    acceptedFriends: 'My Friends', 
     requestedFriends: 'Requests', 
     pendingFriends: 'Pending', 
     rejectedFriends: 'Blocked'}
@@ -22,7 +22,7 @@ const FriendsIndex = ({users, user}) => {
   return (
     <div className='friends-container'>
       <ul className='friendship-headers'>
-      {sessionId === user._id ? currentUserHeaders : <li className='friendship-header-tab no-hover'>My Friends</li>}
+      {sessionId === user._id ? currentUserHeaders : <li className='friendship-header-tab no-hover'>Friends</li>}
       </ul>
       <div className='friends-list'>
           <div className='friends-flex-container'>

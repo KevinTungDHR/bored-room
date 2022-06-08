@@ -58,6 +58,7 @@ router.post('/createDemo', async (req, res) => {
         demoGame: g.demoGame,
         demoTurnCounter: g.demoTurnCounter,
         leftOrRight: g.leftOrRight,
+        rerolls: g.rerolls,
         gameOver: g.gameOver,
         currentState: g.currentState,
       });
@@ -113,6 +114,7 @@ router.post('/create', (req, res) => {
         dialRevealed: g.dialRevealed,
         demoGame: g.demoGame,
         demoTurnCounter: g.demoTurnCounter,
+        rerolls: g.rerolls,
         gameOver: g.gameOver,
         currentState: g.currentState,
       });

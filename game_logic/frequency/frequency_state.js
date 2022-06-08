@@ -14,9 +14,10 @@ const state = {
       return (`${activeTeam} Team Psychic must give a clue`);
     },
     type: "activePlayer",
-    possibleActions: ["giveClue"],
-    actions: ["giveClue"],
+    possibleActions: ["giveClue", 'rerollCard'],
+    actions: ["giveClue", 'rerollCard'],
     transitions: {
+      PSYCHIC_PHASE: 2,
       TEAM_PHASE: 3
     }
   },
