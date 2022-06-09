@@ -4,8 +4,7 @@ import { updateGame } from '../../../util/frequency_util';
 import { fetchGame, receiveGame } from '../../../actions/frequency_actions';
 import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
-import { AiOutlineArrowDown } from 'react-icons/ai';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { AiOutlineArrowDown, AiOutlineCheckCircle } from 'react-icons/ai';
 import MessageItem from '../../taking_six/message_item';
 
 const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, message }) => {
@@ -134,7 +133,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
     if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue} className="clue-form">
-          <div>
+          <div className='clue-input-container'>
             <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
             <button className='submit-clue' onClick={handleUpdate}>Submit</button>
           </div>
@@ -145,7 +144,6 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
   }
   
   const renderRerolls = () => {
-    debugger
     if (gameState.name !== 'PSYCHIC_PHASE' || assets.demoGame){
       return;
     }
@@ -154,9 +152,9 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
     let psychic = teams.find(player => player.isPsychic);
 
     if(sessionId === psychic._id && psychic.activePlayer && assets.rerolls < 2){
-      return <div onClick={handleReroll}>Reroll Card {`${assets.rerolls}/2`}</div>
+      return <div className='freq-aux-button' onClick={handleReroll}>Reroll Card {`${assets.rerolls}/2`}</div>
     } else if (sessionId === psychic._id && psychic.activePlayer && assets.rerolls >= 2){
-      return <div>No more rerolls left!</div>
+      return <div className='no-rerolls-message' >No more rerolls left!</div>
     }
   }
 
@@ -329,9 +327,15 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
               <span>{assets.bluePoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.blueGainedPts})`}</span>
               <ul>
                 {blueUsers.map((player, idx) => <li key={idx} className='handle-li'>
+                  <div>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />
-                  {player.handle}</li>)}
+                  </div>
+            
+                     <div>
+                      {player.handle}
+                     </div>
+                  </li>)}
               </ul>
             </div>
           </div>
@@ -343,8 +347,14 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
               <span>{assets.redPoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.redGainedPts})`}</span>
               <ul>
                 {redUsers.map((player, idx) => <li key={idx} className='handle-li'>
+                  <div>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
-                     ? "active-check" : "hidden"} />{player.handle}</li>)}
+                     ? "active-check" : "hidden"} />  
+                  </div>
+                     <div>
+                     {player.handle}
+                    </div>
+                    </li>)}
               </ul>
             </div>
           </div>
@@ -428,6 +438,10 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
     .catch(err => console.error(err))
   }
 
+  const capitalize = (word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  }
+
   const handleUpdate = (e) => {
     e.preventDefault();
     const payload = {
@@ -457,8 +471,8 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
 
       const actionDescriptions = {
         "giveClue": `${curPlayerHandle} is thinking of a clue`,
-        "makeGuess": `${assets.activeTeam} Team is making a guess`,
-        "chooseLeftRight": `${assets.activeTeam} Team is choosing Left or Right`,
+        "makeGuess": `${capitalize(assets.activeTeam)} Team is making a guess`,
+        "chooseLeftRight": `${capitalize(assets.activeTeam)} Team is choosing Left or Right`,
         "scorePoints": "Tallying Points",
         "nextRound": "Reveal Phase"
       }
@@ -477,9 +491,15 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                   </h1>}
                   {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
                   <div className='dial-container'>
-                    <div className='left-card'>{assets.currentCard.left}</div>
-                    <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
-                    <div className='right-card'>{assets.currentCard.right}</div>
+                    <div className='left-card'>
+                      <div>{assets.currentCard.left}</div>
+                      <div className='freq-arrow-left'></div>
+                    </div>
+                    <DialCanvas draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
+                    <div className='right-card'>
+                      <div>{assets.currentCard.right}</div>
+                      <div className='freq-arrow-right'></div>
+                    </div>
                   </div>
 
                   {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
@@ -488,10 +508,13 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                     {renderClueForm()} 
                     {renderSliderAndConfirm()}
                     {renderLeftOrRight()}
-                    {renderRerolls()}
                     {(gameState.name === 'REVEAL_PHASE' || gameState.name === 'SCORE_PHASE') && <div className='selected-lt-rt'>Selected: {assets.leftOrRight}</div>}
                     {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
                     {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
+                  </div>
+                  <div className='frequency-auxillary-buttons'>
+                      {renderRerolls()}
+                      <div className='freq-aux-button ' onClick={handleHowToPlayer}>How To Play</div>
                   </div>
                 </div>
 
@@ -511,9 +534,6 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                     <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
                     <div className='game-message-input-send' onClick={handleMessageSubmitButton}>Send</div>
                   </div>
-                </div>
-                <div className='howToPlay-btn-container'>
-                  <div className='howToPlay-btn' onClick={handleHowToPlayer}>How To Play</div>
                 </div>
               </div>       
               </div>

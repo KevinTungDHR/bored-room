@@ -48,7 +48,7 @@ const DialCanvas = props => {
     return Math.acos((bc*bc+ab*ab-ac*ac) / (2*bc*ab)) * (180 / Math.PI); 
   }
 
-  return <canvas ref={canvasRef} width={width} height={height} onMouseMove={handleMouseMove} onMouseDown={startDrag} onMouseUp={endDrag} onMouseLeave={endDrag}/>
+  return <canvas className='dial-component' ref={canvasRef} width={width} height={height} onMouseMove={handleMouseMove} onMouseDown={startDrag} onMouseUp={endDrag} onMouseLeave={endDrag}/>
 }
 
 export default DialCanvas;
