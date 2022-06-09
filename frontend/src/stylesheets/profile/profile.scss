@@ -358,12 +358,19 @@
 }
 
 .friendship-status {
-    position: absolute;
-    right: 10px;
     font-size: 22px;
     border-radius: .2rem;
     padding: .2rem;
     height: 20px;
+}
+
+.friendship-status-container {
+    background-color: $champ;
+    position: absolute;
+    display: flex;
+    top: 5px;
+    right: 10px;
+    z-index: 3;
 }
 
 .friendship-red {

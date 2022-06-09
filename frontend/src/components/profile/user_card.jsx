@@ -106,9 +106,9 @@ const UserCard = ({user, status}) => {
       <div className='userCard-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}}></div>
       <div className='userCard-info'>
         <div className='userCard-handle'>{handle}</div>
-        <div className='userCard-bio'>{bio.length > 28 ? `${bio.slice(0, 28)}...` : bio}</div>
+        <div className='userCard-bio'>{bio.length > 26 ? `${bio.slice(0, 26)}...` : bio}</div>
       </div>
-      <div>
+      <div className='friendship-status-container'>
         {renderbuttons()}
       </div>
     </NavLink>
