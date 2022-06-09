@@ -20,9 +20,11 @@ Introducing [Bored Room](https://bored-room.herokuapp.com/), a web platform desi
 On your profile page you are able to see your current friends, requests, pending requests and blocked users. In addition you are able to change your avatar, handle, email and bio to share with the Bored Room community a little bit about yourself and about what makes you...you!
 ![profile_gif](Profile.gif)
 
+## Demo Game and State Queue ##
 Our Taking Six Demo highlights our queue system for dispatching state as well as our animations using Framer Motion.
 ![taking_six_gif](TakingSix.gif)
 
+## Websockets and Canvas ##
 While all of our games use websockets, it's highlighted the most in our Frequency game where multiple users on the same team can affect the central dial. However, in consideration of computers with lower processing power we only update the dial on mouse release. The dial itself is created entirely in canvas and can be manipulated by using trigonometry to convert our mouse-click position into an angle.
 ![Frequency_gif](Frequency.gif)
 
