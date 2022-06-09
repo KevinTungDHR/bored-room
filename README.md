@@ -66,7 +66,7 @@ The following code snippet was an interesting challenge for us because we needed
     } 
   }, [stateQueue, isDelayed])
 ```
-
+### Friendships ###
 One of our goals for this project was to create a profile system where you can add other users as friends. One of the complications with this is that the friendship relationship is a two-way street, which becomes slightly more difficult to do in a NoSQL non-relational database. Requesting a friendship requires that the requestee's pendingFriends is also updated. By having users be within four possible arrays that represent friendship status we can take a potentially complex relationship and make them much easier to work with.
 
 ```jsx
@@ -91,7 +91,6 @@ const UserSchema = new Schema({
   //...
  })
 ```
-### Friendships ###
 
 ```jsx
 router.post('/request/:friendId', passport.authenticate('jwt', {session: false}), async (req, res) => {
