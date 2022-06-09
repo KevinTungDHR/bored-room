@@ -275,7 +275,6 @@ class DontStopGame {
     if(this.getState().type === 'activePlayer'){
       // Check activePlayer
     }
-
     return this[action](args);
   }
 
@@ -322,7 +321,8 @@ class DontStopGame {
     }
 
     if(this.isGameOver()){
-      this.changelElo();
+
+      this.changeElo();
       const nextState = this.getState().transitions.GAME_END;
       this.setState(nextState);
     } else {
@@ -332,17 +332,16 @@ class DontStopGame {
   }
 
   changeElo() {
-    const winnerId = this.players.filter(player => player.color === this.winner)
+    const winner = this.players.filter(player => player.color === this.winner)
     const numPlayers = this.players.length - 1;
     const eloForWinner = numPlayers * 5;
-    let eloWon = eloForWinner / winners.length;
-
+    let eloWon = eloForWinner / numPlayers;
     this.players.forEach((player) => {
       User.findById(player._id)
       .then((user) => {
         let originalElo = user.eloRating.dontStop;
 
-        if(mongoose.Types.ObjectId(winnerId).equals(user._id)){
+        if(mongoose.Types.ObjectId(winner[0]._id).equals(user._id)){
           const increasedElo = {eloRating: { dontStop: (originalElo + eloWon) }};
           user.set(increasedElo)
         } else {
@@ -351,6 +350,7 @@ class DontStopGame {
         }
         user.save()
       })
+      .catch(err => console.log(err));
     });
   }
 

@@ -127,10 +127,12 @@ router.patch('/:code', passport.authenticate("jwt", { session: false }), async (
   try {
 
     g.handleEvent(req.body.action, { ...req.body } );
+
     game.set(g);
     game.markModified('pairs')
     game.markModified('routes')
     game.markModified('currentRun');
+
     let assets = await game.save()
     const gameState = dontStopState[assets.currentState];
 
