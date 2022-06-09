@@ -29,6 +29,8 @@ While all of our games use websockets, it's highlighted the most in our Frequenc
 ![Frequency_gif](Frequency.gif)
 
 ## Code Snippets ##
+
+### Redux Queue System ###
 The following code snippet was an interesting challenge for us because we needed to display changes in the state of the game that were automated on the backend. For example, the game and demobots might automatically place cards, score points, and setup a new turn. The server goes through each game state within milliseconds on the backend and delivers the new state in json format to our frontend. While we could've used external libraries like redux saga to delay our dispatch we implemented our own queue system with setTimeout that would dispatch each state after a short duration. This allows the user to see game changes easily as well as allowing us to play animations for certain games.
 
 ```jsx
@@ -89,6 +91,7 @@ const UserSchema = new Schema({
   //...
  })
 ```
+### Friendships ###
 
 ```jsx
 router.post('/request/:friendId', passport.authenticate('jwt', {session: false}), async (req, res) => {
