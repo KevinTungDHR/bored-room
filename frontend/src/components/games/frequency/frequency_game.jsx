@@ -492,12 +492,12 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                   {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
                   <div className='dial-container'>
                     <div className='left-card'>
-                      <div>{assets.currentCard.left}</div>
+                      <div className='left-card-text'>{assets.currentCard.left}</div>
                       <div className='freq-arrow-left'></div>
                     </div>
                     <DialCanvas draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
                     <div className='right-card'>
-                      <div>{assets.currentCard.right}</div>
+                      <div className='right-card-text'>{assets.currentCard.right}</div>
                       <div className='freq-arrow-right'></div>
                     </div>
                   </div>

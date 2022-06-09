@@ -34,9 +34,25 @@
 
 .left-card, .right-card {
     display: flex;
+
     flex-direction: column;
     justify-content: center;
+    // color: #eeeeee;
+    // text-shadow: 2px 2px 2px #2f4956;
     min-width: 200px;
+}
+
+.left-card-text, .right-card-text {
+    border-radius: 8px;
+    padding: 0.3rem 0;
+    box-shadow: 2px 2px 3px #2f4956;
+}
+
+.left-card-text {
+    background-color: rgb(255, 226, 162);
+}
+.right-card-text {
+    background-color: rgb(252, 129, 107);
 }
 
 .freq-arrow-right::after{
@@ -64,7 +80,7 @@
     display: inline-block;
     width: 0;
     height: 0;
-    border-right: 8px solid #dea030;
+    border-right: 8px solid rgb(255, 226, 162);
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     vertical-align: middle;
@@ -74,7 +90,7 @@
     content: "";
     width: 180px;
     height: 2px;
-    background-color: #dea030;
+    background-color: rgb(255, 226, 162);
     display: inline-block;
     vertical-align: middle;
 }
@@ -359,6 +375,15 @@
     justify-content: center;
     margin-top: 20px;
     font-size: 50px;
+}
+
+.clue {
+    background-color: #cbe9d8;
+    margin: 1rem auto;
+    width: fit-content;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: 2px 2px 3px #2f4956;
 }
 
 .handle-li {
