@@ -54,7 +54,7 @@ const UserPageItem = ({ user }) => {
       <div className='userCard-avatar' style={{ backgroundImage: "url(" + avatars[avatar] + ")"}}></div>
       <div className='userCard-info'>
         <div className='userCard-handle'>{handle}</div>
-        <div className='userCard-bio'>{bio.length > 30 ? `${bio.slice(0, 30)}...` : bio}</div>
+        <div className='userCard-bio'>{bio.length > 26 ? `${bio.slice(0, 26)}...` : bio}</div>
       </div>
     </NavLink>
   )
