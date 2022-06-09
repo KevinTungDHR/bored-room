@@ -473,7 +473,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
       const actionDescriptions = {
         "giveClue": `${curPlayerHandle} is thinking of a clue`,
         "makeGuess": `${capitalize(assets.activeTeam)} Team is making a guess`,
-        "chooseLeftRight": `${capitalize(assets.activeTeam)} Team is choosing Left or Right`,
+        "chooseLeftRight": `${assets.activeTeam === 'red' ? 'Blue' :  'Red'} Team is choosing Left or Right`,
         "scorePoints": "Tallying Points",
         "nextRound": "Reveal Phase"
       }
