@@ -6,6 +6,7 @@ import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
 import { AiOutlineArrowDown, AiOutlineCheckCircle } from 'react-icons/ai';
 import MessageItem from '../../taking_six/message_item';
+import TeamGameEnd from '../team_game_end';
 
 const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, message }) => {
   const [leftOrRight, setLeftOrRight] = useState("");
@@ -480,6 +481,14 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
       return (
           <div className='frequency-outer-div'>
             <div className='game-background'>
+            {gameState.actions[0] === 'gameEnd' &&
+              <motion.div
+                className='end-game-backdrop'
+                animate={{ scale: [0, 1] }}
+                transition={{ duration: 0.5 }}>
+                <TeamGameEnd blueUsers={blueUsers} redUsers={redUsers} blueTeam={blueTeam} redTeam={redTeam} assets={assets} />
+              </motion.div>
+              }
               <div className='frequency-main'>
                 <div className='frequency-left-container'>
                   {gameState.name !== "GAME_END" && <h1 className='curr-game-action'>

@@ -42,6 +42,7 @@ const FrequencyGameSchema = new Schema({
     },
     activePlayer: Boolean,
     isPsychic: Boolean,
+    endingElo: Number
   }],
   redPsychic: Number,
   bluePsychic: Number,

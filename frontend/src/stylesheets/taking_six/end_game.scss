@@ -23,6 +23,11 @@
     margin-top: 20px;
 }
 
+.endgame-score-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .winner-score {
     display: flex;
     justify-content: center;
@@ -48,4 +53,20 @@
     td {
         padding: 6px 34px;
     }
+}
+
+.team-final-score {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    
+    th {
+        padding: 6px 0px;
+        text-decoration: underline;
+    }
+
+    td {
+        padding: 6px 34px;
+    }
+
 }
