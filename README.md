@@ -1,6 +1,5 @@
 # Bored Room
 
-## Description ##
 Have you ever wanted to play your favorite board games online with friends but not know which game you want to play? Was it difficult because there were too many sites for individual games and signing up all your friends is a chore? Do the game websites you've tried require you to refresh the page to see the latest moves?
 
 Introducing, [Bored Room](https://bored-room.herokuapp.com/) a web platform designed for people to play modern board games online with friends and strangers both asynchronously and in real time! Our goal was to create a family-friendly, entertaining space to explore modern board games whether you're a board game veteran or new to the scene. Not only can your friends easily join rooms you create, but you can also learn how to play new games by testing out our demo feature where you play against our demobots! To make things easier for new users a brief set of rules can be seen at the bottom of every page. In addition, from a backend and engineering point of view we designed Bored Room to easily incorporate new games whenever they are designed by implementing our game logic with a State Design Pattern.
@@ -16,6 +15,11 @@ Introducing, [Bored Room](https://bored-room.herokuapp.com/) a web platform desi
   * HTML5/CSS
   * Canvas
   * Webpack/Nodemon
+
+## Profiles ##
+![profile_gif](Profile.gif)
+![taking_six_gif](TakingSix.gif)
+![Frequency_gif](Frequency.gif)
 
 ## Code Snippets ##
 The following code snippet was an interesting challenge for us because we needed to display changes in the state of the game that were automated on the backend. For example, the game and demobots might automatically place cards, score points, and setup a new turn. The server goes through each game state within milliseconds on the backend and delivers the new state in json format to our frontend. While we could've used external libraries like redux saga to delay our dispatch we implemented our own queue system with setTimeout that would dispatch each state after a short duration. This allows the user to see game changes easily as well as allowing us to play animations for certain games.
