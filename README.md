@@ -2,7 +2,7 @@
 
 Have you ever wanted to play your favorite board games online with friends but not know which game you want to play? Was it difficult because there were too many sites for individual games and signing up all your friends is a chore? Do the game websites you've tried require you to refresh the page to see the latest moves?
 
-Introducing, [Bored Room](https://bored-room.herokuapp.com/) a web platform designed for people to play modern board games online with friends and strangers both asynchronously and in real time! Our goal was to create a family-friendly, entertaining space to explore modern board games whether you're a board game veteran or new to the scene. Not only can your friends easily join rooms you create, but you can also learn how to play new games by testing out our demo feature where you play against our demobots! To make things easier for new users a brief set of rules can be seen at the bottom of every page. In addition, from a backend and engineering point of view we designed Bored Room to easily incorporate new games whenever they are designed by implementing our game logic with a State Design Pattern.
+Introducing [Bored Room](https://bored-room.herokuapp.com/), a web platform designed for people to play modern board games online with friends and strangers both asynchronously and in real time! Our goal was to create a family-friendly, entertaining space to explore modern board games whether you're a board game veteran or new to the scene. Not only can your friends easily join rooms you create, but you can also learn how to play new games by testing out our demo feature where you play against our demobots! To make things easier for new users a brief set of rules can be seen at the bottom of every page. In addition, from a backend and engineering point of view we designed Bored Room to easily incorporate new games whenever they are designed by implementing our game logic with a State Design Pattern.
 
 ### Languages and Technologies ###
   * React/Redux
@@ -17,8 +17,13 @@ Introducing, [Bored Room](https://bored-room.herokuapp.com/) a web platform desi
   * Webpack/Nodemon
 
 ## Profiles ##
+On your profile page you are able to see your current friends, requests, pending requests and blocked users. In addition you are able to change your avatar, handle, email and bio to share with the Bored Room community a little bit about yourself and about what makes you...you!
 ![profile_gif](Profile.gif)
+
+Our Taking Six Demo highlights our queue system for dispatching state as well as our animations using Framer Motion.
 ![taking_six_gif](TakingSix.gif)
+
+While all of our games use websockets, it's highlighted the most in our Frequency game where multiple users on the same team can affect the central dial. However, in consideration of computers with lower processing power we only update the dial on mouse release. The dial itself is created entirely in canvas and can be manipulated by using trigonometry to convert our mouse-click position into an angle.
 ![Frequency_gif](Frequency.gif)
 
 ## Code Snippets ##
