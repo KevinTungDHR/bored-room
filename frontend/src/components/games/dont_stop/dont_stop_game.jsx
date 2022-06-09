@@ -6,6 +6,9 @@ import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiFillStar, AiOutlineCheckCircle } from 'react-icons/ai';
 import MessageItem from '../../taking_six/message_item';
 import Die from './die';
+import GameEnd from './game_end';
+import { motion } from 'framer-motion';
+
 
 const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, message }) => {
   const [action, setAction] = useState("");
@@ -103,6 +106,14 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
     }
   }
 
+  const handleMessageSubmitButton = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+    sendMessage(e)
+  }
+
+
   const handleHowToPlayer = (e) =>{
     instructionsRef.current.scrollIntoView({behavior: "smooth", block: 'nearest'})
   }
@@ -195,6 +206,11 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
   }
 
   const handleClimb = (route) => {
+    const currentPlayerId = assets.players.filter(p => p.color === assets.currentPlayer)[0]._id
+
+    if(currentPlayerId !== sessionId){
+      return;
+    }
     setRoute(route);
     setAction('chooseDice')
   }
@@ -216,14 +232,22 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
     const winner = winnerId ? users[winnerId] : null
     const currentPlayer = users[currentPlayerId];
     const moveDescription = {
-      "DICE_REVEAL": `${currentPlayer.handle} must choose which ropes to climb`,
-      "CLIMB_PHASE": `${currentPlayer.handle} must choose to continue or stop`,
-      "FAIL_CLIMB": `${currentPlayer.handle} busts! No possible moves`,
+      "DICE_REVEAL": `${currentPlayer?.handle} must choose which ropes to climb`,
+      "CLIMB_PHASE": `${currentPlayer?.handle} must choose to continue or stop`,
+      "FAIL_CLIMB": `${currentPlayer?.handle} busts! No possible moves`,
       "END_TURN": "Calculating...",
       "GAME_END": `Game Over: ${winner?.handle} wins`
     }
     return(
       <div className='game-background'>
+        {gameState.actions[0] === 'gameEnd' &&
+            <motion.div
+              className='end-game-backdrop'
+              animate={{ scale: [0, 1] }}
+              transition={{ duration: 0.5 }}>
+              <GameEnd users={users} assets={assets} />
+            </motion.div>
+            }
         <div className='dont-stop-game-container'>
           <div className='dont-stop-board-container'>
             <div className='mountain-background'>
@@ -579,7 +603,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
           <div className='dont-stop-action-container'>
             <h2 className='dont-stop-move-description'>{moveDescription[gameState.name]}</h2>
             {currentPlayerId === sessionId && renderClimbPhaseButtons()}
-            {currentPlayerId === sessionId && renderRouteButtons()}
+            {renderRouteButtons()}
           </div>
 
           <div className='dont-stop-right-container'>
@@ -620,7 +644,10 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
                     {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
                     <div ref={chatEndRef}></div>
                   </div>
-                  <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                  <div className='game-component-input-container'>
+                    <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                    <div className='game-message-input-send' onClick={handleMessageSubmitButton}>Send</div>
+                  </div>
                 </div>
                 <div className='howToPlay-btn-container'>
                   <div className='howToPlay-btn' onClick={handleHowToPlayer}>How To Play</div>
@@ -628,7 +655,7 @@ const DontStopGame = ({ roomCode, socket, room, setMessage, sendMessage, list, m
               </div>                
           </div>
 
-          <div className='taking-six-instructions'>
+          <div className='instructions'>
                   <div>
                     <h1>Don't Stop Rules</h1>
                   </div>

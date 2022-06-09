@@ -4,9 +4,9 @@ import { updateGame } from '../../../util/frequency_util';
 import { fetchGame, receiveGame } from '../../../actions/frequency_actions';
 import DialCanvas from './dial_canvas';
 import { motion } from 'framer-motion';
-import { AiOutlineArrowDown } from 'react-icons/ai';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { AiOutlineArrowDown, AiOutlineCheckCircle } from 'react-icons/ai';
 import MessageItem from '../../taking_six/message_item';
+import TeamGameEnd from '../team_game_end';
 
 const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, message }) => {
   const [leftOrRight, setLeftOrRight] = useState("");
@@ -27,6 +27,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
   const redTeam = useSelector(state => state.games[roomCode]?.assets.redTeam)
   const blueTeam = useSelector(state => state.games[roomCode]?.assets.blueTeam) 
   const chatEndRef = useRef();
+  const instructionsRef = useRef();
 
   let selectionMade = false;
   const dispatch = useDispatch();
@@ -133,13 +134,28 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
     if(sessionId === psychic._id && psychic.activePlayer){
       return(
         <form onSubmit={submitClue} className="clue-form">
-          <div>
+          <div className='clue-input-container'>
             <input type="text" onChange={(e) => setClue(e.target.value)} placeholder="Enter a clue..."/>
             <button className='submit-clue' onClick={handleUpdate}>Submit</button>
           </div>
           {errors !== "" && <div className='clue-error'>{errors}</div>}
         </form>
       )
+    }
+  }
+  
+  const renderRerolls = () => {
+    if (gameState.name !== 'PSYCHIC_PHASE' || assets.demoGame){
+      return;
+    }
+
+    let teams = redTeam.concat(blueTeam)
+    let psychic = teams.find(player => player.isPsychic);
+
+    if(sessionId === psychic._id && psychic.activePlayer && assets.rerolls < 2){
+      return <div className='freq-aux-button' onClick={handleReroll}>Reroll Card {`${assets.rerolls}/2`}</div>
+    } else if (sessionId === psychic._id && psychic.activePlayer && assets.rerolls >= 2){
+      return <div className='no-rerolls-message' >No more rerolls left!</div>
     }
   }
 
@@ -312,9 +328,15 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
               <span>{assets.bluePoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.blueGainedPts})`}</span>
               <ul>
                 {blueUsers.map((player, idx) => <li key={idx} className='handle-li'>
+                  <div>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
                      ? "active-check" : "hidden"} />
-                  {player.handle}</li>)}
+                  </div>
+            
+                     <div>
+                      {player.handle}
+                     </div>
+                  </li>)}
               </ul>
             </div>
           </div>
@@ -326,8 +348,14 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
               <span>{assets.redPoints}{(gameState.name === 'REVEAL_PHASE' || gameState.name === 'GAME_END') && ` (+${assets.redGainedPts})`}</span>
               <ul>
                 {redUsers.map((player, idx) => <li key={idx} className='handle-li'>
+                  <div>
                   <AiOutlineCheckCircle height="16px" width="16px" className={allPlayers.find(play => player._id === play._id).activePlayer && gameState.name !== "REVEAL_PHASE"
-                     ? "active-check" : "hidden"} />{player.handle}</li>)}
+                     ? "active-check" : "hidden"} />  
+                  </div>
+                     <div>
+                     {player.handle}
+                    </div>
+                    </li>)}
               </ul>
             </div>
           </div>
@@ -369,6 +397,7 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
           <h2>Bonus Rule: </h2>
           <p>If the active team guesses perfectly (4 points), and they still have fewer points than the opposing team, they get to take another turn, drawing a new card and selecting a new Psychic.</p>
         </div>
+        <div ref={instructionsRef}></div>
       </div>
     )
   }
@@ -382,7 +411,38 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
       sendMessage(e)
     }
   }
+  const handleMessageSubmitButton = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+    sendMessage(e)
+  }
  
+  const handleHowToPlayer = (e) =>{
+    instructionsRef.current.scrollIntoView({behavior: "smooth", block: 'nearest'})
+  }
+
+  const handleReroll = (e) => {
+    e.preventDefault();
+    const payload = {
+      action: gameState.actions[1],
+    }
+
+    if(assets.rerolls >= 2){
+      setErrors('Out of rerolls');
+      return;
+    } else {
+      setErrors('');
+    }
+
+    updateGame(roomCode, payload)
+    .catch(err => console.error(err))
+  }
+
+  const capitalize = (word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  }
+
   const handleUpdate = (e) => {
     e.preventDefault();
     const payload = {
@@ -412,8 +472,8 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
 
       const actionDescriptions = {
         "giveClue": `${curPlayerHandle} is thinking of a clue`,
-        "makeGuess": `${curPlayerHandle} is making a guess`,
-        "chooseLeftRight": `${assets.activeTeam} Team is choosing Left or Right`,
+        "makeGuess": `${capitalize(assets.activeTeam)} Team is making a guess`,
+        "chooseLeftRight": `${capitalize(assets.activeTeam)} Team is choosing Left or Right`,
         "scorePoints": "Tallying Points",
         "nextRound": "Reveal Phase"
       }
@@ -421,6 +481,14 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
       return (
           <div className='frequency-outer-div'>
             <div className='game-background'>
+            {gameState.actions[0] === 'gameEnd' &&
+              <motion.div
+                className='end-game-backdrop'
+                animate={{ scale: [0, 1] }}
+                transition={{ duration: 0.5 }}>
+                <TeamGameEnd blueUsers={blueUsers} redUsers={redUsers} blueTeam={blueTeam} redTeam={redTeam} assets={assets} />
+              </motion.div>
+              }
               <div className='frequency-main'>
                 <div className='frequency-left-container'>
                   {gameState.name !== "GAME_END" && <h1 className='curr-game-action'>
@@ -432,9 +500,15 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                   </h1>}
                   {/* {(sessionId === psychic._id && psychic.activePlayer) ? <div className='dial-answer'>Dial: {assets.dial}</div> : <div></div>} */}
                   <div className='dial-container'>
-                    <div className='left-card'>{assets.currentCard.left}</div>
-                    <DialCanvas className="dial-component" draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
-                    <div className='right-card'>{assets.currentCard.right}</div>
+                    <div className='left-card'>
+                      <div className='left-card-text'>{assets.currentCard.left}</div>
+                      <div className='freq-arrow-left'></div>
+                    </div>
+                    <DialCanvas draw={drawDial} width={630} height={350} setGuess={setGuess} updateGuess={updateGuess} allPlayers={allPlayers} gameState={gameState} sessionId={sessionId}/>
+                    <div className='right-card'>
+                      <div className='right-card-text'>{assets.currentCard.right}</div>
+                      <div className='freq-arrow-right'></div>
+                    </div>
                   </div>
 
                   {(assets.clue) ? <div className='clue'>Clue: {assets.clue}</div> : <div></div>}
@@ -447,6 +521,10 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                     {gameState.name === 'REVEAL_PHASE' && playerInGame && <button className='submit-guess' onClick={handleUpdate}>Next Round</button>}
                     {selectionMade ? <div className='selected-lt-rt'>Selected: {leftOrRight}</div> : ""}
                   </div>
+                  <div className='frequency-auxillary-buttons'>
+                      {renderRerolls()}
+                      <div className='freq-aux-button ' onClick={handleHowToPlayer}>How To Play</div>
+                  </div>
                 </div>
 
                 <div className='frequency-right-container'>
@@ -458,12 +536,15 @@ const FrequencyGame = ({ roomCode, socket, setMessage, sendMessage, list, messag
                       <div>Code: {roomCode}</div>
                     </header>
                     <div className='game-component-messages-container'>
-                      {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
-                      <div ref={chatEndRef}></div>
-                    </div>
+                    {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
+                    <div ref={chatEndRef}></div>
+                  </div>
+                  <div className='game-component-input-container'>
                     <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                    <div className='game-message-input-send' onClick={handleMessageSubmitButton}>Send</div>
                   </div>
                 </div>
+              </div>       
               </div>
               
 

@@ -2,7 +2,7 @@
 @import '../fonts.scss';
 
 .frequency-outer-div {  
-    font-family: "Salt-Rock";
+    font-family: "Really-Free";
     font-size: 32px;
     min-height: 100vh;
 }
@@ -19,10 +19,82 @@
 }
 
 .frequency-left-container {
+    position: relative;
+    background-image: radial-gradient(#588399 , #2f4956);
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.521);
     width: 100%;
     max-width: 1500px;
     padding: 1rem 3rem;
 }
+
+.curr-game-action {
+    padding-top: 1rem;
+}
+
+.left-card, .right-card {
+    display: flex;
+
+    flex-direction: column;
+    justify-content: center;
+    // color: #eeeeee;
+    // text-shadow: 2px 2px 2px #2f4956;
+    min-width: 200px;
+}
+
+.left-card-text, .right-card-text {
+    border-radius: 8px;
+    padding: 0.3rem 0;
+    box-shadow: 2px 2px 3px #2f4956;
+}
+
+.left-card-text {
+    background-color: rgb(255, 226, 162);
+}
+.right-card-text {
+    background-color: rgb(252, 129, 107);
+}
+
+.freq-arrow-right::after{
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 8px solid #e07155;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    vertical-align: middle;
+}
+
+.freq-arrow-right:before {
+    content: "";
+    width: 180px;
+    height: 2px;
+    background-color: #e07155;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.freq-arrow-left::before{
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-right: 8px solid rgb(255, 226, 162);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    vertical-align: middle;
+}
+
+.freq-arrow-left:after {
+    content: "";
+    width: 180px;
+    height: 2px;
+    background-color: rgb(255, 226, 162);
+    display: inline-block;
+    vertical-align: middle;
+}
+
 
 .frequency-right-container {
     display: flex;
@@ -36,21 +108,23 @@
 }
 
 .clue-error {
-    color: rgb(224, 32, 32);
-    font-size: 16px;
+    color: rgb(255, 125, 50);
+    font-size: 36px;
 }
 
 .curr-game-action {
-    font-size: 28px;
+    font-size: 64px;
     color: $title;
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-top: 10px;
 
     span {
         color: $seaweed;
         margin-left: 10px;
-        font-size: 32px;
+        font-size: 64px;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.479);
     }
 }
 
@@ -101,11 +175,11 @@
     min-height: 200px;
     border: 2px solid $seaweed;
     margin: 10px 18px;
-    font-size: 24px;
+    font-size: 38px;
     position: relative;
 
     span, li {
-        font-size: 18px;
+        font-size: 32px;
     }
 }
 
@@ -130,16 +204,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    * {
-        margin-top: 10px;
-    }
+
 }
 
 .dial-container {
-    display: flex;
-    font-size: 26px;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 630px 1fr;
+    font-size: 48px;
     margin: auto;
     margin-top: 12px;
     text-align: center;
@@ -171,7 +242,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     div {
         margin-top: 10px;
     }
@@ -214,7 +284,8 @@
         border: none;
         height: 50px;
         margin: 0px 4px;
-        font-family: "Salt-Rock";
+        font-family: "Really-Free";
+        font-size: 32px;
         border-radius: 8px;
 
         &:hover {
@@ -224,13 +295,18 @@
     }
     }
 }
+.clue-input-container{
+    display: flex;
+    align-items: center;
+}
 
 .submit-guess {
     background-color: $coral;
     border: none;
     height: 50px;
-    margin: 0px 4px;
-    font-family: "Salt-Rock";
+    margin: 10px 4px;
+    font-family: "Really-Free";
+    font-size: 32px;
     border-radius: 8px;
 
     &:hover {
@@ -241,10 +317,11 @@
 }
 
 .freq-confirm-btn, .left-right-btn, .cancel-btn {
-    font-family: "Salt-Rock";
+    font-family: "Really-Free";
     border: $tan;
     height: 50px;
     width: 100px;
+    font-size: 32px;
     margin: 0px 4px;
     border-radius: 8px;
 
@@ -297,11 +374,22 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    font-size: 22px;
+    font-size: 50px;
+}
+
+.clue {
+    background-color: #cbe9d8;
+    margin: 1rem auto;
+    width: fit-content;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: 2px 2px 3px #2f4956;
 }
 
 .handle-li {
     position: relative;
+    display: flex;
+    column-gap: .5rem;
 }
 
 .active-check {
@@ -311,6 +399,44 @@
 }
 
 .selected-lt-rt {
-    font-size: 18px;
+    font-size: 36px;
     margin-left: 20px;
 }   
+
+.frequency-auxillary-buttons {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+}
+
+
+
+.freq-aux-button {
+    width: 150px;
+    justify-content: center;
+    background-color: #095f81;
+    color: white;
+    box-shadow: inset 0 2px white,
+      inset 0 -2px #bbb,
+      inset 2px 0 #d7d7d7, 
+      inset -2px 0 #d7d7d7;
+    padding: 0.5rem 1rem;
+    font-size: 36px;
+    font-family: "Really-Free";
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    &:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+        cursor: pointer;
+    }
+}
+
+.no-rerolls-message{
+    color: #fefefe;
+    text-shadow: 1px 1px 1px #2f4956;
+}

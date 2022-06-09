@@ -30,6 +30,7 @@ const GameComponent = ({ roomCode, socket, room, setMessage, sendMessage, list, 
   const dispatch = useDispatch();
   const bullLogo = <img className="bull-logo" src={bull_logo} height="700px" width="700px" />
   const chatEndRef = useRef();
+  const instructionsRef = useRef();
   
   useEffect(() => {
     dispatch(fetchGame(roomCode));
@@ -127,6 +128,17 @@ const GameComponent = ({ roomCode, socket, room, setMessage, sendMessage, list, 
     if(e.keyCode === 13){
       sendMessage(e)
     }
+  }
+
+  const handleMessageSubmitButton = (e) => {
+    if(message.trim().length === 0){
+      return;
+    }
+    sendMessage(e)
+  }
+
+  const handleHowToPlayer = (e) =>{
+    instructionsRef.current.scrollIntoView({behavior: "smooth", block: 'nearest'})
   }
 
   const handleUpdate = (e) => {
@@ -237,13 +249,17 @@ const GameComponent = ({ roomCode, socket, room, setMessage, sendMessage, list, 
                     {list.map((message, idx) => <MessageItem key={idx} message={message} currentUser={currentUser}/>)}
                     <div ref={chatEndRef}></div>
                   </div>
-                  <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                  <div className='game-component-input-container'>
+                    <textarea className='game-component-message-input' type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={handleMessageSubmit}></textarea>
+                    <div className='game-message-input-send' onClick={handleMessageSubmitButton}>Send</div>
+                  </div>
                 </div>
-               
-              </div>
-
-           
+                <div className='howToPlay-btn-container'>
+                  <div className='howToPlay-btn' onClick={handleHowToPlayer}>How To Play</div>
+                </div>
+              </div>                
             </div>
+
             <div className='taking-six-instructions'>
                   <div>
                     <h1>Taking Six Rules</h1>
@@ -271,6 +287,7 @@ const GameComponent = ({ roomCode, socket, room, setMessage, sendMessage, list, 
                     <h2>Game End:</h2>
                     <p>A game ends when players have played all ten cards from their hand AND a player has reached 0 or fewer points.</p>
                   </div>
+                  <div ref={instructionsRef}></div>
                 </div>
           </div>
         </div>

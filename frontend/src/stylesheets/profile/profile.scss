@@ -43,7 +43,7 @@
     justify-content: space-evenly;
     align-items: center;
     box-sizing: border-box;
-    height: 550px;
+    height: 600px;
     min-width: 500px;
     padding-bottom: 10px;
     background-color: $tan;
@@ -75,7 +75,7 @@
         border-radius: 10px;
         background-color: #f8f8ff;
         resize: none;
-        overflow: scroll;
+        overflow-y: auto;
     }
 
     textarea:focus, input:focus {
@@ -271,7 +271,7 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    height: 550px;
+    height: 600px;
 }
 
 .friendship-headers {
@@ -303,10 +303,12 @@
 
 .friends-list {
     box-sizing: border-box;
+    min-width: 455px;
     padding: 1rem 2rem;
     height: 100%;
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.5);
     background-color: $tan;
+    overflow-y: auto;
 }
 
 .friends-flex-container {
@@ -317,6 +319,7 @@
 }
 
 .userCard-container {
+    position: relative;
     font-family: 'Really-Free';
     width: 250px;
     height: 60px;
@@ -355,6 +358,8 @@
 }
 
 .friendship-status {
+    position: absolute;
+    right: 10px;
     font-size: 22px;
     border-radius: .2rem;
     padding: .2rem;

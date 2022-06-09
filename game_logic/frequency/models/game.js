@@ -42,6 +42,7 @@ const FrequencyGameSchema = new Schema({
     },
     activePlayer: Boolean,
     isPsychic: Boolean,
+    endingElo: Number
   }],
   redPsychic: Number,
   bluePsychic: Number,
@@ -58,6 +59,7 @@ const FrequencyGameSchema = new Schema({
   demoTurnCounter: Number,
   gameOver: Boolean,
   currentState: Number,
+  rerolls: Number,
   winner: String
 },  {
     timestamps: true

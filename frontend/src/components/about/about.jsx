@@ -8,10 +8,11 @@ import angellist from '../../assets/images/angellist.png';
 
 const AboutDevelopers = () => {
     return (
+        <div className='game-background'>
         <div className='about-outer-div'>
-            <div className='about-header'>
+            {/* <div className='about-header'>
                 <h1>About the Developers</h1>
-            </div>
+            </div> */}
 
             <div className='bios-container'>
                 {/* Peter */}
@@ -24,9 +25,9 @@ const AboutDevelopers = () => {
                     <p className='bio-description'>Peter is a problem-solver at heart who loves to dive into complex logic, learn new frameworks, and fix challenging bugs. He has a passion for backend development and understands its role and influence in the context of the whole stack.</p>
                     <div className='connect-links'>
                         <span>Connect: </span>
-                        <a href='https://github.com/Peterkim88'><img src={github} /></a>
-                        <a href='https://www.linkedin.com/in/peter-kim-898aa223a/'><img className='linkedin' src={linkedin} /></a>
-                        <a href=''><img className='angellist' src={angellist} /></a>
+                        <a href='https://github.com/Peterkim88' target="_blank"><img src={github} /></a>
+                        <a href='https://www.linkedin.com/in/peter-kim-898aa223a/' target="_blank"><img className='linkedin' src={linkedin} /></a>
+                        <a href='' target="_blank"><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
 
@@ -40,9 +41,9 @@ const AboutDevelopers = () => {
                     <p className='bio-description'>Jack-of-all-trades...master of many. Kevin is a go-getter who loves to work across the entire codebase, combining his knack for strategic-thinking, deep technical prowess, and natural leadership ability to achieve success.</p>
                     <div className='connect-links'>
                         <span>Connect: </span>
-                        <a href='https://github.com/KevinTungDHR'><img src={github} /></a>
-                        <a href='https://www.linkedin.com/in/kevintungdev/'><img className='linkedin' src={linkedin} /></a>
-                        <a href=''><img className='angellist' src={angellist} /></a>
+                        <a href='https://github.com/KevinTungDHR' target="_blank"><img src={github} /></a>
+                        <a href='https://www.linkedin.com/in/kevintungdev/' target="_blank"><img className='linkedin' src={linkedin} /></a>
+                        <a href='' target="_blank"><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
 
@@ -57,12 +58,13 @@ const AboutDevelopers = () => {
                     <br />
                     <div className='connect-links'>
                         <span>Connect: </span>
-                        <a href='https://github.com/sodea1'><img src={github} /></a>
-                        <a href='https://www.linkedin.com/in/seanodea1/'><img className='linkedin' src={linkedin} /></a>
-                        <a href='https://angel.co/u/sean-o-dea-4'><img className='angellist' src={angellist} /></a>
+                        <a href='https://github.com/sodea1' target="_blank"><img src={github} /></a>
+                        <a href='https://www.linkedin.com/in/seanodea1/' target="_blank"><img className='linkedin' src={linkedin} /></a>
+                        <a href='https://angel.co/u/sean-o-dea-4' target="_blank"><img className='angellist' src={angellist} /></a>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }

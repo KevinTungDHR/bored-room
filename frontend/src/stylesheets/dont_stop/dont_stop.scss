@@ -229,3 +229,32 @@
   justify-content: center;
   column-gap: 1rem;
 }
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 18px;
+  font-family: 'Roboto';
+  max-width: 2000px;
+  row-gap: 1rem;
+  color: rgb(59, 57, 55);
+  background-color: $champ;
+  padding: 1rem;
+  margin: auto;
+  width: 95%;
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    color: $bronze;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+h2 {
+    text-decoration: underline;
+    color: $bronze;
+    font-size: 20px;
+}
+}

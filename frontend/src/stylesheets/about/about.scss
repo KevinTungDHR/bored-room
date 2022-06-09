@@ -6,13 +6,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: "Cormorant-Garamond";
+    font-family: "Roboto";
     margin: 10px 10px;
 }
 
 .about-header {
-    font-size: 68px;
+    font-size: 80px;
     color: $title;
+    text-shadow: 2px 2px 2px rgba(255, 245, 233, 0.658);
 }
 
 .bios-container {
@@ -27,8 +28,12 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    height: 700px;
-    width: 33%;
+    height: 650px;
+    width: 525px;
+    padding: 1.5rem;
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    box-shadow: 2px 2px 3px black;
     
     .headshot {
         height: 220px;

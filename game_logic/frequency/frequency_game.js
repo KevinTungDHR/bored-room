@@ -21,6 +21,7 @@ class FrequencyGame {
       this.currentCard = data.currentCard;
       this.discard = data.discard;
   
+      this.rerolls = data.rerolls;
       this.activeTeam = data.activeTeam;
       this.redTeam = data.redTeam;
       this.blueTeam = data.blueTeam;
@@ -64,6 +65,7 @@ class FrequencyGame {
     this.leftOrRight = null;
     this.dialRevealed = false;
     this.demoTurnCounter = 0;
+    this.rerolls = 0;
     this.winner = null;
 
 
@@ -118,6 +120,7 @@ class FrequencyGame {
     this.leftOrRight = null;
     this.dialRevealed = false;
     this.demoTurnCounter = 0;
+    this.rerolls = 0;
     this.winner = null;
 
     this.deck = demo_cards.slice(0).reverse();
@@ -206,6 +209,17 @@ class FrequencyGame {
     return ids.some(id => id.equals(userId));
   }
 
+  rerollCard(){
+    if(this.rerolls > 2 || this.demoGame){
+      throw 'No rerolls left';
+    }
+
+    this.discard.push(this.currentCard)
+    this.currentCard = this.deck.pop();
+    this.rerolls += 1;
+    this.setRandomDial();
+  }
+
   checkGuess(guess){
     switch(true){
       case (guess >= this.dial - 2 && guess <= this.dial + 2):
@@ -250,6 +264,7 @@ class FrequencyGame {
     this.dialRevealed = false;
     this.redGainedPts = 0;
     this.blueGainedPts = 0;
+    this.rerolls = 0;
 
     if(this.demoGame){
       this.demoTurnCounter += 1;
