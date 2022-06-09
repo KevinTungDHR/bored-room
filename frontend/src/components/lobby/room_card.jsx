@@ -110,7 +110,6 @@ const RoomCard = ({ room, handleRoomDelete }) => {
     )
   } 
 
-
   return(
     <div className='roomCard-item'>
       <div className='roomCard-icon'>{renderIcon()}</div>

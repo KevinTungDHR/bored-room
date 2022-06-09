@@ -113,6 +113,7 @@ router.post('/login', (req, res) => {
               avatar: user.avatar,
               eloRating: user.eloRating,
               bio: user.bio,
+              isAdmin: user.isAdmin,
               acceptedFriends: user.acceptedFriends,
               requestedFriends: user.requestedFriends,
               pendingFriends: user.pendingFriends,

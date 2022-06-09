@@ -59,6 +59,11 @@ const Room = () => {
           return;
         }
 
+        if (rooms[roomCode]?.seatedUsers.length > 10){
+          setRoomError("This game only supports 10 players. Please try Frequency instead.")
+          return;
+        }
+
         TakingSixUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers);
         break;
       case 'Frequency':
@@ -72,10 +77,15 @@ const Room = () => {
         break;
 
       case 'Dont Stop':
-        // if (rooms[roomCode]?.seatedUsers.length < 2){
-        //   setRoomError("This game requires at least two players. Please try our demo instead.")
-        //   return;
-        // }
+        if (rooms[roomCode]?.seatedUsers.length < 2){
+          setRoomError("This game requires at least two players. Please try our demo instead.")
+          return;
+        }
+
+        if (rooms[roomCode]?.seatedUsers.length > 4){
+          setRoomError("This game only supports 4 players. Please try another game instead.")
+          return;
+        }
 
         DontStopUtil.createGame(roomCode, rooms[roomCode]?.seatedUsers);
         break;
