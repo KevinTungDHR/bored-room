@@ -13,7 +13,7 @@ const AboutDevelopers = () => {
             {/* <div className='about-header'>
                 <h1>About the Developers</h1>
             </div> */}
-
+            <a className='git-repo' href='https://github.com/KevinTungDHR/bored-room' target="_blank" >Link to Github Repository</a>
             <div className='bios-container'>
                 {/* Peter */}
                 <div className='bio'>
